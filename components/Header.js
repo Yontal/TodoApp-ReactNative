@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
     },
     inputArea:{
         borderBottomWidth: 1,
-        width: 200
+        width: 200,
+        backgroundColor: 'white'
     },
     header:{
 //        height: 70,
