@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native'
+import {View, Text, StyleSheet, TextInput, Button, Alert, Modal} from 'react-native'
 
-export const Header = ({onAddItem}) => {
+export const Header = ({onAddItem, isAddMode, onCancel}) => {
 
     const [itemValue, setItemValue] = useState('');
 
@@ -15,41 +15,63 @@ export const Header = ({onAddItem}) => {
         }
     }
 
+    const cancelPressHandler = () => {
+        onCancel();
+    }
+
     
 
     return(
-        <View style={styles.header}>
-            <View style={styles.logo}>
-                <Text>Logo</Text>
+        <Modal visible={isAddMode} animationType="slide">
+            <View style={styles.header}>
+                {/* <View style={styles.logo}>
+                    <Text>Logo</Text>
+                </View> */}
+                <View style={styles.inputArea}>
+                    <TextInput 
+                        placeholder="Type your todo item"
+                        value={itemValue}
+                        onChangeText={(itemValue)=>setItemValue(itemValue)}
+                    />
+                </View>
+                <View style={styles.buttonGroup}>
+                    <View style={styles.button}>
+                        <Button 
+                            title="Cancel"
+                            onPress={cancelPressHandler}
+                            color="red"
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button 
+                            title="Add"
+                            onPress={pressHandler}
+                        />
+                    </View>
+                </View>
             </View>
-            <View style={styles.inputArea}>
-                <TextInput 
-                    placeholder="Type your todo item"
-                    value={itemValue}
-                    onChangeText={(itemValue)=>setItemValue(itemValue)}
-                />
-            </View>
-            <View style={styles.button}>
-                <Button 
-                    title="Add"
-                    onPress={pressHandler}
-                />
-            </View>
-        </View>
+        </Modal>
     );
 }
 
 const styles = StyleSheet.create({
+    buttonGroup:{
+        width: '80%',
+        margin: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     button:{
-
+        width: '40%'
     },
     category:{
 
     },
     inputArea:{
-        borderBottomWidth: 1,
-        width: 200,
-        backgroundColor: 'white'
+        borderWidth: 1,
+        width: '80%',
+        backgroundColor: 'white',
+        padding: 3
     },
     header:{
 //        height: 70,
@@ -57,8 +79,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         width: '100%',
         padding: 7,
-        flexDirection: 'row',
+//        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
     }       
 })

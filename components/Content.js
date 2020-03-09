@@ -72,6 +72,7 @@ export const Content = ({items, onRemove}) => {
                 previewOpenDelay={3000}
                 onRowDidOpen={onRowDidOpen}
                 disableRightSwipe={true}
+                keyExtractor={item => item.key}
             />
     </View>
     );
