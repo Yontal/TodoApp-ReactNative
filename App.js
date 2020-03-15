@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+import { useScreens } from 'react-native-screens'
 import { Header } from './components/Header'
-import { Content } from './components/Content' 
+import ItemsListScreen  from './screens/ItemsListScreen'
+
+useScreens();
 
 export default function App() {
 
@@ -27,7 +30,7 @@ export default function App() {
         title="Add new item" 
         onPress={() => setIsAddMode(true)}/>
       <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} />
-      <Content onRemove={onRemove} items={items}/>
+      <ItemsListScreen onRemove={onRemove} items={items}/>
     </View>
   );
 }

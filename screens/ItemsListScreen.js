@@ -1,19 +1,17 @@
-import React, { useState } from 'react'
-import {View, Text, StyleSheet, TouchableOpacity, TouchableHighlight} from 'react-native'
-import {Item} from './Item'
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, TouchableHighlight} from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
+const ItemsListScreen = props =>{
 
-export const Content = ({items, onRemove}) => {
-
-    const [listData, setListData] = useState(items)
-
+    const [listData, setListData] = useState(props.items)
+    
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
         }
     };
-
+    
     const deleteRow = (rowMap, rowKey) => {
         closeRow(rowMap, rowKey);
         const newData = [...listData];
@@ -21,11 +19,11 @@ export const Content = ({items, onRemove}) => {
         newData.splice(prevIndex, 1);
         setListData(newData);
     };
-
+    
     const onRowDidOpen = rowKey => {
         console.log('This row opened', rowKey);
     };
-
+    
     const renderItem = data => (
         <TouchableHighlight
             onPress={() => console.log('You touched me')}
@@ -37,7 +35,7 @@ export const Content = ({items, onRemove}) => {
             </View>
         </TouchableHighlight>
     );
-
+    
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
             <Text></Text>
@@ -51,31 +49,32 @@ export const Content = ({items, onRemove}) => {
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
                 onPress={() => {
                     deleteRow(rowMap, data.item.key)
-                    onRemove(data.item.key)}
-                            }
+                    props.onRemove(data.item.key)
+                }
+            }
             >
                 <Text style={styles.backTextWhite}>Delete</Text>
             </TouchableOpacity>
-        </View>
-    );
+        </View>)
 
     return(
-    <View style={styles.content}>
-         <SwipeListView
-                data={items}
-                renderItem={renderItem}
-                renderHiddenItem={renderHiddenItem}
-                leftOpenValue={75}
-                rightOpenValue={-150}
-                previewRowKey={'0'}
-                previewOpenValue={-40}
-                previewOpenDelay={3000}
-                onRowDidOpen={onRowDidOpen}
-                disableRightSwipe={true}
-                keyExtractor={item => item.key}
-            />
-    </View>
-    );
+        <View style={styles.content}>
+             <SwipeListView
+                    data={props.items}
+                    renderItem={renderItem}
+                    renderHiddenItem={renderHiddenItem}
+                    leftOpenValue={75}
+                    rightOpenValue={-150}
+                    previewRowKey={'0'}
+                    previewOpenValue={-40}
+                    previewOpenDelay={3000}
+                    onRowDidOpen={onRowDidOpen}
+                    disableRightSwipe={true}
+                    keyExtractor={item => item.key}
+                    onRemove={props.onRemove}
+                />
+        </View>
+        );
 }
 
 const styles = StyleSheet.create({
@@ -83,10 +82,6 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#EAEAEA',
         flex: 15
-    },
-    container: {
-        backgroundColor: 'white',
-        flex: 1,
     },
     backTextWhite: {
         color: '#FFF',
@@ -124,3 +119,5 @@ const styles = StyleSheet.create({
         right: 0,
     }
 })
+
+export default ItemsListScreen;
