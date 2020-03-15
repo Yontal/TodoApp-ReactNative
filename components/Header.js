@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {View, Text, StyleSheet, TextInput, Button, Alert, Modal} from 'react-native'
+import {View, StyleSheet, TextInput, Button, Alert, Modal} from 'react-native'
 
 export const Header = ({onAddItem, isAddMode, onCancel}) => {
 
