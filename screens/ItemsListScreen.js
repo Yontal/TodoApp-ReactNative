@@ -1,24 +1,34 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Header } from '../components/Header';
 import TodoItem from '../models/TodoItem';
+import { insertTodo, removeTodo, pullTodo } from '../store/actions/todo';
+import { connect } from 'react-redux';
+
 
 const ItemsListScreen = props =>{
-
     const todoItems = useSelector(state => state.todoItems.todoItems);
-    const [listData, setListData] = useState(todoItems);
+    const dispatch = useDispatch();
+//    const [listData, setListData] = useState(todoItems);
     const [isAddMode, setIsAddMode] = useState(false);
-  
+
+    useEffect(() => {
+        dispatch(pullTodo());
+    }, [dispatch])
+
+
     const addItem = (item) => {
-        const newTodo = new TodoItem(Math.random().toString(), item);
-        setListData(previousState => previousState.concat(newTodo))
-      setIsAddMode(false)
+        const newTodo = new TodoItem(Math.random().toString(), item, false);
+   //     setListData(previousState => previousState.concat(newTodo));
+        setIsAddMode(false);
+        dispatch(insertTodo(newTodo));
     }
-  
+    
     const onRemove = (id) =>{
-        setListData(previousState => previousState.filter((item) => {return item.id !== id}))
+  //      setListData(previousState => previousState.filter((item) => {return item.id !== id}));
+        dispatch(removeTodo(id));
     }
   
     const onCancelHandler = () => {
@@ -33,10 +43,10 @@ const ItemsListScreen = props =>{
     
     const deleteRow = (rowMap, rowKey) => {
         closeRow(rowMap, rowKey);
-        const newData = [...listData];
-        const prevIndex = listData.findIndex(item => item.id === rowKey);
+        const newData = [...todoItems];
+        const prevIndex = todoItems.findIndex(item => item.id === rowKey);
         newData.splice(prevIndex, 1);
-        setListData(newData);
+    //    setListData(newData);
     };
     
     const onRowDidOpen = rowKey => {
@@ -89,7 +99,7 @@ const ItemsListScreen = props =>{
             </View>
             <View style={styles.contentContainer}>
                 <SwipeListView
-                        data={listData}
+                        data={todoItems}
                         renderItem={renderItem}
                         renderHiddenItem={renderHiddenItem}
                         leftOpenValue={75}
@@ -102,6 +112,7 @@ const ItemsListScreen = props =>{
                         keyExtractor={item => item.id}
                         onRemove={onRemove}
                         contentContainerStyle={styles.list}
+                        initialNumToRender={15}
                     />
             </View>
         </View>
@@ -164,4 +175,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ItemsListScreen;
+const mapDispatchToProps = dispatch => {
+    return{
+
+    }
+};
+
+const mapStateToProps = state => {
+    return {
+        
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps) (ItemsListScreen);

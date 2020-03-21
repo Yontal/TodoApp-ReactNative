@@ -22,7 +22,9 @@
     "react-navigation-header-buttons": "^3.0.5",
     "react-navigation-material-bottom-tabs": "^2.2.2",
     "react-redux": "^7.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "expo-sqlite": "~8.0.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

@@ -4,16 +4,26 @@ import { useScreens } from 'react-native-screens'
 import StackNavigator from './Navigation/TodoNavigation'
 
 import { Provider } from 'react-redux';
-import { createStore, combineReducers } from 'redux';
-import todoItemsReducer from './store/reducers/todo'
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import todoItemsReducer from './store/reducers/todo';
+import { init } from './helpers/db'
 
 useScreens();
+init()
+  .then(() => {
+    console.log('todos.db was initialized')
+  })
+  .catch(err => {
+    console.log('todos.db initialization failed')
+    console.log(err)
+  });
 
 const rootReducer = combineReducers({
   todoItems: todoItemsReducer,
-})
+});
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default function App() {
 
