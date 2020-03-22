@@ -4,14 +4,14 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { Header } from '../components/Header';
 import TodoItem from '../models/TodoItem';
-import { insertTodo, removeTodo, pullTodo } from '../store/actions/todo';
+import { insertTodo, removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
 import { connect } from 'react-redux';
+import COLOR from '../constants/colors'
 
 
 const ItemsListScreen = props =>{
     const todoItems = useSelector(state => state.todoItems.todoItems);
     const dispatch = useDispatch();
-//    const [listData, setListData] = useState(todoItems);
     const [isAddMode, setIsAddMode] = useState(false);
 
     useEffect(() => {
@@ -21,18 +21,20 @@ const ItemsListScreen = props =>{
 
     const addItem = (item) => {
         const newTodo = new TodoItem(Math.random().toString(), item, false);
-   //     setListData(previousState => previousState.concat(newTodo));
         setIsAddMode(false);
         dispatch(insertTodo(newTodo));
     }
     
     const onRemove = (id) =>{
-  //      setListData(previousState => previousState.filter((item) => {return item.id !== id}));
         dispatch(removeTodo(id));
     }
   
     const onCancelHandler = () => {
-      setIsAddMode(false)
+      setIsAddMode(false);
+    }
+
+    const markAsImportant = (todo) =>{
+        dispatch(updateTodo(todo));
     }
     
     const closeRow = (rowMap, rowKey) => {
@@ -46,7 +48,6 @@ const ItemsListScreen = props =>{
         const newData = [...todoItems];
         const prevIndex = todoItems.findIndex(item => item.id === rowKey);
         newData.splice(prevIndex, 1);
-    //    setListData(newData);
     };
     
     const onRowDidOpen = rowKey => {
@@ -59,7 +60,8 @@ const ItemsListScreen = props =>{
                 console.log('You touched me')
                 props.navigation.navigate('AddItem');
             }}
-            style={styles.rowFront}
+            onLongPress={() => {markAsImportant(data.item)}}
+            style={data.item.important === 1 ? styles.rowFrontImportant : styles.rowFront}
             underlayColor={'#AAA'}
         >
             <View>
@@ -94,7 +96,7 @@ const ItemsListScreen = props =>{
             <View style={styles.headerContainer}>
                 <Button 
                 title="Add new item" 
-                onPress={() => setIsAddMode(true)}/>
+                onPress={() => setIsAddMode(true)} color={COLOR.accentColor} />
                 <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} />
             </View>
             <View style={styles.contentContainer}>
@@ -142,9 +144,19 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
     rowFront: {
-        alignItems: 'center',
-        backgroundColor: '#CCC',
-        borderBottomColor: 'black',
+        alignItems: 'flex-start',
+        paddingHorizontal: 15,
+        backgroundColor: COLOR.whiteColor,
+        borderBottomColor: COLOR.accentColor,
+        borderBottomWidth: 1,
+        justifyContent: 'center',
+        height: 50,
+    },
+    rowFrontImportant: {
+        alignItems: 'flex-start',
+        paddingHorizontal: 15,
+        backgroundColor: COLOR.redColor,
+        borderBottomColor: COLOR.accentColor,
         borderBottomWidth: 1,
         justifyContent: 'center',
         height: 50,
@@ -166,7 +178,7 @@ const styles = StyleSheet.create({
         width: 75,
     },
     backRightBtnLeft: {
-        backgroundColor: 'blue',
+        backgroundColor: COLOR.accentColor,
         right: 75,
     },
     backRightBtnRight: {

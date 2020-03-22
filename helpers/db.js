@@ -21,9 +21,11 @@ export const init = () => {
 
 export const addTodo = (title, important) => {
     const promise = new Promise((resolve, reject) => {
+        console.log(important);
+        const importantInt = important ? 1 : 0;
         db.transaction((tx) => {
             tx.executeSql('INSERT INTO todos (title, important) VALUES (?, ?);',
-                [title, important],
+                [title, importantInt],
                 (_, result) => {
                     resolve(result);
                 },
@@ -67,3 +69,18 @@ export const deleteTodo = (id) => {
     return promise;
 }
 
+export const correctTodo = (todo) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('UPDATE todos SET title=?, important=? WHERE id=?;',
+                [todo.title, todo.important, parseInt(todo.id)],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err) => {
+                    reject(err);
+                })
+        })
+    });
+    return promise;
+}
