@@ -21,7 +21,6 @@ export const init = () => {
 
 export const addTodo = (title, important) => {
     const promise = new Promise((resolve, reject) => {
-        console.log(important);
         const importantInt = important ? 1 : 0;
         db.transaction((tx) => {
             tx.executeSql('INSERT INTO todos (title, important) VALUES (?, ?);',
@@ -73,7 +72,7 @@ export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql('UPDATE todos SET title=?, important=? WHERE id=?;',
-                [todo.title, todo.important, parseInt(todo.id)],
+                [todo.title, parseInt(todo.important), parseInt(todo.id)],
                 (_, result) => {
                     resolve(result);
                 },

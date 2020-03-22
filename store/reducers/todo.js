@@ -20,8 +20,7 @@ const todoItemsReducer = (state = initialState, action) => {
         case UPDATE_TODO:
             const modifiedTodos = state.todoItems.map(item => {
                 if(item.id.toString() === action.todo.id){
-                    const importantFlag = (action.todo.important === 1) ? 0 : 1;
-                    return new TodoItem(action.todo.id.toString(), action.todo.title, importantFlag)
+                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important)
                 } else {
                     return item
                 }

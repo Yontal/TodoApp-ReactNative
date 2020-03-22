@@ -51,6 +51,8 @@ export const pullTodo = () => {
 export const updateTodo = (todo) => {
     return async dispatch => {
         try{
+            const importantFlag = (todo.important === 1) ? 0 : 1;
+            todo.important = importantFlag;
             const response = await correctTodo(todo);
             dispatch({
                 type: UPDATE_TODO,
