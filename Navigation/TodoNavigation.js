@@ -37,7 +37,7 @@ const categoriesStackNavigator = createStackNavigator({
         navigationOptions:{
             title: 'Categories',
             headerStyle: {
-                backgroundColor: COLORS.primaryColor,
+                backgroundColor: COLORS.accentColor,
             },
             headerTintColor: 'white',
         }

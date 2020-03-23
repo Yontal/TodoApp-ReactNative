@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {View, StyleSheet, TextInput, Button, Alert, Modal} from 'react-native'
 
-export const Header = ({onAddItem, isAddMode, onCancel}) => {
+export const Header = ({onAddItem, isAddMode, onCancel, placeholder}) => {
 
     const [itemValue, setItemValue] = useState('');
 
@@ -24,12 +24,9 @@ export const Header = ({onAddItem, isAddMode, onCancel}) => {
     return(
         <Modal visible={isAddMode} animationType="slide">
             <View style={styles.header}>
-                {/* <View style={styles.logo}>
-                    <Text>Logo</Text>
-                </View> */}
                 <View style={styles.inputArea}>
                     <TextInput 
-                        placeholder="Type your todo item"
+                        placeholder={placeholder}
                         value={itemValue}
                         onChangeText={(itemValue)=>setItemValue(itemValue)}
                     />

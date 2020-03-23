@@ -1,21 +1,20 @@
-import { TODOITEMS } from '../../data/dummy-data';
 import {addTodo, deleteTodo, loadTodo, correctTodo } from '../../helpers/db';
 
 export const INSERT_TODO = 'INSERT_TODO';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const PULL_TODOS = 'PULL_TODOS';
-export const UPDATE_TODO = 'UPDATE_TODO'
+export const UPDATE_TODO = 'UPDATE_TODO';
 
 export const insertTodo = (todo) => {
     return async dispatch => {
         try{
-            const response = await addTodo(todo.title, todo.important);
+            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories);
             dispatch({
                 type: INSERT_TODO,
                 todo: todo
             })
         } catch(err){
-            console.log(err);
+            throw err;
         }
     }
 }
@@ -51,15 +50,13 @@ export const pullTodo = () => {
 export const updateTodo = (todo) => {
     return async dispatch => {
         try{
-            const importantFlag = (todo.important === 1) ? 0 : 1;
-            todo.important = importantFlag;
             const response = await correctTodo(todo);
             dispatch({
                 type: UPDATE_TODO,
                 todo: todo
             })
         } catch(err){
-            console.log(err);
+           throw err;
         }
     }
 }

@@ -5,7 +5,7 @@ const db = SQLite.openDatabase('todos.db');
 export const init = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER)',
+            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL)',
                     [],
                     () => {
                         resolve();
@@ -19,12 +19,14 @@ export const init = () => {
     return promise;
 }
 
-export const addTodo = (title, important) => {
+export const addTodo = (title, important, done, categories) => {
     const promise = new Promise((resolve, reject) => {
         const importantInt = important ? 1 : 0;
+        const doneInt = done ? 1 : 0;
+        let categoriesStr = categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO todos (title, important) VALUES (?, ?);',
-                [title, importantInt],
+            tx.executeSql('INSERT INTO todos (title, important, done, categories) VALUES (?, ?, ?, ?);',
+                [title, importantInt, doneInt, categoriesStr],
                 (_, result) => {
                     resolve(result);
                 },
@@ -36,7 +38,7 @@ export const addTodo = (title, important) => {
     return promise;
 }
 
-export const loadTodo = (title, important) => {
+export const loadTodo = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql('SELECT * FROM todos;',
@@ -70,9 +72,10 @@ export const deleteTodo = (id) => {
 
 export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
+        let categoriesStr = todo.categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('UPDATE todos SET title=?, important=? WHERE id=?;',
-                [todo.title, parseInt(todo.important), parseInt(todo.id)],
+            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=? WHERE id=?;',
+                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.id)],
                 (_, result) => {
                     resolve(result);
                 },

@@ -1,4 +1,4 @@
-import { INSERT_TODO, GET_TODOS, REMOVE_TODO, PULL_TODOS, UPDATE_TODO } from '../actions/todo';
+import { INSERT_TODO, REMOVE_TODO, PULL_TODOS, UPDATE_TODO } from '../actions/todo';
 import TodoItem from '../../models/TodoItem';
 
 
@@ -15,12 +15,12 @@ const todoItemsReducer = (state = initialState, action) => {
             const updatedTodos = state.todoItems.filter(todo => {return todo.id !== action.id});
             return {...state, todoItems: updatedTodos};
         case PULL_TODOS:
-            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important))
+            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(',')));
             return {...state, todoItems: loadedTodos}
         case UPDATE_TODO:
             const modifiedTodos = state.todoItems.map(item => {
                 if(item.id.toString() === action.todo.id){
-                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important)
+                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories);
                 } else {
                     return item
                 }

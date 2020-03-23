@@ -6,6 +6,7 @@ import { Header } from '../components/Header';
 import TodoItem from '../models/TodoItem';
 import { insertTodo, removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
 import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 import COLOR from '../constants/colors'
 
 
@@ -20,7 +21,7 @@ const ItemsListScreen = props =>{
 
 
     const addItem = (item) => {
-        const newTodo = new TodoItem(Math.random().toString(), item, false);
+        const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories);
         setIsAddMode(false);
         dispatch(insertTodo(newTodo));
     }
@@ -34,6 +35,15 @@ const ItemsListScreen = props =>{
     }
 
     const markAsImportant = (todo) =>{
+        const importantFlag = (todo.important === 1) ? 0 : 1;
+        todo.important = importantFlag;
+        dispatch(updateTodo(todo));
+    }
+
+    
+    const markAsDone = (todo) =>{
+        const doneFlag = (todo.done === 1) ? 0 : 1;
+        todo.done = doneFlag;
         dispatch(updateTodo(todo));
     }
     
@@ -58,14 +68,31 @@ const ItemsListScreen = props =>{
         <TouchableHighlight
             onPress={() => {
                 console.log('You touched me')
-                props.navigation.navigate('AddItem');
+//                props.navigation.navigate('AddItem');
             }}
-            onLongPress={() => {markAsImportant(data.item)}}
-            style={data.item.important === 1 ? styles.rowFrontImportant : styles.rowFront}
+            style={styles.rowFront}
             underlayColor={'#AAA'}
         >
-            <View>
-                <Text>{data.item.title}</Text>
+            <View style={styles.rowFrontInner}>
+                <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
+                <View style={styles.iconsContainer}>
+                    <TouchableOpacity 
+                        onLongPress={() => {markAsImportant(data.item)}}>
+                            <Feather 
+                                name="flag" 
+                                size={23}
+                                color={data.item.important === 1 ? COLOR.redColor : COLOR.blackColor} 
+                                style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onLongPress={() => {markAsDone(data.item)}}>
+                            <Feather 
+                                name="check" 
+                                size={23}
+                                color={data.item.done === 1 ? COLOR.greenColor : COLOR.blackColor}  
+                                style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
             </View>
         </TouchableHighlight>
     );
@@ -97,7 +124,7 @@ const ItemsListScreen = props =>{
                 <Button 
                 title="Add new item" 
                 onPress={() => setIsAddMode(true)} color={COLOR.accentColor} />
-                <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} />
+                <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type your todo item" />
             </View>
             <View style={styles.contentContainer}>
                 <SwipeListView
@@ -150,20 +177,31 @@ const styles = StyleSheet.create({
         borderBottomColor: COLOR.accentColor,
         borderBottomWidth: 1,
         justifyContent: 'center',
-        height: 50,
+        minHeight: 50,
     },
-    rowFrontImportant: {
-        alignItems: 'flex-start',
-        paddingHorizontal: 15,
-        backgroundColor: COLOR.redColor,
-        borderBottomColor: COLOR.accentColor,
-        borderBottomWidth: 1,
-        justifyContent: 'center',
-        height: 50,
+    rowFrontInner: {
+        flex: 1,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    iconsContainer: {
+        flexDirection: 'row',
+        minWidth: '15%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: '100%',
+    },
+    icon: {
+        padding: 5,
+    },
+    todoTitle: {
+        maxWidth: '80%',
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#DDD',
+        backgroundColor: COLOR.accentColor,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
