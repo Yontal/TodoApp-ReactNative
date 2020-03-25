@@ -6,6 +6,7 @@ import {createAppContainer, createStackNavigator} from 'react-navigation';
 import { createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import ItemListsScreen from '../screens/ItemsListScreen';
 import AddItemScreen from '../screens/AddItemScreen';
+import ItemScreen from '../screens/ItemScreen';
 import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 
@@ -22,7 +23,8 @@ const todosStackNavigator = createStackNavigator({
             headerTintColor: 'white',
         }
     },
-    AddItem: AddItemScreen
+    AddItem: AddItemScreen,
+    Item: ItemScreen
 },{
     defaultNavigationOptions: {
         headerStyle: {

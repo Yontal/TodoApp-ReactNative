@@ -4,15 +4,25 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { Header } from '../components/Header';
 import TodoItem from '../models/TodoItem';
-import { insertTodo, removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
+import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import COLOR from '../constants/colors'
 
 
-const ItemsListScreen = props =>{
-    const todoItems = useSelector(state => state.todoItems.todoItems);
+const ItemsListScreen = props => {
     const dispatch = useDispatch();
+    const todoItems = useSelector(state => {
+        if(!props.navigation.getParam('title')){
+            return state.todoItems.todoItems
+        } else {
+            return state.todoItems.filteredTodos;
+        }
+    });
+
+    const Clear = props => { 
+        return (<TouchableOpacity style={styles.clear} onPress={() => {}}><Text>X</Text></TouchableOpacity>)  
+    }
     const [isAddMode, setIsAddMode] = useState(false);
 
     useEffect(() => {
@@ -102,9 +112,14 @@ const ItemsListScreen = props =>{
             <Text></Text>
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backRightBtnLeft]}
-                onPress={() => closeRow(rowMap, data.item.id)}
+                onPress={() => {
+                    closeRow(rowMap, data.item.id)
+                    props.navigation.navigate({routeName: 'Item', params: {
+                        todo: data.item,
+                    }})}
+                }
             >
-                <Text style={styles.backTextWhite}>Close</Text>
+                <Text style={styles.backTextWhite}>Modify</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
@@ -144,11 +159,25 @@ const ItemsListScreen = props =>{
                         initialNumToRender={15}
                     />
             </View>
+            <Clear />
         </View>
         );
 }
 
 const styles = StyleSheet.create({
+    clear:{
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        backgroundColor: COLOR.whiteColor,
+        borderColor: COLOR.accentColor,
+        borderRadius: 25,
+        borderWidth: 1,
+        bottom: 5,
+        right: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     mainContainer: {
         flex: 1,
     },

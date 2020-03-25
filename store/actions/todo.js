@@ -4,6 +4,7 @@ export const INSERT_TODO = 'INSERT_TODO';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const PULL_TODOS = 'PULL_TODOS';
 export const UPDATE_TODO = 'UPDATE_TODO';
+export const FILTER_TODOS  = 'FILTER_TODOS';
 
 export const insertTodo = (todo) => {
     return async dispatch => {
@@ -58,5 +59,12 @@ export const updateTodo = (todo) => {
         } catch(err){
            throw err;
         }
+    }
+}
+
+export const filterTodos = (title) => {
+    return  {
+        type: FILTER_TODOS,
+        categoryTitle: title,
     }
 }

@@ -1,4 +1,6 @@
 import TodoItem from '../models/TodoItem';
+import Caegory from '../models/Category';
+import Category from '../models/Category';
 
 export const TODOITEMS = [
     new TodoItem('td1', 'Make some cool staff'),
@@ -23,4 +25,14 @@ export const TODOITEMS = [
     new TodoItem('td20', 'While here no chicks are there'),
     new TodoItem('td21', 'But to the left of me'),
     new TodoItem('td22', 'And to the right too :-)'),
+]
+
+export const CATEGORIES = [
+    new Category('1', 'default'),
+    new Category('2', 'Home'),
+    new Category('3', 'Work'),
+    new Category('4', 'Buddies'),
+    new Category('5', 'Easy'),
+    new Category('6', 'Breezy'),
+    new Category('7', 'Other staff'),
 ]

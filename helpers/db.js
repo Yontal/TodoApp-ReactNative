@@ -2,10 +2,27 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('todos.db');
 
-export const init = () => {
+export const initTodoTable = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL)',
+                    [],
+                    () => {
+                        resolve();
+                    },
+                    (_, err) => {
+                        reject(err);
+                    });
+                });
+            }
+    );
+    return promise;
+}
+
+export const initCategoriesTable = () => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL)',
                     [],
                     () => {
                         resolve();
@@ -38,10 +55,42 @@ export const addTodo = (title, important, done, categories) => {
     return promise;
 }
 
+export const addCategory = (title) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('INSERT INTO categories (title) VALUES (?);',
+                [title],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err) => {
+                    reject(err);
+                })
+        })
+    });
+    return promise;
+}
+
 export const loadTodo = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql('SELECT * FROM todos;',
+                [],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err) => {
+                    reject(err);
+                })
+        })
+    });
+    return promise;
+}
+
+export const loadCategories = () => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('SELECT * FROM categories;',
                 [],
                 (_, result) => {
                     resolve(result);
@@ -70,12 +119,44 @@ export const deleteTodo = (id) => {
     return promise;
 }
 
+export const deleteCategory = (id) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('DELETE FROM categories WHERE id=?;',
+                [id],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err) => {
+                    reject(err);
+                })
+        })
+    });
+    return promise;
+}
+
 export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
         let categoriesStr = todo.categories.toString();
         db.transaction((tx) => {
             tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=? WHERE id=?;',
                 [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.id)],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err) => {
+                    reject(err);
+                })
+        })
+    });
+    return promise;
+}
+
+export const correctCategory = (category) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('UPDATE categories SET title=? WHERE id=?;',
+                [category.title, parseInt(category.id)],
                 (_, result) => {
                     resolve(result);
                 },

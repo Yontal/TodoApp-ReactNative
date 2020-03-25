@@ -1,9 +1,10 @@
-import { INSERT_TODO, REMOVE_TODO, PULL_TODOS, UPDATE_TODO } from '../actions/todo';
+import { INSERT_TODO, REMOVE_TODO, PULL_TODOS, UPDATE_TODO, FILTER_TODOS } from '../actions/todo';
 import TodoItem from '../../models/TodoItem';
 
 
 const initialState = {
     todoItems: [],
+    filteredTodos: [],
 };
 
 const todoItemsReducer = (state = initialState, action) => {
@@ -26,6 +27,9 @@ const todoItemsReducer = (state = initialState, action) => {
                 }
             });
             return {...state, todoItems: modifiedTodos}
+        case FILTER_TODOS:
+            const filtered = state.todoItems.filter(todo => todo.categories.findIndex(catName => catName === action.categoryTitle) >= 0);
+            return {...state, filteredTodos: filtered}
         default:
             return state;
     }

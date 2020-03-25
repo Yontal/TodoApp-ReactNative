@@ -7,10 +7,11 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import todoItemsReducer from './store/reducers/todo';
-import { init } from './helpers/db'
+import categoriesReducer from './store/reducers/category';
+import { initTodoTable, initCategoriesTable } from './helpers/db'
 
 useScreens();
-init()
+initTodoTable()
   .then(() => {
     console.log('todos.db was initialized')
   })
@@ -19,8 +20,18 @@ init()
     console.log(err)
   });
 
+initCategoriesTable()
+  .then(() => {
+    console.log('categories table was initialized')
+  })
+  .catch(err => {
+    console.log('todos.db initialization failed while creating categories table')
+    console.log(err)
+  });
+
 const rootReducer = combineReducers({
   todoItems: todoItemsReducer,
+  categories: categoriesReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Button, FlatList, Text, TouchableNativeFeedback } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Header } from '../components/Header';
 
 import COLOR from '../constants/colors';
+import { insertCategory, pullCategory } from '../store/actions/category';
+import Category from '../models/Category';
+import { filterTodos } from '../store/actions/todo';
 
 const CategoriesListScreen = props => {
+    const categories = useSelector(state => state.categories.categories);
+    const dispatch = useDispatch();
+
     const [isAddMode, setIsAddMode] = useState(false);
+
+    useEffect(() => {
+        dispatch(pullCategory());
+    }, [dispatch])
 
     const onCancelHandler = () => {
         setIsAddMode(false);
+    }
+
+    const addItem = (item) => {
+        const newCategory = new Category(Math.random().toString(), item);
+        setIsAddMode(false);
+        dispatch(insertCategory(newCategory));
+    }
+
+    const selectCategoryHandler = (title) => {
+        dispatch(filterTodos(title));
+        props.navigation.navigate({routeName: 'ItemsList', params: {title:title}});
     }
 
     return(
@@ -17,8 +39,19 @@ const CategoriesListScreen = props => {
                 <Button 
                 title="Add new category" 
                 onPress={() => setIsAddMode(true)} color={COLOR.primaryColor} />
-                <Header onAddItem={() => {}} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
+                <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
             </View>
+            <FlatList 
+            data={categories}
+            renderItem={data => (
+                <TouchableNativeFeedback onPress={() => {selectCategoryHandler(data.item.title)}}>
+                    <View style={styles.rowFront}>
+                        <Text>{data.item.title}</Text>
+                    </View>
+                </TouchableNativeFeedback>
+                )
+            } 
+            keyExtractor={item => item.id} />
         </View>
     );
 }
@@ -32,6 +65,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         alignItems: 'stretch'
+      },
+      rowFront: {
+        alignItems: 'flex-start',
+        paddingHorizontal: 15,
+        backgroundColor: COLOR.whiteColor,
+        borderBottomColor: COLOR.accentColor,
+        borderBottomWidth: 1,
+        justifyContent: 'center',
+        minHeight: 50,
       },
 })
 
