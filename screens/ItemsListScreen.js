@@ -226,10 +226,10 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     rowFrontImportant: {
-        borderBottomColor: COLOR.redColor,
-        borderColor: COLOR.redColor,
+        borderBottomColor: COLOR.orangeColor,
+        borderColor: COLOR.orangeColor,
         borderWidth: 1,
-        backgroundColor: COLOR.redHighlightColor,
+        backgroundColor: COLOR.orangeHighlight,
         borderRadius: 10,
     },
     rowFrontDone: {

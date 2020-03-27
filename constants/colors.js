@@ -9,4 +9,5 @@ export default {
     greenHighlight: '#bdf0bd',
     greyColor: 'grey',
     orangeColor: '#ff890a',
+    orangeHighlight: '#ffd3a3',
 }
