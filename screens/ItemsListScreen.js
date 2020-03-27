@@ -34,6 +34,7 @@ const ItemsListScreen = props => {
         const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories);
         setIsAddMode(false);
         dispatch(insertTodo(newTodo));
+        dispatch(pullTodo())
     }
     
     const onRemove = (id) =>{
@@ -45,15 +46,19 @@ const ItemsListScreen = props => {
     }
 
     const markAsImportant = (todo) =>{
-        const importantFlag = (todo.important === 1) ? 0 : 1;
+        const importantFlag = todo.important === 1 ? 0 : 1;
+        const doneFlag = importantFlag === 1 ? 0 : todo.done;
         todo.important = importantFlag;
+        todo.done = doneFlag;
         dispatch(updateTodo(todo));
     }
 
     
     const markAsDone = (todo) =>{
-        const doneFlag = (todo.done === 1) ? 0 : 1;
+        const doneFlag = todo.done === 1 ? 0 : 1;
+        const importantFlag = doneFlag === 1 ? 0 : todo.important;
         todo.done = doneFlag;
+        todo.important = importantFlag;
         dispatch(updateTodo(todo));
     }
     
@@ -80,13 +85,21 @@ const ItemsListScreen = props => {
                 console.log('You touched me')
 //                props.navigation.navigate('AddItem');
             }}
-            style={styles.rowFront}
+            style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
             underlayColor={'#AAA'}
         >
             <View style={styles.rowFrontInner}>
+                <TouchableOpacity
+                        onPress={() => {markAsDone(data.item)}}>
+                            <Feather 
+                                name="check-circle" 
+                                size={23}
+                                color={data.item.done === 1 ? COLOR.greenColor : COLOR.greyColor}  
+                                style={styles.icon} />
+                    </TouchableOpacity>
                 <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
                 <View style={styles.iconsContainer}>
-                    <TouchableOpacity 
+                    {/* <TouchableOpacity 
                         onLongPress={() => {markAsImportant(data.item)}}>
                             <Feather 
                                 name="flag" 
@@ -101,7 +114,7 @@ const ItemsListScreen = props => {
                                 size={23}
                                 color={data.item.done === 1 ? COLOR.greenColor : COLOR.blackColor}  
                                 style={styles.icon} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         </TouchableHighlight>
@@ -113,33 +126,32 @@ const ItemsListScreen = props => {
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backRightBtnLeft]}
                 onPress={() => {
-                    closeRow(rowMap, data.item.id)
-                    props.navigation.navigate({routeName: 'Item', params: {
-                        todo: data.item,
-                    }})}
+                    deleteRow(rowMap, data.item.id)
+                    onRemove(data.item.id)
+                    
+                    }
                 }
             >
-                <Text style={styles.backTextWhite}>Modify</Text>
+                <Text style={styles.backTextWhite}>Archive</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
                 onPress={() => {
-                    deleteRow(rowMap, data.item.id)
-                    onRemove(data.item.id)
+                    closeRow(rowMap, data.item.id);
+                    markAsImportant(data.item);
+                    //     props.navigation.navigate({routeName: 'Item', params: {
+                    //         todo: data.item,
+                    // }})
                 }
             }
             >
-                <Text style={styles.backTextWhite}>Delete</Text>
+                <Text style={styles.backTextWhite}>Mark!</Text>
             </TouchableOpacity>
         </View>)
 
     return(
         <View style={styles.mainContainer}>
             <View style={styles.headerContainer}>
-                <Button 
-                title="Add new item" 
-                onPress={() => setIsAddMode(true)} color={COLOR.accentColor} />
-                <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type your todo item" />
             </View>
             <View style={styles.contentContainer}>
                 <SwipeListView
@@ -147,7 +159,7 @@ const ItemsListScreen = props => {
                         renderItem={renderItem}
                         renderHiddenItem={renderHiddenItem}
                         leftOpenValue={75}
-                        rightOpenValue={-150}
+                        rightOpenValue={-155}
                         previewRowKey={'0'}
                         previewOpenValue={-40}
                         previewOpenDelay={3000}
@@ -159,7 +171,10 @@ const ItemsListScreen = props => {
                         initialNumToRender={15}
                     />
             </View>
-            <Clear />
+            <Button 
+                title="Add new item" 
+                onPress={() => setIsAddMode(true)} color={COLOR.accentColor} />
+            <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type your todo item" />
         </View>
         );
 }
@@ -189,7 +204,7 @@ const styles = StyleSheet.create({
       },
     contentContainer:{
         width: '100%',
-        backgroundColor: '#EAEAEA',
+        backgroundColor: COLOR.whiteColor,
         alignContent:'flex-start',
         flex: 1
     },
@@ -201,19 +216,35 @@ const styles = StyleSheet.create({
     },
     rowFront: {
         alignItems: 'flex-start',
+        marginHorizontal: 5,
+        marginVertical: 2,
         paddingHorizontal: 15,
         backgroundColor: COLOR.whiteColor,
-        borderBottomColor: COLOR.accentColor,
+        borderBottomColor: COLOR.greyColor,
         borderBottomWidth: 1,
         justifyContent: 'center',
         minHeight: 50,
+    },
+    rowFrontImportant: {
+        borderBottomColor: COLOR.redColor,
+        borderColor: COLOR.redColor,
+        borderWidth: 1,
+        backgroundColor: COLOR.redHighlightColor,
+        borderRadius: 10,
+    },
+    rowFrontDone: {
+        borderBottomColor: COLOR.greenColor,
+        borderColor: COLOR.greenColor,
+        borderWidth: 1,
+        backgroundColor: COLOR.greenHighlight,
+        borderRadius: 10,
     },
     rowFrontInner: {
         flex: 1,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     iconsContainer: {
         flexDirection: 'row',
@@ -230,8 +261,10 @@ const styles = StyleSheet.create({
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: COLOR.accentColor,
+ //       backgroundColor: COLOR.accentColor,
         flex: 1,
+        marginHorizontal: 5,
+        marginVertical: 2,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
@@ -247,10 +280,13 @@ const styles = StyleSheet.create({
     backRightBtnLeft: {
         backgroundColor: COLOR.accentColor,
         right: 75,
+        borderRadius: 15,
+        marginRight: 5,
     },
     backRightBtnRight: {
-        backgroundColor: 'red',
+        backgroundColor: COLOR.orangeColor,
         right: 0,
+        borderRadius: 15,
     }
 })
 
