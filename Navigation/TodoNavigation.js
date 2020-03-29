@@ -9,6 +9,7 @@ import AddItemScreen from '../screens/AddItemScreen';
 import ItemScreen from '../screens/ItemScreen';
 import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
+import ArchiveScreen from '../screens/ArchiveScreen';
 
 import COLORS from '../constants/colors'
 
@@ -33,18 +34,17 @@ const todosStackNavigator = createStackNavigator({
     }
 })
 
-const categoriesStackNavigator = createStackNavigator({
+const archiveStackNavigator = createStackNavigator({
     CategoriesList: {
-        screen: CategoriesListScreen,
+        screen: ArchiveScreen,
         navigationOptions:{
-            title: 'Categories',
+            title: 'Archive',
             headerStyle: {
                 backgroundColor: COLORS.accentColor,
             },
             headerTintColor: 'white',
         }
     },
-    Category: CategoryScreen
 },{
     defaultNavigationOptions: {
         headerStyle: {
@@ -57,17 +57,17 @@ const BottomTabNavRouteConfig = {
     Todos:{
         screen: todosStackNavigator,
         navigationOptions: {
-            tabBarIcon: (tabInfo) => { return <Feather name="check-square" size={25} color={tabInfo.tintColor} />},
+            tabBarIcon: (tabInfo) => { return <Feather name="check-circle" size={25} color={tabInfo.tintColor} />},
             tabBarColor: COLORS.primaryColor,
             tabBarLabel: (<Text>Todo</Text>)
         }
     },
     Categories: {
-        screen: categoriesStackNavigator,
+        screen: archiveStackNavigator,
         navigationOptions: {
-            tabBarIcon: (tabInfo) => {return <Feather name="folder-plus" size={25} color={tabInfo.tintColor}  />},
+            tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
             tabBarColor: COLORS.accentColor,
-            tabBarLabel: (<Text>Categories</Text>)
+            tabBarLabel: (<Text>Archive</Text>)
         }
     }  
 }
@@ -75,6 +75,7 @@ const BottomTabNavRouteConfig = {
 const BottomTabNavigator = createMaterialBottomTabNavigator(BottomTabNavRouteConfig,{
     activeColor: "white",
     shifting: true,
+    sceneAnimationEnabled: false,
 })
 
 export default createAppContainer(BottomTabNavigator)
