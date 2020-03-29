@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, FlatList, Text, TouchableNativeFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { Header } from '../components/Header';
+import { InputField } from '../components/InputField';
 
 import COLOR from '../constants/colors';
 import { insertCategory, pullCategory } from '../store/actions/category';
@@ -39,7 +39,7 @@ const CategoriesListScreen = props => {
                 <Button 
                 title="Add new category" 
                 onPress={() => setIsAddMode(true)} color={COLOR.primaryColor} />
-                <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
+                <InputField onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
             </View>
             <FlatList 
             data={categories}

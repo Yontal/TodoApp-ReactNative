@@ -17,9 +17,14 @@ const todosStackNavigator = createStackNavigator({
     ItemsList: {
         screen: ItemListsScreen,
         navigationOptions:{
-            title: 'Todo',
+            title: 'Task manager',
+            // headerTitleStyle: { justifyContent: 'center' },
+            // headerTitleStyle: { 
+            //     textAlign:"center", 
+            //     flex:1 
+            // },
             headerStyle: {
-                backgroundColor: COLORS.primaryColor,
+                backgroundColor: COLORS.primaryColor
             },
             headerTintColor: 'white',
         }
@@ -30,6 +35,10 @@ const todosStackNavigator = createStackNavigator({
     defaultNavigationOptions: {
         headerStyle: {
             backgroundColor: COLORS.primaryColor,
+        },
+        headerTitleStyle: { 
+            textAlign:"center", 
+            flex:1 
         },
     }
 })
@@ -49,6 +58,10 @@ const archiveStackNavigator = createStackNavigator({
     defaultNavigationOptions: {
         headerStyle: {
             backgroundColor: COLORS.primaryColor,
+        },
+        headerTitleStyle: { 
+            textAlign:"center", 
+            flex:1 
         },
     }
 })

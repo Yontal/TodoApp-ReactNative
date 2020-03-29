@@ -20,14 +20,14 @@ initTodoTable()
     console.log(err)
   });
 
-initCategoriesTable()
-  .then(() => {
-    console.log('categories table was initialized')
-  })
-  .catch(err => {
-    console.log('todos.db initialization failed while creating categories table')
-    console.log(err)
-  });
+// initCategoriesTable()
+//   .then(() => {
+//     console.log('categories table was initialized')
+//   })
+//   .catch(err => {
+//     console.log('todos.db initialization failed while creating categories table')
+//     console.log(err)
+//   });
 
 const rootReducer = combineReducers({
   todoItems: todoItemsReducer,

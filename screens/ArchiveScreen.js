@@ -39,14 +39,11 @@ const ArchiveScreen = props => {
     };
     
     const onRowDidOpen = rowKey => {
-        console.log('This row opened', rowKey);
+        // console.log('This row opened', rowKey);
     };
 
     const renderItem = data => (
         <TouchableHighlight
-            onPress={() => {
-                console.log('You touched me')
-            }}
             style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
             underlayColor={'#AAA'}
         >
@@ -190,7 +187,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
-        marginVertical: 2,
+        marginVertical: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,

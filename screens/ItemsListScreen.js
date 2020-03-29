@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
-import { Header } from '../components/Header';
+import { InputField } from '../components/InputField';
 import TodoItem from '../models/TodoItem';
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { connect } from 'react-redux';
@@ -37,9 +37,9 @@ const ItemsListScreen = props => {
         dispatch(removeTodo(id));
     }
   
-    const onCancelHandler = () => {
-      setIsAddMode(false);
-    }
+    // const onCancelHandler = () => {
+    //   setIsAddMode(false);
+    // }
 
     const markAsImportant = (todo) =>{
         const importantFlag = todo.important === 1 ? 0 : 1;
@@ -78,15 +78,11 @@ const ItemsListScreen = props => {
     };
     
     const onRowDidOpen = rowKey => {
-        console.log('This row opened', rowKey);
+        // console.log('This row opened', rowKey);
     };
     
     const renderItem = data => (
         <TouchableHighlight
-            onPress={() => {
-                console.log('You touched me')
-//                props.navigation.navigate('AddItem');
-            }}
             style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
             underlayColor={'#AAA'}
         >
@@ -101,22 +97,6 @@ const ItemsListScreen = props => {
                     </TouchableOpacity>
                 <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
                 <View style={styles.iconsContainer}>
-                    {/* <TouchableOpacity 
-                        onLongPress={() => {markAsImportant(data.item)}}>
-                            <Feather 
-                                name="flag" 
-                                size={23}
-                                color={data.item.important === 1 ? COLOR.redColor : COLOR.blackColor} 
-                                style={styles.icon} />
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onLongPress={() => {markAsDone(data.item)}}>
-                            <Feather 
-                                name="check" 
-                                size={23}
-                                color={data.item.done === 1 ? COLOR.greenColor : COLOR.blackColor}  
-                                style={styles.icon} />
-                    </TouchableOpacity> */}
                 </View>
             </View>
         </TouchableHighlight>
@@ -152,30 +132,29 @@ const ItemsListScreen = props => {
 
     return(
         <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
-            </View>
-            <View style={styles.contentContainer}>
-                <SwipeListView
-                        data={todoItems}
-                        renderItem={renderItem}
-                        renderHiddenItem={renderHiddenItem}
-                        leftOpenValue={75}
-                        rightOpenValue={-155}
-                        previewRowKey={'0'}
-                        previewOpenValue={-40}
-                        previewOpenDelay={3000}
-                        onRowDidOpen={onRowDidOpen}
-                        disableRightSwipe={true}
-                        keyExtractor={item => item.id}
-                        onRemove={onRemove}
-                        contentContainerStyle={styles.list}
-                        initialNumToRender={15}
-                    />
-            </View>
-            <Button 
-                title="Add new item" 
-                onPress={() => setIsAddMode(true)} color={COLOR.accentColor} />
-            <Header onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type your todo item" />
+            <View style={styles.headerContainer}/>        
+                <InputField onAddItem={addItem} placeholder="What need to be done?" />
+                <View style={styles.contentContainer}>
+                    <SwipeListView
+                            data={todoItems}
+                            renderItem={renderItem}
+                            renderHiddenItem={renderHiddenItem}
+                            leftOpenValue={75}
+                            rightOpenValue={-155}
+                            previewRowKey={'0'}
+                            previewOpenValue={-40}
+                            previewOpenDelay={3000}
+                            onRowDidOpen={onRowDidOpen}
+                            disableRightSwipe={true}
+                            keyExtractor={item => item.id}
+                            onRemove={onRemove}
+                            contentContainerStyle={styles.list}
+                            initialNumToRender={15}
+                        />
+                </View>
+            {/* <KeyboardAvoidingView style={styles.inputTodoContainer} keyboardVerticalOffset={30} enabled="true"> */}
+         
+            {/* </KeyboardAvoidingView> */}
         </View>
         );
 }
@@ -262,10 +241,9 @@ const styles = StyleSheet.create({
     },
     rowBack: {
         alignItems: 'center',
- //       backgroundColor: COLOR.accentColor,
         flex: 1,
         marginHorizontal: 5,
-        marginVertical: 2,
+        marginVertical: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
