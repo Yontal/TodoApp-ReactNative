@@ -5,7 +5,7 @@ const db = SQLite.openDatabase('todos.db');
 export const initTodoTable = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL)',
+            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL, archive INTEGER)',
                     [],
                     () => {
                         resolve();
@@ -36,13 +36,13 @@ export const initCategoriesTable = () => {
     return promise;
 }
 
-export const addTodo = (title, important, done, categories) => {
+export const addTodo = (title, important, done, categories, archive) => {
     const promise = new Promise((resolve, reject) => {
         const importantInt = important ? 1 : 0;
         const doneInt = done ? 1 : 0;
         let categoriesStr = categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO todos (title, important, done, categories) VALUES (?, ?, ?, ?);',
+            tx.executeSql('INSERT INTO todos (title, important, done, categories, archive) VALUES (?, ?, ?, ?, 0);',
                 [title, importantInt, doneInt, categoriesStr],
                 (_, result) => {
                     resolve(result);
@@ -139,8 +139,8 @@ export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
         let categoriesStr = todo.categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=? WHERE id=?;',
-                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.id)],
+            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=?, archive=? WHERE id=?;',
+                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.archive), parseInt(todo.id)],
                 (_, result) => {
                     resolve(result);
                 },
