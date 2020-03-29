@@ -26,6 +26,11 @@
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "package": "ru.goodfellas.dev_task_manager",
+      "versionCode": 1,
+      "permissions": []
+    },
     "description": ""
   }
 }
