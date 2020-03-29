@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {MaterialIcons } from '@expo/vector-icons';
-import {View, StyleSheet, TextInput, Button, Alert, KeyboardAvoidingView, Modal, Text, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {View, StyleSheet, TextInput, Alert, TouchableOpacity, Keyboard} from 'react-native'
 import COLOR from '../constants/colors'
 
 export const InputField = ({onAddItem, placeholder}) => {
@@ -11,6 +11,7 @@ export const InputField = ({onAddItem, placeholder}) => {
         if(itemValue.trim()){
             onAddItem(itemValue)
             setItemValue('')
+            Keyboard.dismiss();
         }
         else{
             Alert.alert('Type something')
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         margin: 10,
-        elevation: 2,
+        // elevation: 1,
         
         // marginLeft: 10,
         // marginRight: 10,
