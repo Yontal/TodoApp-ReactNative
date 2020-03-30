@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { useScreens } from 'react-native-screens'
 import StackNavigator from './Navigation/TodoNavigation'
@@ -20,14 +20,6 @@ initTodoTable()
     console.log(err)
   });
 
-// initCategoriesTable()
-//   .then(() => {
-//     console.log('categories table was initialized')
-//   })
-//   .catch(err => {
-//     console.log('todos.db initialization failed while creating categories table')
-//     console.log(err)
-//   });
 
 const rootReducer = combineReducers({
   todoItems: todoItemsReducer,
@@ -37,8 +29,6 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default function App() {
-
-
   return (
     <Provider store={store}>
       <StackNavigator />

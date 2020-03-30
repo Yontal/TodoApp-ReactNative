@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "todoApp",
-    "slug": "todoapp",
+    "name": "Task Manager",
+    "slug": "taskmanager",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

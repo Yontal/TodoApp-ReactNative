@@ -37,8 +37,8 @@ const todosStackNavigator = createStackNavigator({
             backgroundColor: COLORS.primaryColor,
         },
         headerTitleStyle: { 
-            textAlign:"center", 
-            flex:1 
+            textAlign:"center",
+            flex:1,
         },
     }
 })
