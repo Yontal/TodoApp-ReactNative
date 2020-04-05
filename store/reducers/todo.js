@@ -1,4 +1,4 @@
-import { INSERT_TODO, REMOVE_TODO, PULL_TODOS, UPDATE_TODO, FILTER_TODOS } from '../actions/todo';
+import { INSERT_TODO, REMOVE_TODO, PULL_TODOS, PULL_TODO, UPDATE_TODO, FILTER_TODOS } from '../actions/todo';
 import TodoItem from '../../models/TodoItem';
 
 
@@ -16,12 +16,15 @@ const todoItemsReducer = (state = initialState, action) => {
             const updatedTodos = state.todoItems.filter(todo => {return todo.id !== action.id});
             return {...state, todoItems: updatedTodos, filteredTodos: updatedTodos};
         case PULL_TODOS:
-            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive));
+            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive, todo.deadline));
             return {...state, todoItems: loadedTodos, filteredTodos: loadedTodos}
+        case PULL_TODO:
+            const loadedTodo = new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories.split(','), action.todo.archive, action.todo.deadline);
+            return {...state, filteredTodos: loadedTodo}
         case UPDATE_TODO:
             const modifiedTodos = state.todoItems.map(item => {
                 if(item.id.toString() === action.todo.id){
-                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories, action.todo.archive);
+                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories, action.todo.archive, action.todo.deadline);
                 } else {
                     return item
                 }

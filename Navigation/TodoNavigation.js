@@ -26,11 +26,19 @@ const todosStackNavigator = createStackNavigator({
             headerStyle: {
                 backgroundColor: COLORS.primaryColor
             },
-            headerTintColor: 'white',
         }
     },
     AddItem: AddItemScreen,
-    Item: ItemScreen
+    Item: {
+        screen: ItemScreen,
+        navigationOptions:{
+            title: 'Task details',
+            headerTitleStyle: { 
+                textAlign: "left",
+                flex:1,
+            },
+        },
+    }
 },{
     defaultNavigationOptions: {
         headerStyle: {
@@ -40,6 +48,7 @@ const todosStackNavigator = createStackNavigator({
             textAlign:"center",
             flex:1,
         },
+        headerTintColor: 'white',
     }
 })
 

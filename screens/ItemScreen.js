@@ -1,40 +1,83 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Picker, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateTodo } from '../store/actions/todo';
+import { updateTodo, pullTodoById } from '../store/actions/todo';
+import DateTimePicker from '../components/DateTimePicker';
 
 import COLOR from '../constants/colors';
-import { CATEGORIES } from '../data/dummy-data';
 
-const CategoryScreen = props => {
-    const categories = useSelector(state => state.categories.categories);
-    const [picked, setPicked] = useState(props.navigation.getParam('todo').categories.toString())
+const ItemScreen = props => {
+    const [taskId, setTaskId] = useState(props.navigation.getParam('id'));
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+
+    const [date, setDate] = useState();
 
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(pullTodoById(taskId))
+    }, [dispatch])
 
-    const onSaveHandler = (todo, newCategory) => {
-        const updatedTodo = todo;
-        updatedTodo.categories = [newCategory];
-        dispatch(updateTodo(updatedTodo));
-        props.navigation.navigate('ItemsList');
-    }
+    const todo = useSelector(state => state.todoItems.filteredTodos);
+
+      const onDateChange = (event, selectedDate) => {
+        const currentDate = new Date(selectedDate);
+        setShowDatePicker(false); 
+        if(event.type === 'set'){
+            setDate(currentDate);
+            setShowTimePicker(true);
+        }
+      }
+
+      const onTimeChange = (event, selectedDate) => {
+        const currentDate = new Date(selectedDate);
+        setShowDatePicker(false); 
+        if(event.type === 'set'){
+            const selectedTime = date;
+            selectedTime.setHours(currentDate.getHours());
+            selectedTime.setMinutes(currentDate.getMinutes());
+            setShowDatePicker(false);
+            setShowTimePicker(false);
+            setDate(selectedTime);
+        }
+            setShowTimePicker(false);
+            todo.deadline = date.toString();
+            dispatch(updateTodo(todo));
+            dispatch(pullTodoById(taskId));
+      }
+
+      const setDeadline = () => {
+        setShowDatePicker(true);
+      }
 
     return(
         <View>
-            <Picker
-                selectedValue={picked}
-                style={{ height: 50, width: "100%" }}
-                mode="dropdown"
-                onValueChange={(itemValue, itemIndex) => setPicked(itemValue)}>
-                    {categories.map(category => {return(<Picker.Item label={category.title} value={category.title} key={category.id} />)})}
-            </Picker>
-            <Button title="Save" color={COLOR.primaryColor} onPress={() => {onSaveHandler(props.navigation.getParam('todo'), picked)}} />
+            <View>
+                <View style={styles.row}><Text>Title: </Text><Text>{todo.title}</Text></View>
+                <View style={styles.row}><Text>Importance: </Text><Text>{todo.important == 1 ? "high" : "low"}</Text></View>
+                <View style={styles.row}><Text>Status: </Text><Text>{todo.done == 1 ? "yes" : "not yet"}</Text></View>
+                {(todo.deadline !== '')? (<View style={styles.row}><Text>Deadline: </Text><Text>{todo.deadline}</Text></View>) : null}
+            </View>
+            {todo.done !== 1 ? (<View style={{backgroundColor: COLOR.accentColor}}>
+                <Button color={COLOR.accentColor} onPress={() => setDeadline()} title="Set deadline" />
+            </View>) : null }
+            {showDatePicker ? 
+                (<DateTimePicker value={new Date()} mode="date" onChange={onDateChange} />) : 
+                    (showTimePicker ? 
+                        (<DateTimePicker value={new Date()} mode="time" onChange={onTimeChange} />) : 
+                    null 
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
+    row:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 5,
+        padding: 5,
+    }
 })
 
-export default CategoryScreen;
+export default ItemScreen;

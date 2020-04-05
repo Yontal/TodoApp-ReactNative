@@ -8,12 +8,15 @@ import TodoItem from '../models/TodoItem';
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { connect } from 'react-redux';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import COLOR from '../constants/colors'
+import ProgressBar from '../components/ProgressBar';
+import COLOR from '../constants/colors';
 
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
     const todoItems = useSelector(state => state.todoItems.todoItems.filter(todo => todo.archive !== 1));
+    const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
+    const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
 
  //   const todoItems = allTodoItems.filter(todo => todo.archive !== 1)
 
@@ -65,6 +68,10 @@ const ItemsListScreen = props => {
         dispatch(updateTodo(todo));
     }
     
+    const itemPressHandler = task => {
+        props.navigation.navigate({routeName: 'Item', params: {id: task.id}})
+    }
+    
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
@@ -86,6 +93,7 @@ const ItemsListScreen = props => {
         <TouchableHighlight
             style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
             underlayColor={'#AAA'}
+            onPress={() => itemPressHandler(data.item)}
         >
             <View style={styles.rowFrontInner}>
                 <TouchableOpacity
@@ -163,11 +171,19 @@ const ItemsListScreen = props => {
             {/* <KeyboardAvoidingView style={styles.inputTodoContainer} keyboardVerticalOffset={30} enabled="true"> */}
          
             {/* </KeyboardAvoidingView> */}
+            <View style={styles.progress}>
+                <ProgressBar tasks={todoItems} />
+            </View>
         </View>
         );
 }
 
 const styles = StyleSheet.create({
+    progress:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
     clear:{
         position: 'absolute',
         width: 50,
