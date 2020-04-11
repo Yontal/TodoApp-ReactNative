@@ -69,7 +69,7 @@ const ItemsListScreen = props => {
     }
     
     const itemPressHandler = task => {
-        props.navigation.navigate({routeName: 'Item', params: {id: task.id}})
+        props.navigation.navigate({routeName: 'Item', params: {task: task}})
     }
     
     const closeRow = (rowMap, rowKey) => {
@@ -110,9 +110,10 @@ const ItemsListScreen = props => {
                                 color={COLOR.greyColor}  
                                 style={styles.icon} />)}
                     </TouchableOpacity>
-                <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
-                <View style={styles.iconsContainer}>
-                </View>
+                    <View style={styles.rowFrontInnerInner}>
+                        <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
+                        <View><Text>{data.item.deadline !== '' ? 'Deadline: ' + (new Date(data.item.deadline)).toLocaleDateString() : null}</Text></View>
+                    </View>
             </View>
         </TouchableHighlight>
     );
@@ -250,6 +251,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
+    rowFrontInnerInner: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     iconsContainer: {
         flexDirection: 'row',
         minWidth: '15%',
@@ -261,7 +267,7 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     todoTitle: {
-        maxWidth: '80%',
+        maxWidth: '60%',
     },
     rowBack: {
         alignItems: 'center',
