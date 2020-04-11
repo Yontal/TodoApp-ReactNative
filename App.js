@@ -8,7 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
-import { initTodoTable, initCategoriesTable } from './helpers/db'
+import { initTodoTable, initDeadlineColumn } from './helpers/db'
 
 useScreens();
 initTodoTable()
@@ -17,6 +17,14 @@ initTodoTable()
   })
   .catch(err => {
     console.log('todos.db initialization failed')
+    console.log(err)
+  });
+  initDeadlineColumn()  
+  .then(() => {
+    console.log('deadline column was added')
+  })
+  .catch(err => {
+    console.log('deadline column is already exist')
     console.log(err)
   });
 

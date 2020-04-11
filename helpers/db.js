@@ -18,6 +18,22 @@ export const initTodoTable = () => {
     );
     return promise;
 }
+export const initDeadlineColumn = () => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('ALTER TABLE todos ADD deadline TEXT DEFAULT "" NOT NULL',
+                    [],
+                    () => {
+                        resolve();
+                    },
+                    (_, err) => {
+                        reject(err);
+                    });
+                });
+            }
+    );
+    return promise;
+}
 
 export const initCategoriesTable = () => {
     const promise = new Promise((resolve, reject) => {
