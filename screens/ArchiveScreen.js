@@ -57,7 +57,7 @@ const ArchiveScreen = props => {
                                 color={data.item.done === 1 ? COLOR.greenColor : COLOR.greyColor}  
                                 style={styles.icon} />
                     </TouchableOpacity> */}
-                <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
+                <View style={styles.todoTitle}><Text style={{fontFamily: 'open-sans'}}>{data.item.title}</Text></View>
                 <View style={styles.iconsContainer}>
                 </View>
             </View>
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     },
     backTextWhite: {
         color: '#FFF',
+        fontFamily: 'open-sans',
     },
     rowFront: {
         alignItems: 'flex-start',

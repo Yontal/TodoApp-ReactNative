@@ -111,8 +111,8 @@ const ItemsListScreen = props => {
                                 style={styles.icon} />)}
                     </TouchableOpacity>
                     <View style={styles.rowFrontInnerInner}>
-                        <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
-                        <View><Text>{data.item.deadline !== '' ? 'Deadline: ' + (new Date(data.item.deadline)).toLocaleDateString() : null}</Text></View>
+                        <View style={styles.todoTitle}><Text style={{fontFamily: 'open-sans'}}>{data.item.title}</Text></View>
+                        <View><Text style={{fontFamily: 'open-sans'}}>{data.item.deadline !== '' ? 'Deadline: ' + (new Date(data.item.deadline)).toLocaleDateString() : null}</Text></View>
                     </View>
             </View>
         </TouchableHighlight>
@@ -151,7 +151,7 @@ const ItemsListScreen = props => {
             <View style={styles.headerContainer}/>        
                 <InputField onAddItem={addItem} placeholder="What need to be done?" />
                 <View style={styles.contentContainer}>
-                    {(todoItems.length < 1) ? (<NothingFound message="There is no task yet" />) : null}
+                    {(todoItems.length < 1) ? (<NothingFound message="There is no tasks yet" />) : null}
                     <SwipeListView
                             data={todoItems}
                             renderItem={renderItem}
@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
     },
     backTextWhite: {
         color: '#FFF',
+        fontFamily: 'open-sans',
     },
     rowFront: {
         alignItems: 'flex-start',

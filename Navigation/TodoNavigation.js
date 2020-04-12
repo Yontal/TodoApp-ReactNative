@@ -36,6 +36,7 @@ const todosStackNavigator = createStackNavigator({
             headerTitleStyle: { 
                 textAlign: "left",
                 flex:1,
+                fontFamily: 'open-sans-bold',
             },
         },
     }
@@ -47,6 +48,7 @@ const todosStackNavigator = createStackNavigator({
         headerTitleStyle: { 
             textAlign:"center",
             flex:1,
+            fontFamily: 'open-sans-bold',
         },
         headerTintColor: 'white',
     }
@@ -70,7 +72,8 @@ const archiveStackNavigator = createStackNavigator({
         },
         headerTitleStyle: { 
             textAlign:"center", 
-            flex:1 
+            flex:1,
+            fontFamily: 'open-sans-bold',
         },
     }
 })
@@ -81,7 +84,7 @@ const BottomTabNavRouteConfig = {
         navigationOptions: {
             tabBarIcon: (tabInfo) => { return <Feather name="check-circle" size={25} color={tabInfo.tintColor} />},
             tabBarColor: COLORS.primaryColor,
-            tabBarLabel: (<Text>Todo</Text>)
+            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Tasks</Text>)
         }
     },
     Categories: {
@@ -89,7 +92,7 @@ const BottomTabNavRouteConfig = {
         navigationOptions: {
             tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
             tabBarColor: COLORS.accentColor,
-            tabBarLabel: (<Text>Archive</Text>)
+            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Archive</Text>)
         }
     }  
 }

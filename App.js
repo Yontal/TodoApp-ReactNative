@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { useScreens } from 'react-native-screens'
 import StackNavigator from './Navigation/TodoNavigation'
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
 
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -36,7 +38,20 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+  });
+};
+
 export default function App() {
+  const [appLoaded, setAppLoaded] = useState(false);
+
+  if(!appLoaded){
+    return (<AppLoading startAsync={fetchFonts} onFinish={() => setAppLoaded(true)} />);
+  }
+
   return (
     <Provider store={store}>
       <StackNavigator />

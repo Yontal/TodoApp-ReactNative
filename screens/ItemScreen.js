@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, ImageEditor } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTodo, pullTodoById } from '../store/actions/todo';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
 import {InputField} from '../components/InputField';
+//import { Transition, Transitioning } from "react-native-reanimated";
+
 
 import COLOR from '../constants/colors';
+
 
 const SwitchButton = props => {
     return(
         <View style={styles.filterContainer}>
-            <Text style={styles.filterLabel}>{props.label}</Text>
+            <Text style={{fontFamily: 'open-sans'}}>{props.label}</Text>
             <Switch value={props.value} onValueChange={props.onToggle} trackColor={{true: COLOR.primaryColor}} thumbColor={COLOR.primaryColor} />
         </View>
     );
@@ -37,6 +40,20 @@ const ItemScreen = props => {
         }
       }
 
+      // transition = (
+      //   <Transition.Together>
+      //     <Transition.In
+      //       type="slide-right"
+      //       durationMs={250}
+      //       interpolation="easeInOut"
+      //     />
+      //     <Transition.In type="fade" durationMs={250} />
+      //     <Transition.Change />
+      //     <Transition.Out type="fade" duration={2050} />
+      //   </Transition.Together>
+      // );
+      
+    //const ref = useRef();
       const onTimeChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
         setShowDatePicker(false); 
@@ -72,7 +89,7 @@ const ItemScreen = props => {
         if(!isChanging){
             return;
         }
-        if(todo.title === ''){
+        if(todo.title.trim() === ''){
             Alert.alert('Type something')
             return;
         }
@@ -82,25 +99,34 @@ const ItemScreen = props => {
 
       const discardChanges = () => {
           setTodo(prevTodo => ({...navigation.getParam('task'), deadline: prevTodo.deadline}));
+        //  ref.current.animateNextTransition();
           setIsChanging(false);
+      }
+      const edit = () => {
+        //ref.current.animateNextTransition();
+        setIsChanging(true);
       }
 
     return(
-        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
-        <View>
+        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}} >
+        {/* <Transitioning.View
+        ref={ref}
+        transition={transition}
+      > */}
+      <View>
             {isChanging === false ? (
             <View>
-                <View style={styles.row}><Text>Task: </Text><Text>{todo.title}</Text></View>
-                <View style={styles.row}><Text>Importance: </Text><Text>{todo.important == 1 ? "high" : "low"}</Text></View>
-                <View style={styles.row}><Text>Status: </Text><Text>{todo.done == 1 ? "done" : "not yet done"}</Text></View>
-                <View style={styles.row}><Text>Deadline: </Text><Text>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not yet set"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Task: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.title}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Importance: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.important == 1 ? "high" : "low"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Status: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.done == 1 ? "done" : "not yet done"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Deadline: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not yet set"}</Text></View>
             </View>
         ) : (
             <View style={{alignItems: 'center'}}>
                 <View style={styles.inputArea}>
                     <TextInput 
                             value={todo.title}
-                            onChangeText={(todoNewTitle)=>setTodo(prevTodo => ({...prevTodo, title: todoNewTitle.trim()}))}
+                            onChangeText={(todoNewTitle)=>setTodo(prevTodo => ({...prevTodo, title: todoNewTitle}))}
                             defaultValue={todo.title}
                             style={{width: '100%'}}
                         />
@@ -114,7 +140,7 @@ const ItemScreen = props => {
             }
             
             <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                    <MainButton styles={{width: Dimensions.get('window').width*0.4, paddingHorizontal: 5, margin: Dimensions.get('window').width * 0.05, backgroundColor: isChanging ? COLOR.redColor : COLOR.primaryColor}} onPressHandler={() => {isChanging ? discardChanges() : setIsChanging(true)}}>{isChanging ? 'Discard changes' : 'Edit'}</MainButton>
+                    <MainButton styles={{width: Dimensions.get('window').width*0.4, paddingHorizontal: 5, margin: Dimensions.get('window').width * 0.05, backgroundColor: isChanging ? COLOR.redColor : COLOR.primaryColor}} onPressHandler={() => {isChanging ? discardChanges() : edit()}}>{isChanging ? 'Discard changes' : 'Edit'}</MainButton>
                     <MainButton styles={{width: Dimensions.get('window').width*0.4, paddingHorizontal: 5, margin: Dimensions.get('window').width * 0.05, backgroundColor: isChanging ? COLOR.greenColor : COLOR.greyColor}} onPressHandler={saveChanges}>Save</MainButton>
             </View>
             {showDatePicker ? 
@@ -123,7 +149,8 @@ const ItemScreen = props => {
                         (<DateTimePicker value={new Date()} mode="time" onChange={onTimeChange} />) : 
                     null 
             )}
-        </View>
+            </View>
+        {/* </Transitioning.View> */}
         </TouchableWithoutFeedback>
     );
 }
