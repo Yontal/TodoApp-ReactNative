@@ -1,15 +1,16 @@
-import {addTodo, deleteTodo, loadTodo, correctTodo } from '../../helpers/db';
+import {addTodo, deleteTodo, loadTodo, correctTodo, loadTodoById } from '../../helpers/db';
 
 export const INSERT_TODO = 'INSERT_TODO';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const PULL_TODOS = 'PULL_TODOS';
 export const UPDATE_TODO = 'UPDATE_TODO';
 export const FILTER_TODOS  = 'FILTER_TODOS';
+export const PULL_TODO = 'PULL_TODO'
 
 export const insertTodo = (todo) => {
     return async dispatch => {
         try{
-            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive);
+            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline);
             dispatch({
                 type: INSERT_TODO,
                 todo: todo
@@ -43,6 +44,20 @@ export const pullTodo = () => {
                 todoItems: response.rows._array
             })
         } catch (err){
+            console.log(err);
+        }
+    }
+}
+export const pullTodoById = (id) =>{
+    return async dispatch => {
+        try{
+            const response = await loadTodoById(id);
+            dispatch({
+                type: PULL_TODO,
+                todo: response.rows._array[0]
+            })
+        }
+        catch(err){
             console.log(err);
         }
     }

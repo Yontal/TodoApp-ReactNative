@@ -8,12 +8,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "2.1.0",
     "expo": "~36.0.0",
+    "expo-sqlite": "~8.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-gesture-handler": "^1.5.5",
     "react-native-paper": "^3.6.0",
+    "react-native-progress": "^4.1.0",
     "react-native-reanimated": "~1.1.0",
     "react-native-screens": "^1.0.0-alpha.22",
     "react-native-swipe-list-view": "^2.3.0",
@@ -23,8 +26,7 @@
     "react-navigation-material-bottom-tabs": "^2.2.2",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "expo-sqlite": "~8.0.0"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

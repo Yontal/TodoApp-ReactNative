@@ -3,9 +3,9 @@ import {MaterialIcons } from '@expo/vector-icons';
 import {View, StyleSheet, TextInput, Alert, TouchableOpacity, Keyboard} from 'react-native'
 import COLOR from '../constants/colors'
 
-export const InputField = ({onAddItem, placeholder}) => {
+export const InputField = ({onAddItem, placeholder, defaultValue}) => {
 
-    const [itemValue, setItemValue] = useState('');
+    const [itemValue, setItemValue] = useState(typeof defaultValue !== 'undefined' ? defaultValue : '');
 
     const pressHandler = () => {
         if(itemValue.trim()){
@@ -26,6 +26,7 @@ export const InputField = ({onAddItem, placeholder}) => {
                             placeholder={placeholder}
                             value={itemValue}
                             onChangeText={(itemValue)=>setItemValue(itemValue)}
+                            defaultValue={defaultValue}
                         />
                     </View>
                     <View style={styles.button}>

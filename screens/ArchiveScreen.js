@@ -4,7 +4,8 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
 import { Feather } from '@expo/vector-icons';
-import COLOR from '../constants/colors'
+import NothingFound from '../components/NothingFound';
+import COLOR from '../constants/colors';
 
 const ArchiveScreen = props => {
     const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const ArchiveScreen = props => {
                                 color={data.item.done === 1 ? COLOR.greenColor : COLOR.greyColor}  
                                 style={styles.icon} />
                     </TouchableOpacity> */}
-                <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
+                <View style={styles.todoTitle}><Text style={{fontFamily: 'open-sans'}}>{data.item.title}</Text></View>
                 <View style={styles.iconsContainer}>
                 </View>
             </View>
@@ -95,6 +96,7 @@ const ArchiveScreen = props => {
             <View style={styles.headerContainer}>
             </View>
             <View style={styles.contentContainer}>
+            {(todoItems.length < 1) ? (<NothingFound message="There is no archived task yet" />) : null}
                 <SwipeListView
                         data={todoItems}
                         renderItem={renderItem}
@@ -137,6 +139,7 @@ const styles = StyleSheet.create({
     },
     backTextWhite: {
         color: '#FFF',
+        fontFamily: 'open-sans',
     },
     rowFront: {
         alignItems: 'flex-start',
@@ -150,10 +153,10 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     rowFrontImportant: {
-        borderBottomColor: COLOR.orangeColor,
-        borderColor: COLOR.orangeColor,
+        borderBottomColor: COLOR.redColor,
+        borderColor: COLOR.redColor,
         borderWidth: 1,
-        backgroundColor: COLOR.orangeHighlight,
+        backgroundColor: COLOR.redHighlightColor,
         borderRadius: 10,
     },
     rowFrontDone: {

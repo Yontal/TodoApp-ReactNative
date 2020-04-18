@@ -3,16 +3,20 @@ import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight, 
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { InputField } from '../components/InputField';
+import NothingFound from '../components/NothingFound';
 import TodoItem from '../models/TodoItem';
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
-import COLOR from '../constants/colors'
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import ProgressBar from '../components/ProgressBar';
+import COLOR from '../constants/colors';
 
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
     const todoItems = useSelector(state => state.todoItems.todoItems.filter(todo => todo.archive !== 1));
+    const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
+    const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
 
  //   const todoItems = allTodoItems.filter(todo => todo.archive !== 1)
 
@@ -64,6 +68,10 @@ const ItemsListScreen = props => {
         dispatch(updateTodo(todo));
     }
     
+    const itemPressHandler = task => {
+        props.navigation.navigate({routeName: 'Item', params: {task: task}})
+    }
+    
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
@@ -85,19 +93,27 @@ const ItemsListScreen = props => {
         <TouchableHighlight
             style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
             underlayColor={'#AAA'}
+            onPress={() => itemPressHandler(data.item)}
         >
             <View style={styles.rowFrontInner}>
                 <TouchableOpacity
                         onPress={() => {markAsDone(data.item)}}>
-                            <Feather 
-                                name="check-circle" 
+                            {(data.item.done === 1) ? (<MaterialCommunityIcons 
+                                name="checkbox-marked-circle" 
                                 size={23}
-                                color={data.item.done === 1 ? COLOR.greenColor : COLOR.greyColor}  
-                                style={styles.icon} />
+                                color={COLOR.greenColor}  
+                                style={styles.icon} />)
+                            :
+                            (<MaterialCommunityIcons 
+                                name="checkbox-blank-circle-outline" 
+                                size={23}
+                                color={COLOR.greyColor}  
+                                style={styles.icon} />)}
                     </TouchableOpacity>
-                <View style={styles.todoTitle}><Text>{data.item.title}</Text></View>
-                <View style={styles.iconsContainer}>
-                </View>
+                    <View style={styles.rowFrontInnerInner}>
+                        <View style={styles.todoTitle}><Text style={{fontFamily: 'open-sans'}}>{data.item.title}</Text></View>
+                        <View><Text style={{fontFamily: 'open-sans'}}>{data.item.deadline !== '' ? 'Deadline: ' + (new Date(data.item.deadline)).toLocaleDateString() : null}</Text></View>
+                    </View>
             </View>
         </TouchableHighlight>
     );
@@ -126,7 +142,7 @@ const ItemsListScreen = props => {
                 }
             }
             >
-                <Text style={styles.backTextWhite}>Mark!</Text>
+                <Text style={styles.backTextWhite}>Important</Text>
             </TouchableOpacity>
         </View>)
 
@@ -135,6 +151,7 @@ const ItemsListScreen = props => {
             <View style={styles.headerContainer}/>        
                 <InputField onAddItem={addItem} placeholder="What need to be done?" />
                 <View style={styles.contentContainer}>
+                    {(todoItems.length < 1) ? (<NothingFound message="There is no tasks yet" />) : null}
                     <SwipeListView
                             data={todoItems}
                             renderItem={renderItem}
@@ -155,11 +172,19 @@ const ItemsListScreen = props => {
             {/* <KeyboardAvoidingView style={styles.inputTodoContainer} keyboardVerticalOffset={30} enabled="true"> */}
          
             {/* </KeyboardAvoidingView> */}
+            <View style={styles.progress}>
+                <ProgressBar tasks={todoItems} />
+            </View>
         </View>
         );
 }
 
 const styles = StyleSheet.create({
+    progress:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
     clear:{
         position: 'absolute',
         width: 50,
@@ -193,6 +218,7 @@ const styles = StyleSheet.create({
     },
     backTextWhite: {
         color: '#FFF',
+        fontFamily: 'open-sans',
     },
     rowFront: {
         alignItems: 'flex-start',
@@ -206,10 +232,10 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     rowFrontImportant: {
-        borderBottomColor: COLOR.orangeColor,
-        borderColor: COLOR.orangeColor,
+        borderBottomColor: COLOR.redColor,
+        borderColor: COLOR.redColor,
         borderWidth: 1,
-        backgroundColor: COLOR.orangeHighlight,
+        backgroundColor: COLOR.redHighlightColor,
         borderRadius: 10,
     },
     rowFrontDone: {
@@ -226,6 +252,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
+    rowFrontInnerInner: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     iconsContainer: {
         flexDirection: 'row',
         minWidth: '15%',
@@ -237,7 +268,7 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     todoTitle: {
-        maxWidth: '80%',
+        maxWidth: '60%',
     },
     rowBack: {
         alignItems: 'center',
@@ -263,7 +294,7 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     backRightBtnRight: {
-        backgroundColor: COLOR.orangeColor,
+        backgroundColor: COLOR.redColor,
         right: 0,
         borderRadius: 15,
     }
