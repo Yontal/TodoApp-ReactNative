@@ -1,16 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight, KeyboardAvoidingView, Animated, useWindowDimensions } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { InputField } from '../components/InputField';
 import NothingFound from '../components/NothingFound';
 import TodoItem from '../models/TodoItem';
+import TodoItemView from '../components/TodoItemView'
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { connect } from 'react-redux';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 import COLOR from '../constants/colors';
 
+const SlideView = (props) => {
+    const slideAnim = useRef(new Animated.Value(props.initialValue)).current  // Initial value for opacity: 0
+  
+    React.useEffect(() => {
+      Animated.timing(
+        slideAnim,
+        {
+          toValue: props.open ? 150 : 0,
+          duration: 3000,
+        }
+      ).start();
+    })
+  
+    return (
+      <Animated.View                 // Special animatable View
+        style={{
+          ...props.style,
+          height: slideAnim,         // Bind opacity to animated value
+        }}
+      >
+        {props.children}
+      </Animated.View>
+    );
+  }
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
@@ -29,7 +54,7 @@ const ItemsListScreen = props => {
         dispatch(pullTodo());
     }, [dispatch])
 
-
+    const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
         const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories, false);
         setIsAddMode(false);
@@ -88,63 +113,92 @@ const ItemsListScreen = props => {
     const onRowDidOpen = rowKey => {
         // console.log('This row opened', rowKey);
     };
-    
-    const renderItem = data => (
-        <TouchableHighlight
-            style={data.item.done === 1 ? {...styles.rowFront, ...styles.rowFrontDone} : (data.item.important === 1 ? {...styles.rowFront, ...styles.rowFrontImportant} : styles.rowFront) }
-            underlayColor={'#AAA'}
-            onPress={() => itemPressHandler(data.item)}
-        >
-            <View style={styles.rowFrontInner}>
-                <TouchableOpacity
-                        onPress={() => {markAsDone(data.item)}}>
-                            {(data.item.done === 1) ? (<MaterialCommunityIcons 
-                                name="checkbox-marked-circle" 
-                                size={23}
-                                color={COLOR.greenColor}  
-                                style={styles.icon} />)
-                            :
-                            (<MaterialCommunityIcons 
-                                name="checkbox-blank-circle-outline" 
-                                size={23}
-                                color={COLOR.greyColor}  
-                                style={styles.icon} />)}
-                    </TouchableOpacity>
-                    <View style={styles.rowFrontInnerInner}>
-                        <View style={styles.todoTitle}><Text style={{fontFamily: 'open-sans'}}>{data.item.title}</Text></View>
-                        <View><Text style={{fontFamily: 'open-sans'}}>{data.item.deadline !== '' ? 'Deadline: ' + (new Date(data.item.deadline)).toLocaleDateString() : null}</Text></View>
-                    </View>
-            </View>
-        </TouchableHighlight>
+//     <View>
+//     <TouchableHighlight
+//       style={
+//         data.item.done === 1
+//           ? { ...styles.rowFront, ...styles.rowFrontDone }
+//           : data.item.important === 1
+//           ? { ...styles.rowFront, ...styles.rowFrontImportant }
+//           : styles.rowFront
+//       }
+//       underlayColor={"#AAA"}
+//       onPress={() => itemPressHandler(data.item)}
+//     >
+//       <View style={styles.rowFrontInner}>
+//         <TouchableOpacity
+//           onPress={() => {setIndexToAnimate(data.item.id)
+//             markAsDone(data.item);
+//           }}
+//         >
+//           {data.item.done === 1 ? (
+//             <MaterialCommunityIcons
+//               name="checkbox-marked-circle"
+//               size={23}
+//               color={COLOR.greenColor}
+//               style={styles.icon}
+//             />
+//           ) : (
+//             <MaterialCommunityIcons
+//               name="checkbox-blank-circle-outline"
+//               size={23}
+//               color={COLOR.greyColor}
+//               style={styles.icon}
+//             />
+//           )}
+//         </TouchableOpacity>
+//         <View style={styles.rowFrontInnerInner}>
+//           <View style={styles.todoTitle}>
+//             <Text style={{ fontFamily: "open-sans" }}>
+//               {data.item.title}
+//             </Text>
+//           </View>
+//           <View>
+//             <Text style={{ fontFamily: "open-sans" }}>
+//               {data.item.deadline !== ""
+//                 ? "Deadline: " +
+//                   new Date(data.item.deadline).toLocaleDateString()
+//                 : null}
+//             </Text>
+//           </View>
+//         </View>
+//       </View>
+//     </TouchableHighlight>
+//     <SlideView initialValue={data.item.done === 1 ? 0 : 150} open={data.item.done === 1 ? true : false} />
+//   </View>
+    const renderItem = (data) => (
+      <TodoItemView item={data.item} markAsDone={markAsDone} markAsImportant={markAsImportant} markAsArchived={markAsArchived} itemPressHandler={itemPressHandler} />
     );
     
+    
     const renderHiddenItem = (data, rowMap) => (
-        <View style={styles.rowBack}>
-            <Text></Text>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnLeft]}
-                onPress={() => {
-                    deleteRow(rowMap, data.item.id);
-                    markAsArchived(data.item);
-                    }
-                }
-            >
-                <Text style={styles.backTextWhite}>Archive</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => {
-                    closeRow(rowMap, data.item.id);
-                    markAsImportant(data.item);
-                    //     props.navigation.navigate({routeName: 'Item', params: {
-                    //         todo: data.item,
-                    // }})
-                }
+<View style={styles.rowBack}>
+    <Text></Text>
+    <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        onPress={() => {
+            deleteRow(rowMap, data.item.id);
+            markAsArchived(data.item);
             }
-            >
-                <Text style={styles.backTextWhite}>Important</Text>
-            </TouchableOpacity>
-        </View>)
+        }
+    >
+        <Text style={styles.backTextWhite}>Delete</Text>
+    </TouchableOpacity>
+    {/* <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        onPress={() => {
+            closeRow(rowMap, data.item.id);
+            markAsImportant(data.item);
+            //     props.navigation.navigate({routeName: 'Item', params: {
+            //         todo: data.item,
+            // }})
+        }
+    }   
+    >
+        <Text style={styles.backTextWhite}>Important</Text>
+    </TouchableOpacity> */}
+</View>
+)
 
     return(
         <View style={styles.mainContainer}>
@@ -157,7 +211,7 @@ const ItemsListScreen = props => {
                             renderItem={renderItem}
                             renderHiddenItem={renderHiddenItem}
                             leftOpenValue={75}
-                            rightOpenValue={-155}
+                            rightOpenValue={-80}
                             previewRowKey={'0'}
                             previewOpenValue={-40}
                             previewOpenDelay={3000}
@@ -224,7 +278,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginHorizontal: 5,
         marginVertical: 2,
-        paddingHorizontal: 15,
+        paddingHorizontal: 5,
         backgroundColor: COLOR.whiteColor,
         borderBottomColor: COLOR.greyColor,
         borderBottomWidth: 1,
@@ -278,6 +332,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
+        maxHeight: 50,
     },
     backRightBtn: {
         alignItems: 'center',
@@ -285,6 +340,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         position: 'absolute',
         top: 0,
+        height: 45,
         width: 75,
     },
     backRightBtnLeft: {
