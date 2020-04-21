@@ -8,7 +8,7 @@ export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
 export const insertCategory = (category) => {
     return async dispatch => {
         try{
-            const response = await addCategory(category.title);
+            const response = await addCategory(category.title, category.color);
             dispatch({
                 type: INSERT_CATEGORY,
                 category: category

@@ -78,6 +78,45 @@ const archiveStackNavigator = createStackNavigator({
     }
 })
 
+const categoriesStackNavigator = createStackNavigator(
+  {
+    CategoriesList: {
+      screen: CategoriesListScreen,
+      navigationOptions: {
+        title: "Categories",
+        headerStyle: {
+          backgroundColor: COLORS.accentColor,
+        },
+        headerTintColor: "white",
+      },
+    },
+      Category: {
+        screen: CategoryScreen,
+        navigationOptions: {
+          title: "Category",
+          headerTitleStyle: {
+            textAlign: "left",
+            flex: 1,
+            fontFamily: "open-sans-bold",
+          },
+          headerTintColor: "white",
+        },
+      },
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: COLORS.primaryColor,
+      },
+      headerTitleStyle: {
+        textAlign: "center",
+        flex: 1,
+        fontFamily: "open-sans-bold",
+      },
+    },
+  }
+);
+
 const BottomTabNavRouteConfig = {
     Todos:{
         screen: todosStackNavigator,
@@ -87,14 +126,22 @@ const BottomTabNavRouteConfig = {
             tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Tasks</Text>)
         }
     },
-    Categories: {
+    Archive: {
         screen: archiveStackNavigator,
         navigationOptions: {
             tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
             tabBarColor: COLORS.accentColor,
             tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Archive</Text>)
         }
-    }  
+    },
+    Categories: {
+        screen: categoriesStackNavigator,
+        navigationOptions: {
+            tabBarIcon: (tabInfo) => {return <Feather name="tag" size={25} color={tabInfo.tintColor}  />},
+            tabBarColor: COLORS.accentColor,
+            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Categories</Text>)
+        }
+    },  
 }
 
 const BottomTabNavigator = createMaterialBottomTabNavigator(BottomTabNavRouteConfig,{

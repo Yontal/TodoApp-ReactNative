@@ -7,54 +7,57 @@ import NothingFound from '../components/NothingFound';
 import TodoItem from '../models/TodoItem';
 import TodoItemView from '../components/TodoItemView'
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
+import { pullCategory } from '../store/actions/category';
 import { connect } from 'react-redux';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 import COLOR from '../constants/colors';
 
-const SlideView = (props) => {
-    const slideAnim = useRef(new Animated.Value(props.initialValue)).current  // Initial value for opacity: 0
+// const SlideView = (props) => {
+//     const slideAnim = useRef(new Animated.Value(props.initialValue)).current  // Initial value for opacity: 0
   
-    React.useEffect(() => {
-      Animated.timing(
-        slideAnim,
-        {
-          toValue: props.open ? 150 : 0,
-          duration: 3000,
-        }
-      ).start();
-    })
+//     React.useEffect(() => {
+//       Animated.timing(
+//         slideAnim,
+//         {
+//           toValue: props.open ? 150 : 0,
+//           duration: 3000,
+//         }
+//       ).start();
+//     })
   
-    return (
-      <Animated.View                 // Special animatable View
-        style={{
-          ...props.style,
-          height: slideAnim,         // Bind opacity to animated value
-        }}
-      >
-        {props.children}
-      </Animated.View>
-    );
-  }
+//     return (
+//       <Animated.View                 // Special animatable View
+//         style={{
+//           ...props.style,
+//           height: slideAnim,         // Bind opacity to animated value
+//         }}
+//       >
+//         {props.children}
+//       </Animated.View>
+//     );
+//   }
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
     const todoItems = useSelector(state => state.todoItems.todoItems.filter(todo => todo.archive !== 1));
+    const categories = useSelector(state => state.categories.categories);
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
 
  //   const todoItems = allTodoItems.filter(todo => todo.archive !== 1)
 
-    const Clear = props => { 
-        return (<TouchableOpacity style={styles.clear} onPress={() => {}}><Text>X</Text></TouchableOpacity>)  
-    }
+    // const Clear = props => { 
+    //     return (<TouchableOpacity style={styles.clear} onPress={() => {}}><Text>X</Text></TouchableOpacity>)  
+    // }
     const [isAddMode, setIsAddMode] = useState(false);
 
     useEffect(() => {
         dispatch(pullTodo());
+        dispatch(pullCategory());
     }, [dispatch])
 
-    const [indexToAnimate, setIndexToAnimate] = useState(null);
+    // const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
         const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories, false);
         setIsAddMode(false);
@@ -167,7 +170,7 @@ const ItemsListScreen = props => {
 //     <SlideView initialValue={data.item.done === 1 ? 0 : 150} open={data.item.done === 1 ? true : false} />
 //   </View>
     const renderItem = (data) => (
-      <TodoItemView item={data.item} markAsDone={markAsDone} markAsImportant={markAsImportant} markAsArchived={markAsArchived} itemPressHandler={itemPressHandler} />
+      <TodoItemView item={data.item} markAsDone={markAsDone} markAsImportant={markAsImportant} markAsArchived={markAsArchived} itemPressHandler={itemPressHandler} categories={categories.find(cat => cat.title === data.item.categories[0])} />
     );
     
     

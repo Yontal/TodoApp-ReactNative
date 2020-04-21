@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, ImageEditor } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTodo, pullTodoById } from '../store/actions/todo';
+import { pullCategory } from '../store/actions/category';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
+import Picker from '../components/Picker';
 import {InputField} from '../components/InputField';
 //import { Transition, Transitioning } from "react-native-reanimated";
 
@@ -28,8 +30,15 @@ const ItemScreen = props => {
     const [todo, setTodo] = useState(navigation.getParam('task'));
     const [date, setDate] = useState();
     const [isChanging, setIsChanging] = useState(false);
-
+    const categories = useSelector(state => state.categories.categories);
     const dispatch = useDispatch();
+
+    const [isAddMode, setIsAddMode] = useState(false);
+
+    useEffect(() => {
+        dispatch(pullCategory());
+    }, [dispatch])
+
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
@@ -107,6 +116,10 @@ const ItemScreen = props => {
         setIsChanging(true);
       }
 
+      const setCategory = (category) => {
+        setTodo(prevTodo => ({...prevTodo, categories: [category]}))
+      }
+
     return(
         <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}} >
         {/* <Transitioning.View
@@ -118,8 +131,9 @@ const ItemScreen = props => {
             <View>
                 <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Task: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.title}</Text></View>
                 <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Importance: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.important == 1 ? "high" : "low"}</Text></View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Status: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.done == 1 ? "done" : "not yet done"}</Text></View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Deadline: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not yet set"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Status: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.done == 1 ? "done" : "in progress"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Deadline: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not set"}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Category: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.categories[0] !== 'default' ? todo.categories : 'not set'}</Text></View>
             </View>
         ) : (
             <View style={{alignItems: 'center'}}>
@@ -133,6 +147,7 @@ const ItemScreen = props => {
                 </View>
                 <SwitchButton value={todo.important == 1 ? true : false} label="Importance:" onToggle={() => setImportance()} />
                 {/* <SwitchButton value={todo.done == 1 ? true : false} label="Status:" onToggle={() => setStatus()} /> */}
+                <Picker label="Category" categories={categories} item={todo} onValueChange={setCategory} />
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <MainButton styles={{width: Dimensions.get('window').width*0.9, paddingHorizontal: 5}} onPressHandler={setDeadline}>{todo.deadline === '' ? 'Set deadline' : 'Deadline: ' + ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString())}</MainButton>
                 </View>
@@ -153,6 +168,12 @@ const ItemScreen = props => {
         {/* </Transitioning.View> */}
         </TouchableWithoutFeedback>
     );
+}
+
+ItemScreen.navigationOptions = (navigationData) => {
+    return {
+        headerTitle: navigationData.navigation.getParam('task').title,
+    }
 }
 
 const styles = StyleSheet.create({

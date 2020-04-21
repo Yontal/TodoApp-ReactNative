@@ -28,9 +28,10 @@ const CategoriesListScreen = props => {
         dispatch(insertCategory(newCategory));
     }
 
-    const selectCategoryHandler = (title) => {
-        dispatch(filterTodos(title));
-        props.navigation.navigate({routeName: 'ItemsList', params: {title:title}});
+    const selectCategoryHandler = (category) => {
+        // dispatch(filterTodos(title));
+        
+        props.navigation.navigate({routeName: 'Category', params: {category: category}});
     }
 
     return(
@@ -44,7 +45,7 @@ const CategoriesListScreen = props => {
             <FlatList 
             data={categories}
             renderItem={data => (
-                <TouchableNativeFeedback onPress={() => {selectCategoryHandler(data.item.title)}}>
+                <TouchableNativeFeedback onPress={() => {selectCategoryHandler(data.item)}}>
                     <View style={styles.rowFront}>
                         <Text>{data.item.title}</Text>
                     </View>

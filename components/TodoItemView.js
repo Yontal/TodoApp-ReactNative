@@ -120,7 +120,13 @@ const TodoItemView = props => {
             justifyContent: "space-between",
             alignItems: "center",
             width: useWindowDimensions.width,
-            borderBottomColor: props.item.important === 1 ? COLOR.redColor : (props.item.done === 1 ? COLOR.greenColor : COLOR.greyColor),
+            borderBottomColor:
+              props.item.important === 1
+                ? COLOR.redColor
+                : props.item.done === 1
+                ? COLOR.greenColor
+                : COLOR.greyColor,
+            backgroundColor: props.categories ? props.categories.color : COLOR.whiteColor,
           }}
         >
           <View
@@ -159,15 +165,22 @@ const TodoItemView = props => {
                 alignItems: "center",
                 flexDirection: "row",
                 justifyContent: "space-between",
-
               }}
             >
-              <View>
-                <Text>Category</Text>
-              </View>
-              <View>
-                <Text>Deadline:</Text>
-              </View>
+              {props.item.categories[0] !== "default" ? (
+                <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                  <MaterialCommunityIcons name="tag" size={18} color={props.item.important === 1 ? COLOR.redColor : COLOR.blackColor } />
+                  <Text>{props.item.categories[0]}</Text>
+                </View>
+              ) : null}
+              {props.item.deadline !== "" ? (
+                <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
+                  <MaterialCommunityIcons name="timelapse" size={18} />
+                  <Text>
+                    {new Date(props.item.deadline).toLocaleDateString()}
+                  </Text>
+                </View>
+              ) : null}
             </View>
           </View>
           <View

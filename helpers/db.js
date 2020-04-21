@@ -38,7 +38,7 @@ export const initDeadlineColumn = () => {
 export const initCategoriesTable = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL)',
+            tx.executeSql('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, color TEXT DEFAULT "white")',
                     [],
                     () => {
                         resolve();
@@ -71,11 +71,11 @@ export const addTodo = (title, important, done, categories, archive, deadline) =
     return promise;
 }
 
-export const addCategory = (title) => {
+export const addCategory = (title, color) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO categories (title) VALUES (?);',
-                [title],
+            tx.executeSql('INSERT INTO categories (title, color) VALUES (?,?);',
+                [title, color],
                 (_, result) => {
                     resolve(result);
                 },
@@ -187,8 +187,8 @@ export const correctTodo = (todo) => {
 export const correctCategory = (category) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('UPDATE categories SET title=? WHERE id=?;',
-                [category.title, parseInt(category.id)],
+            tx.executeSql('UPDATE categories SET title=?, color=? WHERE id=?;',
+                [category.title, category.color, parseInt(category.id)],
                 (_, result) => {
                     resolve(result);
                 },
