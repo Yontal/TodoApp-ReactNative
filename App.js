@@ -10,7 +10,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
-import { initTodoTable, initDeadlineColumn, initCategoriesTable } from './helpers/db'
+import { initTodoTable, initDeadlineColumn, initNoteColumn, initCategoriesTable } from './helpers/db'
 
 useScreens();
 initTodoTable()
@@ -27,6 +27,14 @@ initTodoTable()
   })
   .catch(err => {
     console.log('deadline column is already exist')
+    console.log(err)
+  });
+  initNoteColumn()  
+  .then(() => {
+    console.log('note column was added')
+  })
+  .catch(err => {
+    console.log('note column is already exist')
     console.log(err)
   });
   initCategoriesTable()

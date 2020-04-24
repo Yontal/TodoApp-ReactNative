@@ -4,10 +4,12 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
+import { TextInput } from 'react-native-paper';
 
 const MoreDetails = props => {
   const slideAnim = useRef(new Animated.Value(props.initialValue)).current 
   const fadeAnim = useRef(new Animated.Value(0)).current
+  const [editNote, setEditNote] = useState(false)
   
     useEffect(() => {
       Animated.timing(
@@ -26,29 +28,48 @@ const MoreDetails = props => {
       ).start();
     }, [props.initialValue])
   return (
-    <Animated.View
-      style={{height: slideAnim,
-      }}
-    >
+    <Animated.View style={{ height: slideAnim }}>
       <Animated.View
         style={{
           opacity: fadeAnim,
-         // display: props.open ? "flex" : "none",
+          // display: props.open ? "flex" : "none",
           width: "100%",
           height: "100%",
           justifyContent: "space-between",
           padding: 5,
           marginHorizontal: 5,
-          borderBottomColor: slideAnim === 0 ? 'rgba(0,0,0,0)' : COLOR.greyColor, 
+          borderBottomColor:
+            slideAnim === 0 ? "rgba(0,0,0,0)" : COLOR.greyColor,
           borderBottomWidth: 1,
         }}
       >
-        <View>
-          <Text>
-            The description of the item and its delails will be displayes here a
-            little bit later...
-            The description of the item and its delails will be displayes here a
-          </Text>
+        <View
+          style={{
+            marginBottom: 5,
+            marginRight: 10,
+            padding: 5,
+            borderColor: COLOR.greyColor,
+            borderWidth: 1,
+            borderRadius: 5,
+            flex: 1,
+          }}
+        >
+          {!editNote ? (
+            <View>
+              <Text>{props.item.note}</Text>
+            </View>
+          ) : (
+            <TextInput style={{backgroundColor: COLOR.whiteColor, borderWidth: 0}} autoCorrect={false} multiline={true} underlineColorAndroid="rgba(0,0,0,0)" underlineColor="rgba(0,0,0,0)" textAlignVertical="top" value={props.item.note} />
+          )}
+          <View style={{ position: "absolute", bottom: 5, right: 5 }}>
+            <TouchableOpacity
+              onPress={() => {
+                setEditNote(!editNote);
+              }}
+            >
+              <MaterialCommunityIcons name="square-edit-outline" size={28} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <MainButton styles={{ width: useWindowDimensions().width * 0.4 }}>

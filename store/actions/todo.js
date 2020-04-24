@@ -10,7 +10,7 @@ export const PULL_TODO = 'PULL_TODO'
 export const insertTodo = (todo) => {
     return async dispatch => {
         try{
-            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline);
+            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note);
             dispatch({
                 type: INSERT_TODO,
                 todo: todo

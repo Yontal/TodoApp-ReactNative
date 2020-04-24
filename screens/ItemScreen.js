@@ -134,6 +134,7 @@ const ItemScreen = props => {
                 <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Status: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.done == 1 ? "done" : "in progress"}</Text></View>
                 <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Deadline: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not set"}</Text></View>
                 <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Category: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.categories[0] !== 'default' ? todo.categories : 'not set'}</Text></View>
+                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Note: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.note !== '' ? todo.note : 'not set'}</Text></View>
             </View>
         ) : (
             <View style={{alignItems: 'center'}}>
@@ -150,6 +151,14 @@ const ItemScreen = props => {
                 <Picker label="Category" categories={categories} item={todo} onValueChange={setCategory} />
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <MainButton styles={{width: Dimensions.get('window').width*0.9, paddingHorizontal: 5}} onPressHandler={setDeadline}>{todo.deadline === '' ? 'Set deadline' : 'Deadline: ' + ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString())}</MainButton>
+                </View>
+                <View style={styles.inputArea}>
+                    <TextInput 
+                            value={todo.note}
+                            onChangeText={(todoNewNote)=>setTodo(prevTodo => ({...prevTodo, note: todoNewNote}))}
+                            defaultValue={todo.note}
+                            style={{width: '100%'}}
+                        />
                 </View>
             </View>)
             }

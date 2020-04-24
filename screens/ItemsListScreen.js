@@ -62,7 +62,7 @@ const ItemsListScreen = props => {
         const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories, false);
         setIsAddMode(false);
         dispatch(insertTodo(newTodo));
-        dispatch(pullTodo())
+        dispatch(pullTodo());
     }
     
     const onRemove = (id) =>{
