@@ -185,7 +185,7 @@ const ItemsListScreen = props => {
             }
         }
     >
-        <Text style={styles.backTextWhite}>Delete</Text>
+        <Text style={{...styles.backTextWhite, fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5 }}>Delete</Text>
     </TouchableOpacity>
     {/* <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
