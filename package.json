@@ -10,6 +10,7 @@
   "dependencies": {
     "@react-native-community/datetimepicker": "2.1.0",
     "expo": "~36.0.0",
+    "expo-push-notification-helper": "^0.4.0",
     "expo-sqlite": "~8.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",

@@ -5,12 +5,26 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
 import { TextInput } from 'react-native-paper';
+import { Notifications } from 'expo';
+import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
 
 const MoreDetails = props => {
   const slideAnim = useRef(new Animated.Value(props.initialValue)).current 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const [editNote, setEditNote] = useState(false)
-  
+
+  const reminderHandler = () => {
+    // debugger;
+    // console.log(props.item.deadline);
+    // console.log(localNotification);
+    // console.log(schedulingOptions);
+    //   // let t = new Date(props.item.deadline);
+    //   let t = new Date();
+    //   t.setSeconds(t.getSeconds() + 10);  
+    schedulingOptions.time = new Date(props.item.deadline);
+    Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
+  }
+
     useEffect(() => {
       Animated.timing(
         slideAnim,
@@ -72,7 +86,7 @@ const MoreDetails = props => {
           </View>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <MainButton styles={{ width: useWindowDimensions().width * 0.4 }}>
+          <MainButton styles={{ width: useWindowDimensions().width * 0.4 }} onPressHandler={reminderHandler}>
             Remind me
           </MainButton>
           <MainButton
