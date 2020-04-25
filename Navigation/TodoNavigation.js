@@ -126,14 +126,14 @@ const BottomTabNavRouteConfig = {
             tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Tasks</Text>)
         }
     },
-    Archive: {
-        screen: archiveStackNavigator,
-        navigationOptions: {
-            tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
-            tabBarColor: COLORS.accentColor,
-            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Archive</Text>)
-        }
-    },
+    // Archive: {
+    //     screen: archiveStackNavigator,
+    //     navigationOptions: {
+    //         tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
+    //         tabBarColor: COLORS.accentColor,
+    //         tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Archive</Text>)
+    //     }
+    // },
     Categories: {
         screen: categoriesStackNavigator,
         navigationOptions: {

@@ -70,7 +70,7 @@ const MoreDetails = props => {
         >
           {!editNote ? (
             <View>
-              <Text>{props.item.note}</Text>
+              <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25 }}>{props.item.note}</Text>
             </View>
           ) : (
             <TextInput style={{backgroundColor: COLOR.whiteColor, borderWidth: 0}} autoCorrect={false} multiline={true} underlineColorAndroid="rgba(0,0,0,0)" underlineColor="rgba(0,0,0,0)" textAlignVertical="top" value={props.item.note} />
@@ -155,13 +155,7 @@ const TodoItemView = props => {
             justifyContent: "space-between",
             alignItems: "center",
             width: useWindowDimensions.width,
-            borderBottomColor:
-              props.item.important === 1
-                ? COLOR.redColor
-                : props.item.done === 1
-                ? COLOR.greenColor
-                : COLOR.greyColor,
-            backgroundColor: props.categories ? props.categories.color : COLOR.whiteColor,
+            borderBottomColor: COLOR.primaryColor,            
           }}
         >
           <View
@@ -192,7 +186,7 @@ const TodoItemView = props => {
               alignItems: "flex-start",
             }}
           >
-            <Text>{props.item.title}</Text>
+            <Text style={{ fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.title}</Text>
             <View
               style={{
                 flex: 1,
@@ -204,14 +198,17 @@ const TodoItemView = props => {
             >
               {props.item.categories[0] !== "default" ? (
                 <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-                  <MaterialCommunityIcons name="tag" size={18} color={props.item.important === 1 ? COLOR.redColor : COLOR.blackColor } />
-                  <Text>{props.item.categories[0]}</Text>
+                  {props.item.important === 1 ? 
+                  <MaterialIcons name="priority-high" size={18} color={COLOR.redColor} /> : null
+                  }
+                  <MaterialCommunityIcons name="tag" size={18} color={props.categories ? props.categories.color : COLOR.whiteColor } />
+                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.item.categories[0]}</Text>
                 </View>
               ) : null}
               {props.item.deadline !== "" ? (
                 <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
                   <MaterialCommunityIcons name="timelapse" size={18} />
-                  <Text>
+                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25 }}>
                     {new Date(props.item.deadline).toLocaleDateString()}
                   </Text>
                 </View>
