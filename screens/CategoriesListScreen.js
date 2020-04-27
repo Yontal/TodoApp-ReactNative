@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { InputField } from '../components/InputField';
 import NothingFound from '../components/NothingFound';
-
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderButton';
 import COLOR from '../constants/colors';
 import { insertCategory, pullCategory, removeCategory } from '../store/actions/category';
 import Category from '../models/Category';
@@ -197,5 +198,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     }
 })
+
+CategoriesListScreen.navigationOptions = (navData) => {
+    return {
+      headerLeft: (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            onPress={() => navData.navigation.toggleDrawer()}
+            iconName="menu"
+            title="Menu"
+          />
+        </HeaderButtons>
+      ),
+      headerRight: (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButtonEmpty}>
+          <Item
+            onPress={() => null}
+            iconName="menu"
+            title="Menu"
+          />
+        </HeaderButtons>
+      ),
+    };
+  }
 
 export default CategoriesListScreen;

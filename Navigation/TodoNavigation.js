@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import {createAppContainer, createStackNavigator} from 'react-navigation';
+import {createAppContainer, createStackNavigator, createDrawerNavigator} from 'react-navigation';
 import { createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import ItemListsScreen from '../screens/ItemsListScreen';
 import AddItemScreen from '../screens/AddItemScreen';
@@ -17,11 +17,10 @@ const todosStackNavigator = createStackNavigator({
     ItemsList: {
         screen: ItemListsScreen,
         navigationOptions:{
-            title: 'Task manager',
+            title: 'Task Runner',
             // headerTitleStyle: { justifyContent: 'center' },
             // headerTitleStyle: { 
-            //     textAlign:"center", 
-            //     flex:1 
+            //     textAlign: 'left', 
             // },
             headerStyle: {
                 backgroundColor: COLORS.primaryColor
@@ -160,4 +159,25 @@ const BottomTabNavigator = createMaterialBottomTabNavigator(BottomTabNavRouteCon
     sceneAnimationEnabled: false,
 })
 
-export default createAppContainer(BottomTabNavigator)
+const DrawerNavigator = createDrawerNavigator(
+  {
+    MealFavs: {
+      screen: BottomTabNavigator,
+      navigationOptions: { drawerLabel: "All tasks" },
+    },
+  },
+  {
+    hideStatusBar: true,
+    drawerBackgroundColor: "rgba(255,255,255,1)",
+    overlayColor: "rgba(255,255,255,.0)",
+    contentOptions: {
+      activeTintColor: COLORS.whiteColor,
+      activeBackgroundColor: COLORS.primaryColor,
+      labelStyle: {
+        fontFamily: 'open-sans',
+    }
+    },
+  }
+);
+
+export default createAppContainer(DrawerNavigator)

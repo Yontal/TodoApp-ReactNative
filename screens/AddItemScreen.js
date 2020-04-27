@@ -82,7 +82,7 @@ const AddItemScreen = props => {
         }}
       >
         <ScrollView>
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={70}>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={50}>
           <View
             style={{
               ...styles.inputArea,
@@ -115,6 +115,7 @@ const AddItemScreen = props => {
                 fontSize: 16,
                 letterSpacing: 0.5
               }}
+              autoFocus={true}
             />
             <View
               style={{
@@ -235,7 +236,7 @@ const AddItemScreen = props => {
                 </View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
-                    ? "No active reminder"
+                    ? "-- click here to set --"
                     : new Date(todo.deadline).toLocaleDateString() +
                       " " +
                       new Date(todo.deadline).toLocaleTimeString()}
