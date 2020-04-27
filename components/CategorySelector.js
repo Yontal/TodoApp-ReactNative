@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
+import MainButton from '../components/MainButton';
 import COLOR from '../constants/colors';
 
 const Category = props => {
@@ -52,6 +53,27 @@ const CategorySelector = props => {
             />
           )}
         />
+        <MainButton
+          styles={{
+            width: useWindowDimensions().width - 20,
+            borderRadius: 8,
+            margin: 10,
+            backgroundColor: COLOR.whiteColor,
+          }}
+          textStyle={{
+            fontFamily: "open-sans",
+            fontSize: 16,
+            letterSpacing: 1.25,
+            textTransform: "uppercase",
+            color: COLOR.blackColor,
+          }}
+          onPressHandler={() => {
+            props.navigation.navigate("Categories");
+            props.onSelected();
+          }}
+        >
+          Add category
+        </MainButton>
       </View>
     );
 }

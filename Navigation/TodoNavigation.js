@@ -28,7 +28,17 @@ const todosStackNavigator = createStackNavigator({
             },
         }
     },
-    AddItem: AddItemScreen,
+    AddItem: {
+        screen: AddItemScreen,
+        navigationOptions: {
+            title: 'Add task',
+            headerTitleStyle: { 
+                textAlign: "left",
+                flex:1,
+                fontFamily: 'open-sans-bold',
+            },
+        }
+    },
     Item: {
         screen: ItemScreen,
         navigationOptions:{

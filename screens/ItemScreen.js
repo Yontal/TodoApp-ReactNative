@@ -201,6 +201,7 @@ const ItemScreen = props => {
                 categories={categories}
                 todo={todo}
                 onSelectedHandler={setCategory}
+                navigation={props.navigation}
               />
             </Modal>
             <TouchableOpacity

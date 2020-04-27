@@ -11,6 +11,7 @@ import { pullCategory } from '../store/actions/category';
 import { connect } from 'react-redux';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
+import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 
 // const SlideView = (props) => {
@@ -232,6 +233,7 @@ const ItemsListScreen = props => {
             <View style={styles.progress}>
                 <ProgressBar tasks={todoItems} />
             </View>
+            <AddButton onPress={() => {props.navigation.navigate('AddItem')}} />
         </View>
         );
 }
@@ -356,6 +358,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.redColor,
         right: 0,
         borderRadius: 15,
+        marginHorizontal: 2,
     }
 })
 
