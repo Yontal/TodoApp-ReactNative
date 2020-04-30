@@ -14,14 +14,8 @@ const MoreDetails = props => {
   const [editNote, setEditNote] = useState(false)
 
   const reminderHandler = () => {
-    // debugger;
-    // console.log(props.item.deadline);
-    // console.log(localNotification);
-    // console.log(schedulingOptions);
-    //   // let t = new Date(props.item.deadline);
-    //   let t = new Date();
-    //   t.setSeconds(t.getSeconds() + 10);  
     schedulingOptions.time = new Date(props.item.deadline);
+    localNotification.title = props.item.title;
     Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
   }
 
