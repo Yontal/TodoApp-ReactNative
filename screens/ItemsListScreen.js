@@ -9,8 +9,11 @@ import TodoItemView from '../components/TodoItemView'
 import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
 import { pullCategory } from '../store/actions/category';
 import { connect } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderButton';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
+import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 
 // const SlideView = (props) => {
@@ -206,7 +209,7 @@ const ItemsListScreen = props => {
     return(
         <View style={styles.mainContainer}>
             <View style={styles.headerContainer}/>        
-                <InputField onAddItem={addItem} placeholder="What need to be done?" />
+                <InputField onAddItem={addItem} placeholder="Quick add task..." />
                 <View style={styles.contentContainer}>
                     {(todoItems.length < 1) ? (<NothingFound message="There is no tasks yet" />) : null}
                     <SwipeListView
@@ -232,6 +235,7 @@ const ItemsListScreen = props => {
             <View style={styles.progress}>
                 <ProgressBar tasks={todoItems} />
             </View>
+            <AddButton onPress={() => {props.navigation.navigate('AddItem')}} />
         </View>
         );
 }
@@ -335,15 +339,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
-        maxHeight: 50,
+        maxHeight: 80,
     },
     backRightBtn: {
         alignItems: 'center',
-        bottom: 0,
+        bottom: 10,
         justifyContent: 'center',
         position: 'absolute',
-        top: 0,
-        height: 45,
+        top: 10,
+        height: 60,
         width: 75,
     },
     backRightBtnLeft: {
@@ -356,8 +360,32 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.redColor,
         right: 0,
         borderRadius: 15,
+        marginHorizontal: 2,
     }
 })
+
+ItemsListScreen.navigationOptions = (navData) => {
+    return {
+      headerLeft: (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            onPress={() => navData.navigation.toggleDrawer()}
+            iconName="menu"
+            title="Menu"
+          />
+        </HeaderButtons>
+      ),
+      headerRight: (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButtonEmpty}>
+          <Item
+            onPress={() => null}
+            iconName="menu"
+            title="Menu"
+          />
+        </HeaderButtons>
+      ),
+    };
+}
 
 const mapDispatchToProps = dispatch => {
     return{

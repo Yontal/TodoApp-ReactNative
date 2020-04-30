@@ -190,15 +190,15 @@ const TodoItemView = props => {
                 justifyContent: "space-between",
               }}
             >
-              {props.item.categories[0] !== "default" ? (
+              
                 <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                   {props.item.important === 1 ? 
                   <MaterialIcons name="priority-high" size={18} color={COLOR.redColor} /> : null
                   }
+                  {props.item.categories[0] !== "default" ? (<View style={{flexDirection:'row'}}>
                   <MaterialCommunityIcons name="tag" size={18} color={props.categories ? props.categories.color : COLOR.whiteColor } />
-                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.item.categories[0]}</Text>
-                </View>
-              ) : null}
+                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.item.categories[0]}</Text></View>) : null}
+              </View>
               {props.item.deadline !== "" ? (
                 <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
                   <MaterialCommunityIcons name="timelapse" size={18} />
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         borderBottomColor: COLOR.greyColor,
         borderBottomWidth: 1,
         justifyContent: 'center',
-        minHeight: 50,
+        minHeight: 80,
     },
 });
 
