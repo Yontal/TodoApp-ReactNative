@@ -29,7 +29,7 @@ const todoItemsReducer = (state = initialState, action) => {
                     return item
                 }
             });
-            return {...state, todoItems: modifiedTodos, filteredTodos: modifiedTodos}
+            return {...state, filteredTodos: modifiedTodos}
         case FILTER_TODOS:
             if (typeof action.categoryId == "undefined"){
                 const filteredTodos = state.todoItems;
