@@ -188,7 +188,7 @@ const AddItemScreen = props => {
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.categories[0] === "default"
                     ? "-- choose a category --"
-                    : categories.find((cat) => cat.title === todo.categories[0])
+                    : categories.find((cat) => cat.id === todo.categories[0])
                         .title}
                 </Text>
               </View>
@@ -198,7 +198,7 @@ const AddItemScreen = props => {
                     todo.categories[0] === "default"
                       ? COLOR.accentColor
                       : categories.find(
-                          (cat) => cat.title === todo.categories[0]
+                          (cat) => cat.id === todo.categories[0]
                         ).color,
                   borderWidth: 1,
                   height: 15,
@@ -208,7 +208,7 @@ const AddItemScreen = props => {
                     todo.categories[0] === "default"
                       ? COLOR.accentColor
                       : categories.find(
-                          (cat) => cat.title === todo.categories[0]
+                          (cat) => cat.id === todo.categories[0]
                         ).color,
                 }}
               ></View>

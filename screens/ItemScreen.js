@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, TouchableOpacity, useWindowDimensions, Modal, KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateTodo, pullTodoById } from '../store/actions/todo';
+import { updateTodo, pullTodoById, pullTodo } from '../store/actions/todo';
 import { pullCategory } from '../store/actions/category';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
@@ -98,6 +98,7 @@ const ItemScreen = props => {
         setPushNotification();
         dispatch(updateTodo(todo));
         navigation.navigate({routeName: 'ItemsList'});
+        dispatch(pullTodo());
       }
 
       const discardChanges = () => {
