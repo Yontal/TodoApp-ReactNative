@@ -220,9 +220,6 @@ const ItemsListScreen = props => {
         <View style={styles.mainContainer}>
             <View style={styles.headerContainer}/>        
                 <InputField onAddItem={addItem} placeholder="Quick add task..." />
-                <View style={styles.progress}>
-                <ProgressBar tasks={todoItems} />
-            </View>
                 <View style={styles.contentContainer}>
                     {(todoItems.length < 1) ? (<NothingFound message="There is no tasks yet" />) : null}
                     <SwipeListView
@@ -245,7 +242,9 @@ const ItemsListScreen = props => {
             {/* <KeyboardAvoidingView style={styles.inputTodoContainer} keyboardVerticalOffset={30} enabled="true"> */}
          
             {/* </KeyboardAvoidingView> */}
-
+            <View style={styles.progress}>
+                <ProgressBar tasks={todoItems} />
+            </View>
             <AddButton onPress={() => {props.navigation.navigate('AddItem')}} />
         </View>
         );
