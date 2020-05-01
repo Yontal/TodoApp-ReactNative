@@ -10,8 +10,8 @@ import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../st
 import { pullCategory } from '../store/actions/category';
 import { connect } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderButton';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { CustomHeaderButton, CustomHeaderButtonEmpty, ClearFilterHeaderButton } from '../components/HeaderButton';
+import { MaterialIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
@@ -43,7 +43,7 @@ import COLOR from '../constants/colors';
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
-    const todoItems = useSelector(state => state.todoItems.todoItems.filter(todo => todo.archive !== 1));
+    const todoItems = useSelector(state => state.todoItems.filteredTodos.filter(todo => todo.archive !== 1));
     const categories = useSelector(state => state.categories.categories);
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
@@ -78,18 +78,18 @@ const ItemsListScreen = props => {
 
     const markAsImportant = (todo) =>{
         const importantFlag = todo.important === 1 ? 0 : 1;
-        const doneFlag = importantFlag === 1 ? 0 : todo.done;
+        //const doneFlag = importantFlag === 1 ? 0 : todo.done;
         todo.important = importantFlag;
-        todo.done = doneFlag;
+        //todo.done = doneFlag;
         dispatch(updateTodo(todo));
     }
 
     
     const markAsDone = (todo) =>{
         const doneFlag = todo.done === 1 ? 0 : 1;
-        const importantFlag = doneFlag === 1 ? 0 : todo.important;
+        //const importantFlag = doneFlag === 1 ? 0 : todo.important;
         todo.done = doneFlag;
-        todo.important = importantFlag;
+        //todo.important = importantFlag;
         dispatch(updateTodo(todo));
     }
 
@@ -173,24 +173,34 @@ const ItemsListScreen = props => {
 //     <SlideView initialValue={data.item.done === 1 ? 0 : 150} open={data.item.done === 1 ? true : false} />
 //   </View>
     const renderItem = (data) => (
-      <TodoItemView item={data.item} markAsDone={markAsDone} markAsImportant={markAsImportant} markAsArchived={markAsArchived} itemPressHandler={itemPressHandler} categories={categories.find(cat => cat.title === data.item.categories[0])} />
+      <TodoItemView
+        item={data.item}
+        markAsDone={markAsDone}
+        markAsImportant={markAsImportant}
+        markAsArchived={markAsArchived}
+        itemPressHandler={itemPressHandler}
+        onRemove={onRemove}
+        categories={categories.find(
+          (cat) => cat.title === data.item.categories[0]
+        )}
+      />
     );
     
     
     const renderHiddenItem = (data, rowMap) => (
-<View style={styles.rowBack}>
-    <Text></Text>
-    <TouchableOpacity
-        style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => {
+      <View style={styles.rowBack}>
+        <Text></Text>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() => {
             deleteRow(rowMap, data.item.id);
             markAsArchived(data.item);
-            }
-        }
-    >
-        <Text style={{...styles.backTextWhite, fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5 }}>Delete</Text>
-    </TouchableOpacity>
-    {/* <TouchableOpacity
+          }}
+        >
+          {/* <Text style={{...styles.backTextWhite, fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5 }}>Delete</Text> */}
+          <MaterialIcons name="delete" size={30} color={COLOR.whiteColor} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => {
             closeRow(rowMap, data.item.id);
@@ -203,8 +213,8 @@ const ItemsListScreen = props => {
     >
         <Text style={styles.backTextWhite}>Important</Text>
     </TouchableOpacity> */}
-</View>
-)
+      </View>
+    );
 
     return(
         <View style={styles.mainContainer}>
@@ -357,14 +367,16 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     backRightBtnRight: {
-        backgroundColor: COLOR.redColor,
+        backgroundColor: COLOR.primaryColor,
         right: 0,
-        borderRadius: 15,
+        borderRadius: 8,
         marginHorizontal: 2,
     }
 })
 
 ItemsListScreen.navigationOptions = (navData) => {
+    let showFilter = navData.navigation.getParam('filter');
+    let clearFilter = navData.navigation.getParam('clearFilter');
     return {
       headerLeft: (
         <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
@@ -376,11 +388,11 @@ ItemsListScreen.navigationOptions = (navData) => {
         </HeaderButtons>
       ),
       headerRight: (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButtonEmpty}>
+        <HeaderButtons HeaderButtonComponent={(showFilter)  ? ClearFilterHeaderButton : CustomHeaderButtonEmpty}>
           <Item
-            onPress={() => null}
-            iconName="menu"
-            title="Menu"
+            onPress={clearFilter}
+            iconName={(showFilter)  ? "filter-remove" : "menu"}
+            title="Clear"
           />
         </HeaderButtons>
       ),

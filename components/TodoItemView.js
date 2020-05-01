@@ -23,7 +23,7 @@ const MoreDetails = props => {
       Animated.timing(
         slideAnim,
         {
-          toValue: props.open ? 150 : 0,
+          toValue: props.open ? 55 : 0,
           duration: 300,
         }
       ).start();
@@ -47,11 +47,11 @@ const MoreDetails = props => {
           padding: 5,
           marginHorizontal: 5,
           borderBottomColor:
-            slideAnim === 0 ? "rgba(0,0,0,0)" : COLOR.greyColor,
+            slideAnim === 0 ? "rgba(0,0,0,0)" : COLOR.blackColor,
           borderBottomWidth: 1,
         }}
       >
-        <View
+        {/* <View
           style={{
             marginBottom: 5,
             marginRight: 10,
@@ -61,15 +61,15 @@ const MoreDetails = props => {
             borderRadius: 5,
             flex: 1,
           }}
-        >
-          {!editNote ? (
+        > */}
+        {/* {!editNote ? (
             <View>
               <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25 }}>{props.item.note}</Text>
             </View>
           ) : (
             <TextInput style={{backgroundColor: COLOR.whiteColor, borderWidth: 0}} autoCorrect={false} multiline={true} underlineColorAndroid="rgba(0,0,0,0)" underlineColor="rgba(0,0,0,0)" textAlignVertical="top" value={props.item.note} />
-          )}
-          <View style={{ position: "absolute", bottom: 5, right: 5 }}>
+          )} */}
+        {/* <View style={{ position: "absolute", bottom: 5, right: 5 }}>
             <TouchableOpacity
               onPress={() => {
                 setEditNote(!editNote);
@@ -77,23 +77,52 @@ const MoreDetails = props => {
             >
               <MaterialCommunityIcons name="square-edit-outline" size={28} />
             </TouchableOpacity>
-          </View>
-        </View>
+          </View> */}
+        {/* </View> */}
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <MainButton styles={{ width: useWindowDimensions().width * 0.4 }} onPressHandler={reminderHandler}>
-            Remind me
-          </MainButton>
           <MainButton
             styles={{
-              width: useWindowDimensions().width * 0.4,
+              width: useWindowDimensions().width * 0.25,
+              borderRadius: 8,
+            }}
+            onPressHandler={() => props.onRemove(props.item.id)}
+          >
+            <MaterialIcons name="delete" size={30} color={COLOR.whiteColor} />
+          </MainButton>
+          {/* <MainButton
+            styles={{
+              width: useWindowDimensions().width * 0.25,
+              borderRadius: 8,
+            }}
+          >
+            <MaterialIcons
+              name="alarm-add"
+              size={30}
+              color={COLOR.whiteColor}
+            />
+          </MainButton> */}
+          <MainButton
+            styles={{
+              width: useWindowDimensions().width * 0.25,
+              borderRadius: 8,
               backgroundColor:
+                props.item.important === 1
+                  ? COLOR.redColor
+                  : COLOR.primaryColor,
+              borderColor:
                 props.item.important === 1
                   ? COLOR.redColor
                   : COLOR.primaryColor,
             }}
             onPressHandler={() => props.markAsImportant(props.item)}
           >
-            {props.item.important === 1 ? "Disperse" : "Prioritize"}
+            <MaterialIcons
+              name="priority-high"
+              size={30}
+              color={
+                props.item.important === 1 ? COLOR.whiteColor : COLOR.whiteColor
+              }
+            />
           </MainButton>
         </View>
       </Animated.View>
@@ -120,7 +149,7 @@ const MoreDetailsIcon = (props) => {
   return (
     <Animated.View style={{ transform: [{ rotate: spinOpen }] }}>
       <MaterialIcons
-        name="expand-more"
+        name="more-vert"
         size={30}
         color={COLOR.greyColor}
         style={styles.icon}
@@ -149,13 +178,13 @@ const TodoItemView = props => {
             justifyContent: "space-between",
             alignItems: "center",
             width: useWindowDimensions.width,
-            borderBottomColor: COLOR.primaryColor,            
+            borderBottomColor: COLOR.primaryColor,         
           }}
         >
           <View
             style={{
               maxWidth: 50,
-              justifyContent: "center",
+              justifyContent: "center", 
             }}
           >
             <TouchableOpacity onPress={() => props.markAsDone(props.item)}>
@@ -178,16 +207,20 @@ const TodoItemView = props => {
               maxWidth: "80%",
               flex: 1,
               alignItems: "flex-start",
+              justifyContent: 'center',
+              paddingVertical: 5,
             }}
           >
             <Text style={{ fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.title}</Text>
+            {props.item.note !== '' ? <Text numberOfLines={2} style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.note}</Text> : null}
             <View
               style={{
-                flex: 1,
+                flex: (props.item.important === 1 || props.item.categories[0] !== 'default') ? 1 : 0,
                 width: "100%",
                 alignItems: "center",
                 flexDirection: "row",
                 justifyContent: "space-between",
+                paddingVertical: (props.item.important === 1 || props.item.categories[0] !== 'default') ? 5 : 0,  
               }}
             >
               
@@ -213,9 +246,10 @@ const TodoItemView = props => {
             style={{
               maxWidth: 50,
               justifyContent: "center",
+              height: 70
             }}
           >
-            <TouchableOpacity onPress={() => showDetailsHandler()}>
+            <TouchableOpacity onPress={() => showDetailsHandler()} style={{height: 70, alignItems: 'center', justifyContent: 'center'}} >
               <MoreDetailsIcon
                 initialValue={showDetails ? 0 : 1}
                 open={showDetails ? true : false}
@@ -228,6 +262,7 @@ const TodoItemView = props => {
           open={showDetails ? true : false}
           markAsImportant={props.markAsImportant}
           item={props.item}
+          onRemove={props.onRemove}
         />
       </TouchableOpacity>
     );
