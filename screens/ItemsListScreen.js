@@ -181,7 +181,7 @@ const ItemsListScreen = props => {
         itemPressHandler={itemPressHandler}
         onRemove={onRemove}
         categories={categories.find(
-          (cat) => cat.title === data.item.categories[0]
+          (cat) => cat.id === data.item.categories[0]
         )}
       />
     );

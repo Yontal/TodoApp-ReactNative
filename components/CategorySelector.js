@@ -7,7 +7,7 @@ const Category = props => {
     return (
       <TouchableOpacity
         onPress={
-            () => {props.onSelectedHandler(props.category.title)
+            () => {props.onSelectedHandler(props.category.id)
             props.onSelected()}
         }
         style={{

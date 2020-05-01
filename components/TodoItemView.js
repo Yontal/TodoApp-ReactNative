@@ -230,7 +230,7 @@ const TodoItemView = props => {
                   }
                   {props.item.categories[0] !== "default" ? (<View style={{flexDirection:'row'}}>
                   <MaterialCommunityIcons name="tag" size={18} color={props.categories ? props.categories.color : COLOR.whiteColor } />
-                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.item.categories[0]}</Text></View>) : null}
+                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.categories.title}</Text></View>) : null}
               </View>
               {props.item.deadline !== "" ? (
                 <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
