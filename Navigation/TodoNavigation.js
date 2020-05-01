@@ -10,8 +10,9 @@ import ItemScreen from '../screens/ItemScreen';
 import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import ArchiveScreen from '../screens/ArchiveScreen';
+import Drawer from '../components/Drawer';
 
-import COLORS from '../constants/colors'
+import COLORS from '../constants/colors';
 
 const todosStackNavigator = createStackNavigator({
     ItemsList: {
@@ -58,6 +59,8 @@ const todosStackNavigator = createStackNavigator({
             textAlign:"center",
             flex:1,
             fontFamily: 'open-sans-bold',
+            fontSize: 20,
+            letterSpacing: .15,
         },
         headerTintColor: 'white',
     }
@@ -168,15 +171,19 @@ const DrawerNavigator = createDrawerNavigator(
   },
   {
     hideStatusBar: true,
-    drawerBackgroundColor: "rgba(255,255,255,1)",
+    drawerBackgroundColor: "rgba(0,0,0,1)",
     overlayColor: "rgba(255,255,255,.0)",
     contentOptions: {
       activeTintColor: COLORS.whiteColor,
       activeBackgroundColor: COLORS.primaryColor,
+      useNativeAnimations: false,
       labelStyle: {
-        fontFamily: 'open-sans',
-    }
+        fontFamily: "open-sans",
+      },
     },
+    contentComponent: props => <Drawer {...props} />,
+    drawerType: 'front',
+    hideStatusBar: false,
   }
 );
 

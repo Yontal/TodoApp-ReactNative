@@ -107,7 +107,7 @@ export const addCategory = (title, color) => {
 export const loadTodo = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM todos;',
+            tx.executeSql('SELECT * FROM todos WHERE archive=0;',
                 [],
                 (_, result) => {
                     resolve(result);
