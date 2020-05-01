@@ -49,6 +49,9 @@ export const pullCategory = () => {
 
 export const updateCategory = (category) => {
     return async dispatch => {
+        console.log('------------');
+        console.log(category)
+
         try{
             const response = await correctCategory(category);
             dispatch({

@@ -15,6 +15,7 @@
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-color-picker": "^0.5.2",
     "react-native-gesture-handler": "^1.5.5",
     "react-native-paper": "^3.6.0",
     "react-native-progress": "^4.1.0",
@@ -30,8 +31,9 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "babel-preset-expo": "~8.0.0",
-    "@babel/core": "^7.0.0"
+    "react-devtools": "^4.6.0"
   },
   "private": true
 }

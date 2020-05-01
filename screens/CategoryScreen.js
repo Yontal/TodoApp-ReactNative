@@ -1,63 +1,125 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Picker} from 'react-native';
+import { View, Text, StyleSheet, Picker, Dimensions, useWindowDimensions, TextInput, Alert} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateCategory } from '../store/actions/category';
+import { updateCategory, insertCategory } from '../store/actions/category';
+import { toHsv, fromHsv } from 'react-native-color-picker'
 
 import MainButton from '../components/MainButton';
 import COLOR from '../constants/colors';
 
+
+import { ColorPicker } from 'react-native-color-picker'
+import { addCategory } from '../helpers/db';
+
 const CategoryScreen = props => {
     const [category, setCategory] = useState(props.navigation.getParam('category'));
-    const [selectedValue, setSelectedValue] = useState(category.color);
+    const [newCategory, setNewCategory] = useState(props.navigation.getParam('newCategory'));
+    
+    // const [color, setSelectedValue] = useState(category.color);
     
     const dispatch = useDispatch();
-
+    // console.log(newCategory);
     const saveChanges = () => {
-        dispatch(updateCategory(category));
-        props.navigation.navigate({routeName: 'CategoriesList'});
+      if (category.title === '') {
+        Alert.alert('Type category name!');
+        return;
+      }
+      // console.log(category);
+
+      if (!newCategory) {
+         dispatch(updateCategory(category));
+      } else {
+        dispatch(insertCategory(category));
+      }
+      props.navigation.navigate({routeName: 'CategoriesList'});
+
       }
 
     return (
       <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={{ fontFamily: "open-sans" }}>Category: </Text>
-          <Text style={{ fontFamily: "open-sans" }}>{category.title}</Text>
-        </View>
-        <Text style={{ fontFamily: "open-sans" }}>Color:</Text>
-        <Picker
-          selectedValue={selectedValue}
-          style={{ height: 50, width: 150 }}
-          onValueChange={(itemValue, itemPosition) => {
-            setCategory((prev) => ({ ...prev, color: itemValue }));
-            setSelectedValue(itemValue);
+        <View style={styles.inputArea}>
+        <View
+              style={{
+                position: "absolute",
+                top: -10,
+                left: 15,
+                backgroundColor: COLOR.whiteColor,
+                paddingHorizontal: 5,
+              }}
+            >
+              <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+            </View>
+        <TextInput
+              placeholder={category.title === '' ? "Type category name" : ''}
+              value={category.title}
+              onChangeText={(categoryName) =>
+                setCategory((prevCat) => ({ ...prevCat, title: categoryName }))
+              }
+              defaultValue={category.title}
+              style={{
+                
+                width: useWindowDimensions().width - 120,
+                fontFamily: "open-sans",
+                fontSize: 16,
+                letterSpacing: 0.5
+              }}
+            />
+          </View>
+        <ColorPicker
+          
+          onColorSelected={color => {setCategory((prev) => ({ ...prev, color: fromHsv({ h: color.h, s: color.s, v: color.v })}))}}
+          style={{flex: 1}}
+          hideSliders={true}
+          //  defaultColor={category.color}
+          onColorChange={color => {
+          setCategory((prev) => ({ ...prev, color: fromHsv({ h: color.h, s: color.s, v: color.v })}));
+          // setSelectedValue(color);
           }}
-          prompt="Select color from list below"
-        >
-          {COLOR.categotyColors.map((color) => {
-            return (
-              <Picker.Item
-                key={color.label}
-                label={color.label}
-                value={color.value}
-              />
-            );
-          })}
-        </Picker>
-        <MainButton onPressHandler={saveChanges}>Save</MainButton>
+        />
+        <MainButton styles={{
+                width: Dimensions.get("window").width - 20,
+                borderRadius: 8,
+                margin: 10,
+              }}
+              textStyle={{
+                fontFamily: 'open-sans',
+                fontSize: 16,
+                letterSpacing: 1.25,
+                textTransform: 'uppercase'
+              }} 
+              onPressHandler={saveChanges}>Save</MainButton>
       </View>
     );
 }
 
+CategoryScreen.navigationOptions = (navigationData) => {
+  return {
+      headerTitle: navigationData.navigation.getParam('category').title,
+  }
+}
+
 const styles = StyleSheet.create({
     container:{
-        marginHorizontal: '5%',
+        // marginHorizontal: 5,
+        // marginVertical: 5,
         flex: 1,
-        flexDirection: 'row',
-        width: '90%',
-        marginVertical: 15,
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        // flexDirection: '',
+        // alignItems: 'center',
+        // width: '100%',
+        
+        // justifyContent: 'space-between',
+        // alignItems: 'flex-start',
     },
+    inputArea: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      margin: 10,
+      borderColor: COLOR.accentColor,
+      borderRadius: 8,
+      borderWidth: 1,
+      padding: 10,
+  },
 });
 
 export default CategoryScreen;

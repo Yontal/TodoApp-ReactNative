@@ -9,7 +9,8 @@ import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderB
 import COLOR from '../constants/colors';
 import { insertCategory, pullCategory, removeCategory } from '../store/actions/category';
 import Category from '../models/Category';
-
+import AddButton from '../components/AddButton';
+// import Category from '../models/Category';
 const CategoriesListScreen = props => {
     const categories = useSelector(state => state.categories.categories);
     const dispatch = useDispatch();
@@ -67,9 +68,23 @@ const CategoriesListScreen = props => {
             style={styles.rowFront}
             underlayColor={'#AAA'}
         >
-            <View>
-                <Text>{data.item.title}</Text>
-            </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}> 
+            <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
+                {data.item.title}
+            </Text>
+          {/* </View> */}
+            <View
+            style={{
+              borderColor: data.item.color,
+              borderWidth: 1,
+              height: 15,
+              width: 25,
+              borderRadius: 4,
+              backgroundColor: data.item.color,
+              paddingRight: 2
+            }}
+            ></View>
+          </View>
         </TouchableHighlight>
     );
 
@@ -90,9 +105,9 @@ const CategoriesListScreen = props => {
 
     return(
         <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
+            {/* <View style={styles.headerContainer}>
                 <InputField onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
-            </View>
+            </View> */}
             {/* <FlatList 
             data={categories}
             renderItem={data => (
@@ -123,6 +138,8 @@ const CategoriesListScreen = props => {
                             initialNumToRender={15}
                         />
                 </View>
+                <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} />
+                
         </View>
     );
 }
@@ -143,20 +160,20 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'stretch'
       },
-      rowFront: {
-        alignItems: 'flex-start',
-        paddingHorizontal: 15,
-        backgroundColor: COLOR.whiteColor,
-        borderBottomColor: COLOR.accentColor,
-        borderBottomWidth: 1,
-        justifyContent: 'center',
-        minHeight: 50,
-      },
+      // rowFront: {
+      //   alignItems: 'flex-start',
+      //   paddingHorizontal: 15,
+      //   backgroundColor: COLOR.whiteColor,
+      //   borderBottomColor: COLOR.accentColor,
+      //   borderBottomWidth: 1,
+      //   justifyContent: 'center',
+      //   minHeight: 50,
+      // },
       rowFront: {
         alignItems: 'flex-start',
         marginHorizontal: 5,
         marginVertical: 2,
-        paddingHorizontal: 5,
+        paddingHorizontal: 8,
         backgroundColor: COLOR.whiteColor,
         borderBottomColor: COLOR.greyColor,
         borderBottomWidth: 1,

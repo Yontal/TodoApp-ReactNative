@@ -1,5 +1,4 @@
 import TodoItem from '../models/TodoItem';
-import Caegory from '../models/Category';
 import Category from '../models/Category';
 
 export const TODOITEMS = [
