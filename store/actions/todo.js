@@ -77,9 +77,9 @@ export const updateTodo = (todo) => {
     }
 }
 
-export const filterTodos = (title) => {
+export const filterTodos = (id) => {
     return  {
         type: FILTER_TODOS,
-        categoryTitle: title,
+        categoryId: id,
     }
 }

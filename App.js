@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { useScreens, enableScreens } from 'react-native-screens'
+import { useScreens } from 'react-native-screens'
 import StackNavigator from './Navigation/TodoNavigation'
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
@@ -12,7 +12,7 @@ import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
 import { initTodoTable, initDeadlineColumn, initNoteColumn, initCategoriesTable } from './helpers/db'
 
-enableScreens();
+useScreens();
 initTodoTable()
   .then(() => {
     console.log('todos.db was initialized')

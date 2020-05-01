@@ -31,10 +31,10 @@ const todoItemsReducer = (state = initialState, action) => {
             });
             return {...state, todoItems: modifiedTodos, filteredTodos: modifiedTodos}
         case FILTER_TODOS:
-            if (typeof action.categoryTitle == "undefined"){
+            if (typeof action.categoryId == "undefined"){
                 const filteredTodos = state.todoItems;
                 return {...state, filteredTodos: filteredTodos}}
-            const filtered = state.todoItems.filter(todo => todo.categories.findIndex(catName => catName === action.categoryTitle) >= 0);
+            const filtered = state.todoItems.filter(todo => todo.categories.findIndex(catId => catId === action.categoryId) >= 0);
             return {...state, filteredTodos: filtered}
         default:
             return state;
