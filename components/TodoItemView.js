@@ -4,20 +4,11 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
-import { TextInput } from 'react-native-paper';
-import { Notifications } from 'expo';
-import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
 
 const MoreDetails = props => {
   const slideAnim = useRef(new Animated.Value(props.initialValue)).current 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const [editNote, setEditNote] = useState(false)
-
-  const reminderHandler = () => {
-    schedulingOptions.time = new Date(props.item.deadline);
-    localNotification.title = props.item.title;
-    Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
-  }
 
     useEffect(() => {
       Animated.timing(

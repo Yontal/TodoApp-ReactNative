@@ -10,6 +10,8 @@ import CategorySelector from '../components/CategorySelector';
 import {InputField} from '../components/InputField';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 //import { Transition, Transitioning } from "react-native-reanimated";
+import { Notifications } from 'expo';
+import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
 
 
 import COLOR from '../constants/colors';
@@ -32,6 +34,16 @@ const ItemScreen = props => {
         dispatch(pullCategory());
     }, [dispatch])
 
+    const setPushNotification = () => {
+      schedulingOptions.time = new Date(todo.deadline);
+      if (todo.categories[0] !== 'default') {
+        localNotification.title = categories.find (cat => cat.id === todo.categories[0]).title;
+        localNotification.body = todo.title;
+      } else {
+        localNotification.title = todo.title;
+      }
+      Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
+    }  
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
@@ -77,7 +89,13 @@ const ItemScreen = props => {
         if(todo.title.trim() === ''){
             Alert.alert('Type something')
             return;
+        } else if (new Date() > new Date(todo.deadline)) {
+            Alert.alert('Selected date is in the past. Please, select new date!');
+            return;
         }
+        // console.log(todo.deadline);
+        // console.log(new Date(todo.deadline));
+        setPushNotification();
         dispatch(updateTodo(todo));
         navigation.navigate({routeName: 'ItemsList'});
       }
