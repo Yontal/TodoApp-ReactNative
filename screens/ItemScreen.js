@@ -1,35 +1,37 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, ImageEditor } from 'react-native';
+import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, TouchableOpacity, useWindowDimensions, Modal, KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTodo, pullTodoById } from '../store/actions/todo';
+import { pullCategory } from '../store/actions/category';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
+import Picker from '../components/Picker';
+import CategorySelector from '../components/CategorySelector';
 import {InputField} from '../components/InputField';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 //import { Transition, Transitioning } from "react-native-reanimated";
 
 
 import COLOR from '../constants/colors';
-
-
-const SwitchButton = props => {
-    return(
-        <View style={styles.filterContainer}>
-            <Text style={{fontFamily: 'open-sans'}}>{props.label}</Text>
-            <Switch value={props.value} onValueChange={props.onToggle} trackColor={{true: COLOR.primaryColor}} thumbColor={COLOR.primaryColor} />
-        </View>
-    );
-}
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ItemScreen = props => {
     const { navigation } = props;
-    // const [taskId, setTaskId] = useState(props.navigation.getParam('id'));
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [todo, setTodo] = useState(navigation.getParam('task'));
     const [date, setDate] = useState();
     const [isChanging, setIsChanging] = useState(false);
-
+    const [isCategorySelector, setIsCategorySelector] = useState(false);
+    const categories = useSelector(state => state.categories.categories);
     const dispatch = useDispatch();
+
+    const [isAddMode, setIsAddMode] = useState(false);
+
+    useEffect(() => {
+        dispatch(pullCategory());
+    }, [dispatch])
+
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
@@ -40,20 +42,6 @@ const ItemScreen = props => {
         }
       }
 
-      // transition = (
-      //   <Transition.Together>
-      //     <Transition.In
-      //       type="slide-right"
-      //       durationMs={250}
-      //       interpolation="easeInOut"
-      //     />
-      //     <Transition.In type="fade" durationMs={250} />
-      //     <Transition.Change />
-      //     <Transition.Out type="fade" duration={2050} />
-      //   </Transition.Together>
-      // );
-      
-    //const ref = useRef();
       const onTimeChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
         setShowDatePicker(false); 
@@ -64,9 +52,9 @@ const ItemScreen = props => {
             setShowDatePicker(false);
             setShowTimePicker(false);
             setDate(selectedTime);
+            setTodo(prevTodo => ({...prevTodo, deadline: date.toString()}))
         }
             setShowTimePicker(false);
-            setTodo(prevTodo => ({...prevTodo, deadline: date.toString()}))
       }
 
       const setDeadline = () => {
@@ -86,9 +74,6 @@ const ItemScreen = props => {
       }
       
       const saveChanges = () => {
-        if(!isChanging){
-            return;
-        }
         if(todo.title.trim() === ''){
             Alert.alert('Type something')
             return;
@@ -99,60 +84,288 @@ const ItemScreen = props => {
 
       const discardChanges = () => {
           setTodo(prevTodo => ({...navigation.getParam('task'), deadline: prevTodo.deadline}));
-        //  ref.current.animateNextTransition();
           setIsChanging(false);
       }
       const edit = () => {
-        //ref.current.animateNextTransition();
         setIsChanging(true);
       }
 
-    return(
-        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}} >
-        {/* <Transitioning.View
-        ref={ref}
-        transition={transition}
-      > */}
-      <View>
-            {isChanging === false ? (
-            <View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Task: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.title}</Text></View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Importance: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.important == 1 ? "high" : "low"}</Text></View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Status: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.done == 1 ? "done" : "not yet done"}</Text></View>
-                <View style={styles.row}><Text style={{fontFamily: 'open-sans'}}>Deadline: </Text><Text style={{fontFamily: 'open-sans'}}>{todo.deadline !== '' ? ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString()) : "not yet set"}</Text></View>
+      const setCategory = (category) => {
+        setTodo(prevTodo => ({...prevTodo, categories: [category]}))
+      }
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <ScrollView>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={70}>
+          <View
+            style={{
+              ...styles.inputArea,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingRight: 5,
+              marginTop: 20,
+            }}
+          >
+            <View
+              style={{
+                position: "absolute",
+                top: -10,
+                left: 15,
+                backgroundColor: COLOR.whiteColor,
+                paddingHorizontal: 5,
+              }}
+            >
+              <Text style={{ fontFamily: "open-sans" }}>Task</Text>
             </View>
-        ) : (
-            <View style={{alignItems: 'center'}}>
-                <View style={styles.inputArea}>
-                    <TextInput 
-                            value={todo.title}
-                            onChangeText={(todoNewTitle)=>setTodo(prevTodo => ({...prevTodo, title: todoNewTitle}))}
-                            defaultValue={todo.title}
-                            style={{width: '100%'}}
-                        />
+            <TextInput
+              value={todo.title}
+              onChangeText={(todoNewTitle) =>
+                setTodo((prevTodo) => ({ ...prevTodo, title: todoNewTitle }))
+              }
+              defaultValue={todo.title}
+              style={{
+                width: useWindowDimensions().width - 120,
+                fontFamily: "open-sans",
+                fontSize: 16,
+                letterSpacing: 0.5
+              }}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  ...styles.inputArea,
+                  width: 40,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor:
+                    todo.important === 1 ? COLOR.redColor : COLOR.accentColor,
+                  borderWidth: 0,
+                  padding: 0,
+                  margin: 0,
+                }}
+                onPress={() => setImportance()}
+              >
+                {todo.done === 0 ? (
+                  <MaterialIcons
+                    name="priority-high"
+                    size={30}
+                    color={
+                      todo.important === 1 ? COLOR.redColor : COLOR.greyColor
+                    }
+                  />
+                ) : null}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  ...styles.inputArea,
+                  width: 40,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor:
+                    todo.done === 1 ? COLOR.greenColor : COLOR.accentColor,
+                  borderWidth: 0,
+                  padding: 0,
+                  margin: 0,
+                }}
+                onPress={() => setStatus()}
+              >
+                <MaterialCommunityIcons
+                  name="checkbox-marked-circle"
+                  size={30}
+                  color={todo.done === 1 ? COLOR.greenColor : COLOR.greyColor}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Modal
+              animationType="fade"
+              transparent={false}
+              visible={isCategorySelector}
+              onRequestClose={() => {
+                setIsCategorySelector(false);
+              }}
+            >
+              <CategorySelector
+                onSelected={() => setIsCategorySelector(false)}
+                categories={categories}
+                todo={todo}
+                onSelectedHandler={setCategory}
+                navigation={props.navigation}
+              />
+            </Modal>
+            <TouchableOpacity
+              onPress={() => setIsCategorySelector(true)}
+              style={{
+                ...styles.inputArea,
+                height: 50,
+                width: useWindowDimensions().width - 20,
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  position: "absolute",
+                  top: -10,
+                  left: 15,
+                  backgroundColor: COLOR.whiteColor,
+                  paddingHorizontal: 5,
+                }}
+              >
+                <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+              </View>
+              <View>
+                <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
+                  {todo.categories[0] === "default"
+                    ? "-- choose a category --"
+                    : categories.find((cat) => cat.title === todo.categories[0])
+                        .title}
+                </Text>
+              </View>
+              <View
+                style={{
+                  borderColor:
+                    todo.categories[0] === "default"
+                      ? COLOR.accentColor
+                      : categories.find(
+                          (cat) => cat.title === todo.categories[0]
+                        ).color,
+                  borderWidth: 1,
+                  height: 15,
+                  width: 25,
+                  borderRadius: 4,
+                  backgroundColor:
+                    todo.categories[0] === "default"
+                      ? COLOR.accentColor
+                      : categories.find(
+                          (cat) => cat.title === todo.categories[0]
+                        ).color,
+                }}
+              ></View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={setDeadline}>
+              <View
+                style={{
+                  ...styles.inputArea,
+                  flexDirection: "row",
+                  height: 50,
+                  alignItems: "center",
+                  width: useWindowDimensions().width - 20,
+                }}
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    top: -10,
+                    left: 15,
+                    backgroundColor: COLOR.whiteColor,
+                    paddingHorizontal: 5,
+                  }}
+                >
+                  <Text style={{ fontFamily: "open-sans" }}>Reminder</Text>
                 </View>
-                <SwitchButton value={todo.important == 1 ? true : false} label="Importance:" onToggle={() => setImportance()} />
-                {/* <SwitchButton value={todo.done == 1 ? true : false} label="Status:" onToggle={() => setStatus()} /> */}
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <MainButton styles={{width: Dimensions.get('window').width*0.9, paddingHorizontal: 5}} onPressHandler={setDeadline}>{todo.deadline === '' ? 'Set deadline' : 'Deadline: ' + ((new Date(todo.deadline)).toLocaleDateString() + ' ' + (new Date(todo.deadline)).toLocaleTimeString())}</MainButton>
+                <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
+                  {todo.deadline === ""
+                    ? "No active reminder"
+                    : new Date(todo.deadline).toLocaleDateString() +
+                      " " +
+                      new Date(todo.deadline).toLocaleTimeString()}
+                </Text>
+
+                <MaterialIcons
+                  name="alarm-add"
+                  size={30}
+                  color={COLOR.accentColor}
+                />
+              </View>
+            </TouchableOpacity>
+              <View>
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 28,
+                    backgroundColor: COLOR.whiteColor,
+                    zIndex: 100,
+                    paddingHorizontal: 5,
+                  }}
+                >
+                  <Text style={{ fontFamily: "open-sans" }}>Note</Text>
                 </View>
-            </View>)
-            }
+                <TextInput
+                  style={{
+                    ...styles.inputArea,
+                    width: useWindowDimensions().width - 20,
+                    fontFamily: "open-sans",
+                    fontSize: 16, 
+                    letterSpacing: 0.5
+                  }}
+                  autoCorrect={false}
+                  multiline={true}
+                  underlineColorAndroid="rgba(0,0,0,0)"
+                  underlineColor="rgba(0,0,0,0)"
+                  textAlignVertical="top"
+                  value={todo.note}
+                  onChangeText={(todoNewNote) =>
+                    setTodo((prevTodo) => ({ ...prevTodo, note: todoNewNote }))
+                  }
+                  defaultValue={todo.note}
+                />
+              </View>
             
-            <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                    <MainButton styles={{width: Dimensions.get('window').width*0.4, paddingHorizontal: 5, margin: Dimensions.get('window').width * 0.05, backgroundColor: isChanging ? COLOR.redColor : COLOR.primaryColor}} onPressHandler={() => {isChanging ? discardChanges() : edit()}}>{isChanging ? 'Discard changes' : 'Edit'}</MainButton>
-                    <MainButton styles={{width: Dimensions.get('window').width*0.4, paddingHorizontal: 5, margin: Dimensions.get('window').width * 0.05, backgroundColor: isChanging ? COLOR.greenColor : COLOR.greyColor}} onPressHandler={saveChanges}>Save</MainButton>
-            </View>
-            {showDatePicker ? 
-                (<DateTimePicker value={new Date()} mode="date" onChange={onDateChange} />) : 
-                    (showTimePicker ? 
-                        (<DateTimePicker value={new Date()} mode="time" onChange={onTimeChange} />) : 
-                    null 
-            )}
-            </View>
-        {/* </Transitioning.View> */}
-        </TouchableWithoutFeedback>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <MainButton
+              styles={{
+                width: Dimensions.get("window").width - 20,
+                borderRadius: 8,
+                margin: 10,
+              }}
+              textStyle={{
+                fontFamily: 'open-sans',
+                fontSize: 16,
+                letterSpacing: 1.25,
+                textTransform: 'uppercase'
+              }}
+              onPressHandler={saveChanges}
+            >
+              Save
+            </MainButton>
+          </View>
+
+          {showDatePicker ? (
+            <DateTimePicker
+              value={new Date()}
+              mode="date"
+              onChange={onDateChange}
+            />
+          ) : showTimePicker ? (
+            <DateTimePicker
+              value={new Date()}
+              mode="time"
+              onChange={onTimeChange}
+            />
+          ) : null}
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     );
+}
+
+ItemScreen.navigationOptions = (navigationData) => {
+    return {
+        headerTitle: navigationData.navigation.getParam('task').title,
+    }
 }
 
 const styles = StyleSheet.create({
@@ -178,7 +391,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         padding: 10,
-        width: '90%'
     },
 })
 

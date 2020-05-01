@@ -5,7 +5,7 @@ const db = SQLite.openDatabase('todos.db');
 export const initTodoTable = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL, archive INTEGER, deadline TEXT)',
+            tx.executeSql('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, important INTEGER, done INTEGER, categories TEXT NOT NULL, archive INTEGER, deadline TEXT, note TEXT)',
                     [],
                     () => {
                         resolve();
@@ -35,10 +35,10 @@ export const initDeadlineColumn = () => {
     return promise;
 }
 
-export const initCategoriesTable = () => {
+export const initNoteColumn = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL)',
+            tx.executeSql('ALTER TABLE todos ADD note TEXT DEFAULT "" NOT NULL',
                     [],
                     () => {
                         resolve();
@@ -52,14 +52,31 @@ export const initCategoriesTable = () => {
     return promise;
 }
 
-export const addTodo = (title, important, done, categories, archive, deadline) => {
+export const initCategoriesTable = () => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL, color TEXT DEFAULT "white")',
+                    [],
+                    () => {
+                        resolve();
+                    },
+                    (_, err) => {
+                        reject(err);
+                    });
+                });
+            }
+    );
+    return promise;
+}
+
+export const addTodo = (title, important, done, categories, archive, deadline, note) => {
     const promise = new Promise((resolve, reject) => {
         const importantInt = important ? 1 : 0;
         const doneInt = done ? 1 : 0;
         let categoriesStr = categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO todos (title, important, done, categories, archive, deadline) VALUES (?, ?, ?, ?, 0, ?);',
-                [title, importantInt, doneInt, categoriesStr, deadline],
+            tx.executeSql('INSERT INTO todos (title, important, done, categories, archive, deadline, note) VALUES (?, ?, ?, ?, 0, ?, ?);',
+                [title, importantInt, doneInt, categoriesStr, deadline, note],
                 (_, result) => {
                     resolve(result);
                 },
@@ -71,11 +88,11 @@ export const addTodo = (title, important, done, categories, archive, deadline) =
     return promise;
 }
 
-export const addCategory = (title) => {
+export const addCategory = (title, color) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO categories (title) VALUES (?);',
-                [title],
+            tx.executeSql('INSERT INTO categories (title, color) VALUES (?,?);',
+                [title, color],
                 (_, result) => {
                     resolve(result);
                 },
@@ -90,7 +107,7 @@ export const addCategory = (title) => {
 export const loadTodo = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM todos;',
+            tx.executeSql('SELECT * FROM todos WHERE archive=0;',
                 [],
                 (_, result) => {
                     resolve(result);
@@ -171,8 +188,8 @@ export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
         let categoriesStr = todo.categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=?, archive=?, deadline=? WHERE id=?;',
-                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.archive), todo.deadline, parseInt(todo.id)],
+            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=?, archive=?, deadline=?, note=? WHERE id=?;',
+                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.archive), todo.deadline, todo.note, parseInt(todo.id)],
                 (_, result) => {
                     resolve(result);
                 },
@@ -187,8 +204,8 @@ export const correctTodo = (todo) => {
 export const correctCategory = (category) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('UPDATE categories SET title=? WHERE id=?;',
-                [category.title, parseInt(category.id)],
+            tx.executeSql('UPDATE categories SET title=?, color=? WHERE id=?;',
+                [category.title, category.color, parseInt(category.id)],
                 (_, result) => {
                     resolve(result);
                 },

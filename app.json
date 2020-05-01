@@ -17,6 +17,12 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+    "notification": {
+      //  "icon": "https://www.icone-png.com/png/44/44356.png", 
+      //  "color": "#000000",
+        "androidMode": "default",
+        "androidCollapsedTitle": "Task Runner" 
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
