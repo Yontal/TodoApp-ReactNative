@@ -187,7 +187,7 @@ const TodoItemView = props => {
               justifyContent: "center", 
             }}
           >
-            <TouchableOpacity onPress={() => props.markAsDone(props.item)}>
+            <TouchableOpacity onPress={() => props.markAsDone(props.item)} style={{height: 70, alignItems: 'center', justifyContent: 'center', padding: 5}} >
               <MaterialCommunityIcons
                 name={
                   props.item.done === 1
