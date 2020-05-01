@@ -22,7 +22,7 @@ const todoItemsReducer = (state = initialState, action) => {
             const loadedTodo = new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories.split(','), action.todo.archive, action.todo.deadline, action.todo.note);
             return {...state, filteredTodos: loadedTodo}
         case UPDATE_TODO:
-            const modifiedTodos = state.todoItems.map(item => {
+            const modifiedTodos = state.filteredTodos.map(item => {
                 if(item.id.toString() === action.todo.id){
                     return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories, action.todo.archive, action.todo.deadline, action.todo.note);
                 } else {
