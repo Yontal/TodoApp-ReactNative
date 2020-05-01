@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterTodos } from '../store/actions/todo';
 import MainButton from '../components/MainButton';
+import CategoryModel from '../models/Category';
 
 import COLOR from '../constants/colors';
 
@@ -11,7 +12,7 @@ const Category = props => {
     return (
       <TouchableOpacity
         onPress={
-            () => {props.onSelectedHandler(props.category.title)}
+            () => {props.onSelectedHandler(props.category.id)}
         }
         style={{
           ...styles.categoryItem,
@@ -25,17 +26,17 @@ const Category = props => {
       >
         <View style={{width: 205}}>
           <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
-            {props.category.title}
+            {props.category ? props.category.title : null}
           </Text>
         </View>
         <View
           style={{
-            borderColor: props.category.color,
+            borderColor: props.category ? props.category.color : null,
             borderWidth: 1,
             height: 15,
             width: 25,
             borderRadius: 4,
-            backgroundColor: props.category.color,
+            backgroundColor: props.category ? props.category.color : null,
           }}
         ></View>
       </TouchableOpacity>
@@ -52,8 +53,8 @@ const Drawer = props => {
         props.navigation.navigate({routeName:'ItemsList', params: {filter: false}});
     }
 
-    const onSelectedHandler = (title) => {
-        dispatch(filterTodos(title));
+    const onSelectedHandler = (id) => {
+        dispatch(filterTodos(id));
         props.navigation.navigate({routeName:'ItemsList', params: {filter: true, clearFilter: clearFilter}});
         props.navigation.closeDrawer();
     }
@@ -97,8 +98,8 @@ const Drawer = props => {
             color: COLOR.blackColor,
           }}
           onPressHandler={() => {
-            props.navigation.navigate("Categories");
             props.navigation.closeDrawer();
+            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}});
           }}
         >
           Add category
