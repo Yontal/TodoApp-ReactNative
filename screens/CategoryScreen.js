@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Picker, Dimensions, useWindowDimensions, TextInput, Alert} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateCategory, insertCategory } from '../store/actions/category';
+import { updateCategory, insertCategory, pullCategory } from '../store/actions/category';
 import { toHsv, fromHsv } from 'react-native-color-picker'
 
 import MainButton from '../components/MainButton';
@@ -32,7 +32,7 @@ const CategoryScreen = props => {
         dispatch(insertCategory(category));
       }
       props.navigation.navigate({routeName: 'CategoriesList'});
-
+      dispatch(pullCategory())
       }
 
     return (

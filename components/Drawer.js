@@ -49,7 +49,6 @@ const Drawer = props => {
 
     const clearFilter = () => {
         dispatch(filterTodos());
-        console.log('here')
         props.navigation.navigate({routeName:'ItemsList', params: {filter: false}});
     }
 

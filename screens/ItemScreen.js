@@ -47,7 +47,7 @@ const ItemScreen = props => {
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
-        setShowDatePicker(false); 
+        setShowDatePicker(false);     
         if(event.type === 'set'){
             setDate(currentDate);
             setShowTimePicker(true);
@@ -95,10 +95,10 @@ const ItemScreen = props => {
         }
         // console.log(todo.deadline);
         // console.log(new Date(todo.deadline));
-        setPushNotification();
+ //       setPushNotification();
         dispatch(updateTodo(todo));
         navigation.navigate({routeName: 'ItemsList'});
-        dispatch(pullTodo());
+  //      dispatch(pullTodoById(todo.id.toString()));
       }
 
       const discardChanges = () => {

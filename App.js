@@ -12,7 +12,7 @@ import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
 import { initTodoTable, initDeadlineColumn, initNoteColumn, initCategoriesTable } from './helpers/db'
 
-enableScreens();
+useScreens();
 initTodoTable()
   .then(() => {
     console.log('todos.db was initialized')
@@ -57,7 +57,8 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+    'open-sans-italic': require('./assets/fonts/OpenSans-Italic.ttf'),
   });
 };
 

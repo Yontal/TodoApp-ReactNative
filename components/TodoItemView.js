@@ -203,7 +203,7 @@ const TodoItemView = props => {
             }}
           >
             <Text style={{ fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.title}</Text>
-            {props.item.note !== '' ? <Text numberOfLines={2} style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.note}</Text> : null}
+            {props.item.note !== '' ? <Text numberOfLines={showDetails ? null : 2} style={{ fontFamily: 'open-sans-italic', fontSize: 14, letterSpacing: 0.25, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.note}</Text> : null}
             <View
               style={{
                 flex: (props.item.important === 1 || props.item.categories[0] !== 'default') ? 1 : 0,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import MainButton from '../components/MainButton';
+import CategoryModel from '../models/Category';
 import COLOR from '../constants/colors';
 
 const Category = props => {
@@ -68,7 +69,7 @@ const CategorySelector = props => {
             color: COLOR.blackColor,
           }}
           onPressHandler={() => {
-            props.navigation.navigate("Categories");
+            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})
             props.onSelected();
           }}
         >
