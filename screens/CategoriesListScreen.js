@@ -146,7 +146,7 @@ const CategoriesListScreen = props => {
                             initialNumToRender={15}
                         />
                 </View>
-                {/* <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} /> */}
+                <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} />
                 
         </View>
     );

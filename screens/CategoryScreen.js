@@ -93,8 +93,9 @@ const CategoryScreen = props => {
 }
 
 CategoryScreen.navigationOptions = (navigationData) => {
+  let newCategory = navigationData.navigation.getParam('newCategory');
   return {
-      headerTitle: navigationData.navigation.getParam('category').title,
+      headerTitle: newCategory ? 'Add category' : navigationData.navigation.getParam('category').title,
   }
 }
 
