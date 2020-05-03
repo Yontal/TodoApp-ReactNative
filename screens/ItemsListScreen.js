@@ -245,7 +245,7 @@ const ItemsListScreen = props => {
             <View style={styles.progress}>
                 <ProgressBar tasks={todoItems} />
             </View>
-            <AddButton onPress={() => {props.navigation.navigate('AddItem')}} />
+            {/* <AddButton onPress={() => {props.navigation.navigate('AddItem')}} /> */}
         </View>
         );
 }

@@ -8,11 +8,13 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderButton';
 import COLOR from '../constants/colors';
 import { insertCategory, pullCategory, removeCategory } from '../store/actions/category';
+import { updateTodo } from '../store/actions/todo';
 import Category from '../models/Category';
 import AddButton from '../components/AddButton';
 // import Category from '../models/Category';
 const CategoriesListScreen = props => {
     const categories = useSelector(state => state.categories.categories);
+    const todos = useSelector(state => state.todoItems.todoItems);
     const dispatch = useDispatch();
 
     const [isAddMode, setIsAddMode] = useState(false);
@@ -53,6 +55,12 @@ const CategoriesListScreen = props => {
     };
     const onRemove = (id) =>{
         dispatch(removeCategory(id));
+        todos.forEach(element => {
+          if(element.categories[0] === id){
+            element.categories[0] = 'default';
+            dispatch(updateTodo(element));
+          }
+        });
     }
 
     const deleteRow = (rowMap, rowKey) => {
@@ -138,7 +146,7 @@ const CategoriesListScreen = props => {
                             initialNumToRender={15}
                         />
                 </View>
-                <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} />
+                {/* <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} /> */}
                 
         </View>
     );

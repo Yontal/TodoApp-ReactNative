@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import {createAppContainer, createStackNavigator, createDrawerNavigator} from 'react-navigation';
+import {createAppContainer, createStackNavigator, createDrawerNavigator, createBottomTabNavigator} from 'react-navigation';
 import { createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import ItemListsScreen from '../screens/ItemsListScreen';
 import AddItemScreen from '../screens/AddItemScreen';
@@ -11,8 +11,10 @@ import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import ArchiveScreen from '../screens/ArchiveScreen';
 import Drawer from '../components/Drawer';
+import AddButton from '../components/AddButton';
 
 import COLORS from '../constants/colors';
+import BottomTab from '../components/BottomTab';
 
 const todosStackNavigator = createStackNavigator({
     ItemsList: {
@@ -138,7 +140,13 @@ const BottomTabNavRouteConfig = {
             tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Tasks</Text>)
         }
     },
-    // Archive: {
+    Add:{
+      screen:() => null,
+      navigationOptions: {
+        tabBarIcon: props => <AddButton {...props} />
+      }
+    },
+    //, Archive: {
     //     screen: archiveStackNavigator,
     //     navigationOptions: {
     //         tabBarIcon: (tabInfo) => {return <Feather name="archive" size={25} color={tabInfo.tintColor}  />},
@@ -156,10 +164,17 @@ const BottomTabNavRouteConfig = {
     },  
 }
 
-const BottomTabNavigator = createMaterialBottomTabNavigator(BottomTabNavRouteConfig,{
+const BottomTabNavigator = createBottomTabNavigator(BottomTabNavRouteConfig,{
     activeColor: "white",
     shifting: true,
     sceneAnimationEnabled: false,
+    tabBarOptions:{
+      activeBackgroundColor: COLORS.primaryColor,
+      inactiveBackgroundColor: COLORS.primaryColor,
+      activeTintColor: COLORS.whiteColor,
+      showLabel: false,
+    },
+    tabBarComponent : props => <BottomTab {...props} />
 })
 
 const DrawerNavigator = createDrawerNavigator(
