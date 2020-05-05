@@ -14,6 +14,7 @@ import { addCategory } from '../helpers/db';
 const CategoryScreen = props => {
     const [category, setCategory] = useState(props.navigation.getParam('category'));
     const [newCategory, setNewCategory] = useState(props.navigation.getParam('newCategory'));
+    const [redirectToItem, setRedirectToItem] = useState(props.navigation.getParam('redirectToItem'));
     
     // const [color, setSelectedValue] = useState(category.color);
     
@@ -29,9 +30,14 @@ const CategoryScreen = props => {
       if (!newCategory) {
          dispatch(updateCategory(category));
       } else {
-        dispatch(insertCategory(category));
+         dispatch(insertCategory(category));
       }
-      props.navigation.navigate({routeName: 'CategoriesList'});
+      if(redirectToItem){
+        props.navigation.navigate({routeName: 'CategoriesList'});
+        props.navigation.navigate({routeName: 'Todos', params: {newCat: true}})
+      } else {
+        props.navigation.navigate({routeName: 'CategoriesList'});
+      }
       dispatch(pullCategory())
       }
 

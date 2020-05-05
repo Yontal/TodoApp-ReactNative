@@ -69,7 +69,7 @@ const CategorySelector = props => {
             color: COLOR.blackColor,
           }}
           onPressHandler={() => {
-            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})
+            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true, redirectToItem: true}})
             props.onSelected();
           }}
         >
