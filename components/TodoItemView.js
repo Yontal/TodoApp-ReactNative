@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, useWindowDimensions, Animated, Easing, Dimensions } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import moment from "moment";
 
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
@@ -156,7 +157,6 @@ const TodoItemView = props => {
   const showDetailsHandler = () => {
     setShowDetails(prev => !prev);    
   }
-
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -215,7 +215,7 @@ const TodoItemView = props => {
               }}
             >
               
-                <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                <View style={{ flexDirection: "row", alignItems: "flex-end", width: '50%' }}>
                   {props.item.important === 1 ? 
                   <MaterialIcons name="priority-high" size={18} color={COLOR.redColor} /> : null
                   }
@@ -224,10 +224,10 @@ const TodoItemView = props => {
                   <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.categories ? props.categories.title : null}</Text></View>) : null}
               </View>
               {props.item.deadline !== "" ? (
-                <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
+                <View style={{flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
                   <MaterialCommunityIcons name="timelapse" size={18} />
                   <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25 }}>
-                    {new Date(props.item.deadline).toLocaleDateString()}
+                    {moment(new Date(props.item.deadline)).format('DD MMM YYYY')}
                   </Text>
                 </View>
               ) : null}

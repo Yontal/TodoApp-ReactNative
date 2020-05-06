@@ -12,6 +12,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 //import { Transition, Transitioning } from "react-native-reanimated";
 import { Notifications } from 'expo';
 import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
+import moment from 'moment';
 
 
 import COLOR from '../constants/colors';
@@ -296,9 +297,7 @@ const ItemScreen = props => {
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
                     ? "No active reminder"
-                    : new Date(todo.deadline).toLocaleDateString() +
-                      " " +
-                      new Date(todo.deadline).toLocaleTimeString()}
+                    : moment(new Date(todo.deadline)).format('DD MMM YYYY, HH:mm')}
                 </Text>
 
                 <MaterialIcons
