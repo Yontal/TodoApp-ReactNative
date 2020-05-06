@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {MaterialIcons } from '@expo/vector-icons';
 import {View, StyleSheet, TextInput, Alert, TouchableOpacity, Keyboard} from 'react-native'
 import COLOR from '../constants/colors'
+import i18n from 'i18n-js';
 
 export const InputField = ({onAddItem, placeholder, defaultValue}) => {
 
@@ -14,7 +15,7 @@ export const InputField = ({onAddItem, placeholder, defaultValue}) => {
             Keyboard.dismiss();
         }
         else{
-            Alert.alert('Type something')
+            Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
         }
     }
 

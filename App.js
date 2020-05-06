@@ -6,7 +6,7 @@ import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import {createAppContainer} from 'react-navigation';
 import MainNavigator from './Navigation/TodoNavigation';
-import LocalizationContext from './context/LocalizationContext';
+
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';

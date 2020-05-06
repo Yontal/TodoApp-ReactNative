@@ -11,6 +11,7 @@ export default {
     taskDetails: 'Task details',
     noTasks: 'There is no any task yet',
     noCategories: 'There is no any category yet',
+    noActiveReminder: '-- no active reminder --',
     addItem: 'Add item',
     delete: 'Delete',
     quickAddTask:'Quick add item...',

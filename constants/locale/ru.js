@@ -13,6 +13,7 @@ export default {
    taskDetails: 'Описание задачи',
    noTasks: 'Задач пока нет',
    noCategories: 'Категорий пока нет',
+   noActiveReminder: '-- Напоминание не установлено --',
    quickAddTask:'Быстрое создание задачи...',
    reminder: 'Напоминание',
    note: 'Заметка',

@@ -248,7 +248,7 @@ const ItemScreen = props => {
               <View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.categories[0] === "default"
-                    ? "-- choose a category --"
+                    ? i18n.t('chooseCategory')
                     : categories.find((cat) => cat.id === todo.categories[0])
                         .title}
                 </Text>
@@ -297,7 +297,7 @@ const ItemScreen = props => {
                 </View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
-                    ? "No active reminder"
+                    ? i18n.t('noActiveReminder')
                     : moment(new Date(todo.deadline)).format('DD MMM YYYY, HH:mm')}
                 </Text>
 
