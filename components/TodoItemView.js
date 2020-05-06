@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, useWindowDimensions, Animated, Easing, Dimensions } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import moment from "moment";
+import i18n from 'i18n-js';
 
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';

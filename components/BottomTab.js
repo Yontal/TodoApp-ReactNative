@@ -5,6 +5,7 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import Category from '../models/Category';
 import COLOR from '../constants/colors';
+import i18n from 'i18n-js';
 
 const BottomTab = props => {
     const [currentScreen, setCurrentScreen] = useState('item');

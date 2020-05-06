@@ -13,6 +13,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Notifications } from 'expo';
 import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
 import moment from 'moment';
+import i18n from 'i18n-js';
 
 
 import COLOR from '../constants/colors';
@@ -88,10 +89,10 @@ const ItemScreen = props => {
       
       const saveChanges = () => {
         if(todo.title.trim() === ''){
-            Alert.alert('Type something')
+            Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
             return;
         } else if (new Date() > new Date(todo.deadline)) {
-            Alert.alert('Selected date is in the past. Please, select new date!');
+            Alert.alert(i18n.t('selectedDateInPast'));
             return;
         }
         // console.log(todo.deadline);
@@ -140,7 +141,7 @@ const ItemScreen = props => {
                 paddingHorizontal: 5,
               }}
             >
-              <Text style={{ fontFamily: "open-sans" }}>Task</Text>
+              <Text style={{ fontFamily: "open-sans" }}>{i18n.t('task')}</Text>
             </View>
             <TextInput
               value={todo.title}
@@ -242,7 +243,7 @@ const ItemScreen = props => {
                   paddingHorizontal: 5,
                 }}
               >
-                <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+                <Text style={{ fontFamily: "open-sans" }}>{i18n.t('category')}</Text>
               </View>
               <View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
@@ -292,7 +293,7 @@ const ItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Reminder</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('reminder')}</Text>
                 </View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
@@ -318,7 +319,7 @@ const ItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Note</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('note')}</Text>
                 </View>
                 <TextInput
                   style={{
@@ -357,7 +358,7 @@ const ItemScreen = props => {
               }}
               onPressHandler={saveChanges}
             >
-              Save
+              {i18n.t('save')}
             </MainButton>
           </View>
 

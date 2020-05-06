@@ -4,13 +4,19 @@ import { useScreens, enableScreens } from 'react-native-screens'
 import StackNavigator from './Navigation/TodoNavigation'
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
-
+import {createAppContainer} from 'react-navigation';
+import MainNavigator from './Navigation/TodoNavigation';
+import LocalizationContext from './context/LocalizationContext';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
 import { initTodoTable, initDeadlineColumn, initNoteColumn, initCategoriesTable } from './helpers/db'
+import * as Localization from 'expo-localization';
+import i18n from 'i18n-js';
+import ru from './constants/locale/ru';
+import en from './constants/locale/en';
 
 useScreens();
 initTodoTable()
@@ -62,8 +68,20 @@ const fetchFonts = () => {
   });
 };
 
+const AppContainer = createAppContainer(MainNavigator);
+
+
 export default function App() {
   const [appLoaded, setAppLoaded] = useState(false);
+
+  i18n.translations = {
+    en: en,
+    ru: ru,
+  };
+  // Set the locale once at the beginning of your app.
+  i18n.locale = Localization.locale;
+  // When a value is missing from a language it'll fallback to another language with the key present.
+  i18n.fallbacks = true;
 
   if(!appLoaded){
     return (<AppLoading startAsync={fetchFonts} onFinish={() => setAppLoaded(true)} />);
@@ -71,7 +89,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <StackNavigator />
+      <AppContainer />
     </Provider>
   );
 }

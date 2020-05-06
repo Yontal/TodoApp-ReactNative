@@ -11,6 +11,7 @@ import { insertCategory, pullCategory, removeCategory } from '../store/actions/c
 import { updateTodo } from '../store/actions/todo';
 import Category from '../models/Category';
 import AddButton from '../components/AddButton';
+import i18n from 'i18n-js';
 // import Category from '../models/Category';
 const CategoriesListScreen = props => {
     const categories = useSelector(state => state.categories.categories);
@@ -106,7 +107,7 @@ const CategoriesListScreen = props => {
               onRemove(data.item.id);
             }}
           >
-            <Text style={styles.backTextWhite}>Delete</Text>
+            <Text style={styles.backTextWhite}>{i18n.t('delete')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -128,7 +129,7 @@ const CategoriesListScreen = props => {
             } 
             keyExtractor={item => item.id} /> */}
             <View style={styles.contentContainer}>
-                    {(categories.length < 1) ? (<NothingFound message="There is no categories yet" />) : null}
+                    {(categories.length < 1) ? (<NothingFound message={i18n.t('noCategories')} />) : null}
                     <SwipeListView
                             data={categories}
                             renderItem={renderItem}

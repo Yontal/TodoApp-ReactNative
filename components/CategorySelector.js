@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, useWindowDi
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
 import COLOR from '../constants/colors';
+import i18n from 'i18n-js';
+
 
 const Category = props => {
     return (
@@ -73,7 +75,7 @@ const CategorySelector = props => {
             props.onSelected();
           }}
         >
-          Add category
+          {i18n.t('addCategory')}
         </MainButton>
       </View>
     );

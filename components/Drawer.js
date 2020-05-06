@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { filterTodos } from '../store/actions/todo';
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
+import i18n from 'i18n-js';
 
 import COLOR from '../constants/colors';
 
@@ -70,7 +71,7 @@ const Drawer = props => {
             letterSpacing: .15,
           }}
         >
-          Categories
+          {i18n.t('categories')}
         </Text>
         <FlatList
           data={categories}
@@ -101,7 +102,7 @@ const Drawer = props => {
             props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}});
           }}
         >
-          Add category
+          {i18n.t('addCategory')}
         </MainButton>
       </SafeAreaView>
     );
