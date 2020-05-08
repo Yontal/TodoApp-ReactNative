@@ -36,13 +36,28 @@ const ItemScreen = props => {
 
     const setPushNotification = () => {
       schedulingOptions.time = new Date(todo.deadline);
+      // var z = (Notifications.presentLocalNotificationAsync());
+      // console.log(z);
       if (todo.categories[0] !== 'default') {
         localNotification.title = categories.find (cat => cat.id === todo.categories[0]).title;
         localNotification.body = todo.title;
       } else {
         localNotification.title = todo.title;
       }
-      Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
+      var notificationId = null;
+      Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions).then (
+      // z.then (
+        result => {
+          // первая функция-обработчик - запустится при вызове resolve
+          console.log("Fulfilled: " + result); // result - аргумент resolve
+          notificationId = result + ''; // приводим id к строке
+        },
+        error => {
+          // вторая функция - запустится при вызове reject
+          alert("Rejected: " + error); // error - аргумент reject
+          notificationId = null;
+        }
+        );
     }  
 
       const onDateChange = (event, selectedDate) => {
@@ -93,11 +108,9 @@ const ItemScreen = props => {
             Alert.alert('Selected date is in the past. Please, select new date!');
             return;
         }
-        // console.log(todo.deadline);
-        // console.log(new Date(todo.deadline));
         setPushNotification();
         dispatch(updateTodo(todo));
-        navigation.navigate({routeName: 'ItemsList'});
+        // navigation.navigate({routeName: 'ItemsList'});
       }
 
       const discardChanges = () => {
