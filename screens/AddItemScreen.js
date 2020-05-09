@@ -8,6 +8,7 @@ import MainButton from '../components/MainButton';
 import CategorySelector from '../components/CategorySelector';
 import TodoItem from '../models/TodoItem';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import i18n from 'i18n-js';
 
 
 import COLOR from '../constants/colors';
@@ -63,8 +64,11 @@ const AddItemScreen = props => {
 
       const addItem = () => {
         if(todo.title.trim() === ''){
-            Alert.alert('Type item title')
+            Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
             return;
+        } else if (new Date() > new Date(todo.deadline)) {
+          Alert.alert(i18n.t('selectedDateInPast'));
+          return;
         }
         dispatch(insertTodo(todo));
         props.navigation.navigate({routeName: 'ItemsList'});
@@ -101,7 +105,7 @@ const AddItemScreen = props => {
                 paddingHorizontal: 5,
               }}
             >
-              <Text style={{ fontFamily: "open-sans" }}>Task</Text>
+              <Text style={{ fontFamily: "open-sans" }}>{i18n.t('task')}</Text>
             </View>
             <TextInput
               value={todo.title}
@@ -182,13 +186,13 @@ const AddItemScreen = props => {
                   paddingHorizontal: 5,
                 }}
               >
-                <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+                <Text style={{ fontFamily: "open-sans" }}>{i18n.t('category')}</Text>
               </View>
               <View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.categories[0] === "default"
-                    ? "-- choose a category --"
-                    : categories.find((cat) => cat.title === todo.categories[0])
+                    ? i18n.t('chooseCategory')
+                    : categories.find((cat) => cat.id === todo.categories[0])
                         .title}
                 </Text>
               </View>
@@ -198,7 +202,7 @@ const AddItemScreen = props => {
                     todo.categories[0] === "default"
                       ? COLOR.accentColor
                       : categories.find(
-                          (cat) => cat.title === todo.categories[0]
+                          (cat) => cat.id === todo.categories[0]
                         ).color,
                   borderWidth: 1,
                   height: 15,
@@ -208,7 +212,7 @@ const AddItemScreen = props => {
                     todo.categories[0] === "default"
                       ? COLOR.accentColor
                       : categories.find(
-                          (cat) => cat.title === todo.categories[0]
+                          (cat) => cat.id === todo.categories[0]
                         ).color,
                 }}
               ></View>
@@ -232,11 +236,11 @@ const AddItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Reminder</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('reminder')}</Text>
                 </View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
-                    ? "-- click here to set --"
+                    ? i18n.t('clickHereToSetReminder')
                     : new Date(todo.deadline).toLocaleDateString() +
                       " " +
                       new Date(todo.deadline).toLocaleTimeString()}
@@ -260,7 +264,7 @@ const AddItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Note</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('note')}</Text>
                 </View>
                 <TextInput
                   style={{
@@ -299,7 +303,7 @@ const AddItemScreen = props => {
               }}
               onPressHandler={addItem}
             >
-              Add item
+              {i18n.t('addItem')}
             </MainButton>
           </View>
 

@@ -6,6 +6,7 @@ import { removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
 import { Feather } from '@expo/vector-icons';
 import NothingFound from '../components/NothingFound';
 import COLOR from '../constants/colors';
+import i18n from 'i18n-js';
 
 const ArchiveScreen = props => {
     const dispatch = useDispatch();

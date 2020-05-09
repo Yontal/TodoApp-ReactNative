@@ -14,7 +14,7 @@ export const insertTodo = (todo) => {
                 type: INSERT_TODO,
                 todo: todo
             })
-            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note);
+            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note, todo.notificationID);
         } catch(err){
             throw err;
         }
@@ -66,6 +66,9 @@ export const pullTodoById = (id) =>{
 export const updateTodo = (todo) => {
     return async dispatch => {
         try{
+            console.log('?-?')
+            console.log(todo)
+            console.log('?-?')
             const response = await correctTodo(todo);
             dispatch({
                 type: UPDATE_TODO,

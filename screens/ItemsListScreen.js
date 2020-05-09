@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
+import i18n from 'i18n-js';
 
 // const SlideView = (props) => {
 //     const slideAnim = useRef(new Animated.Value(props.initialValue)).current  // Initial value for opacity: 0
@@ -219,9 +220,9 @@ const ItemsListScreen = props => {
     return(
         <View style={styles.mainContainer}>
             <View style={styles.headerContainer}/>        
-                <InputField onAddItem={addItem} placeholder="Quick add task..." />
+                <InputField onAddItem={addItem} placeholder={i18n.t('quickAddTask')} />
                 <View style={styles.contentContainer}>
-                    {(todoItems.length < 1) ? (<NothingFound message="There is no tasks yet" />) : null}
+                    {(todoItems.length < 1) ? (<NothingFound message={i18n.t('noTasks')} />) : null}
                     <SwipeListView
                             data={todoItems}
                             renderItem={renderItem}

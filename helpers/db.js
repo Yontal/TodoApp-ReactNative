@@ -35,6 +35,23 @@ export const initDeadlineColumn = () => {
     return promise;
 }
 
+export const initNotificationIDColumn = () => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('ALTER TABLE todos ADD notificationID TEXT DEFAULT ""',
+                    [],
+                    () => {
+                        resolve();
+                    },
+                    (_, err) => {
+                        reject(err);
+                    });
+                });
+            }
+    );
+    return promise;
+}
+
 export const initNoteColumn = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
@@ -69,14 +86,14 @@ export const initCategoriesTable = () => {
     return promise;
 }
 
-export const addTodo = (title, important, done, categories, archive, deadline, note) => {
+export const addTodo = (title, important, done, categories, archive, deadline, note, notificationID) => {
     const promise = new Promise((resolve, reject) => {
         const importantInt = important ? 1 : 0;
         const doneInt = done ? 1 : 0;
         let categoriesStr = categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO todos (title, important, done, categories, archive, deadline, note) VALUES (?, ?, ?, ?, 0, ?, ?);',
-                [title, importantInt, doneInt, categoriesStr, deadline, note],
+            tx.executeSql('INSERT INTO todos (title, important, done, categories, archive, deadline, note, notificationID) VALUES (?, ?, ?, ?, 0, ?, ?, ?);',
+                [title, importantInt, doneInt, categoriesStr, deadline, note, notificationID],
                 (_, result) => {
                     resolve(result);
                 },
@@ -188,8 +205,8 @@ export const correctTodo = (todo) => {
     const promise = new Promise((resolve, reject) => {
         let categoriesStr = todo.categories.toString();
         db.transaction((tx) => {
-            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=?, archive=?, deadline=?, note=? WHERE id=?;',
-                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.archive), todo.deadline, todo.note, parseInt(todo.id)],
+            tx.executeSql('UPDATE todos SET title=?, important=?, done=?, categories=?, archive=?, deadline=?, note=?, notificationID=? WHERE id=?;',
+                [todo.title, parseInt(todo.important), parseInt(todo.done), categoriesStr, parseInt(todo.archive), todo.deadline, todo.note, todo.notificationID, parseInt(todo.id)],
                 (_, result) => {
                     resolve(result);
                 },

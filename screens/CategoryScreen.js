@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Picker, Dimensions, useWindowDimensions, TextInput, Alert} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateCategory, insertCategory } from '../store/actions/category';
+import { updateCategory, insertCategory, pullCategory } from '../store/actions/category';
 import { toHsv, fromHsv } from 'react-native-color-picker'
+import i18n from 'i18n-js';
 
 import MainButton from '../components/MainButton';
 import COLOR from '../constants/colors';
 
 
 import { ColorPicker } from 'react-native-color-picker'
-import { addCategory } from '../helpers/db';
 
 const CategoryScreen = props => {
     const [category, setCategory] = useState(props.navigation.getParam('category'));
     const [newCategory, setNewCategory] = useState(props.navigation.getParam('newCategory'));
+    const [redirectToItem, setRedirectToItem] = useState(props.navigation.getParam('redirectToItem'));
     
     // const [color, setSelectedValue] = useState(category.color);
     
@@ -21,7 +22,7 @@ const CategoryScreen = props => {
     // console.log(newCategory);
     const saveChanges = () => {
       if (category.title === '') {
-        Alert.alert('Type category name!');
+        Alert.alert(i18n.t('categoryTitleCannotBeEmpty'));
         return;
       }
       // console.log(category);
@@ -29,10 +30,15 @@ const CategoryScreen = props => {
       if (!newCategory) {
          dispatch(updateCategory(category));
       } else {
-        dispatch(insertCategory(category));
+         dispatch(insertCategory(category));
       }
-      props.navigation.navigate({routeName: 'CategoriesList'});
-
+      if(redirectToItem){
+        props.navigation.navigate({routeName: 'CategoriesList'});
+        props.navigation.navigate({routeName: 'Todos', params: {newCat: true}})
+      } else {
+        props.navigation.navigate({routeName: 'CategoriesList'});
+      }
+      dispatch(pullCategory())
       }
 
     return (
@@ -47,10 +53,10 @@ const CategoryScreen = props => {
                 paddingHorizontal: 5,
               }}
             >
-              <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+              <Text style={{ fontFamily: "open-sans" }}>{i18n.t('category')}</Text>
             </View>
         <TextInput
-              placeholder={category.title === '' ? "Type category name" : ''}
+              placeholder={category.title === '' ? i18n.t('typeCategory') : ''}
               value={category.title}
               onChangeText={(categoryName) =>
                 setCategory((prevCat) => ({ ...prevCat, title: categoryName }))
@@ -87,14 +93,15 @@ const CategoryScreen = props => {
                 letterSpacing: 1.25,
                 textTransform: 'uppercase'
               }} 
-              onPressHandler={saveChanges}>Save</MainButton>
+              onPressHandler={saveChanges}>{newCategory ? i18n.t('addItem') : i18n.t('save')}</MainButton>
       </View>
     );
 }
 
 CategoryScreen.navigationOptions = (navigationData) => {
+  let newCategory = navigationData.navigation.getParam('newCategory');
   return {
-      headerTitle: navigationData.navigation.getParam('category').title,
+      headerTitle: newCategory ? i18n.t('addCategory') : navigationData.navigation.getParam('category').title,
   }
 }
 

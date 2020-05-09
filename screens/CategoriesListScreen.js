@@ -8,11 +8,14 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import {CustomHeaderButton, CustomHeaderButtonEmpty} from '../components/HeaderButton';
 import COLOR from '../constants/colors';
 import { insertCategory, pullCategory, removeCategory } from '../store/actions/category';
+import { updateTodo } from '../store/actions/todo';
 import Category from '../models/Category';
 import AddButton from '../components/AddButton';
+import i18n from 'i18n-js';
 // import Category from '../models/Category';
 const CategoriesListScreen = props => {
     const categories = useSelector(state => state.categories.categories);
+    const todos = useSelector(state => state.todoItems.todoItems);
     const dispatch = useDispatch();
 
     const [isAddMode, setIsAddMode] = useState(false);
@@ -53,6 +56,12 @@ const CategoriesListScreen = props => {
     };
     const onRemove = (id) =>{
         dispatch(removeCategory(id));
+        todos.forEach(element => {
+          if(element.categories[0] === id){
+            element.categories[0] = 'default';
+            dispatch(updateTodo(element));
+          }
+        });
     }
 
     const deleteRow = (rowMap, rowKey) => {
@@ -98,7 +107,7 @@ const CategoriesListScreen = props => {
               onRemove(data.item.id);
             }}
           >
-            <Text style={styles.backTextWhite}>Delete</Text>
+            <Text style={styles.backTextWhite}>{i18n.t('delete')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -120,7 +129,7 @@ const CategoriesListScreen = props => {
             } 
             keyExtractor={item => item.id} /> */}
             <View style={styles.contentContainer}>
-                    {(categories.length < 1) ? (<NothingFound message="There is no categories yet" />) : null}
+                    {(categories.length < 1) ? (<NothingFound message={i18n.t('noCategories')} />) : null}
                     <SwipeListView
                             data={categories}
                             renderItem={renderItem}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, TouchableOpacity, useWindowDimensions, Modal, KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateTodo, pullTodoById } from '../store/actions/todo';
+import { updateTodo, pullTodoById, pullTodo } from '../store/actions/todo';
 import { pullCategory } from '../store/actions/category';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
@@ -12,6 +12,8 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 //import { Transition, Transitioning } from "react-native-reanimated";
 import { Notifications } from 'expo';
 import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
+import moment from 'moment';
+import i18n from 'i18n-js';
 
 
 import COLOR from '../constants/colors';
@@ -22,6 +24,8 @@ const ItemScreen = props => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [todo, setTodo] = useState(navigation.getParam('task'));
+    const [notificationID, setNotificationID] = useState(navigation.getParam('task').notificationID);
+    const [flag, setFlag] = useState(false);
     const [date, setDate] = useState();
     const [isChanging, setIsChanging] = useState(false);
     const [isCategorySelector, setIsCategorySelector] = useState(false);
@@ -34,35 +38,65 @@ const ItemScreen = props => {
         dispatch(pullCategory());
     }, [dispatch])
 
+    useEffect(() => {   
+      setTodo(prevTodo => ({...prevTodo, notificationID: notificationID}))
+    }, [flag])
+
     const setPushNotification = () => {
+      return new Promise((resolve, reject) => {
       schedulingOptions.time = new Date(todo.deadline);
-      // var z = (Notifications.presentLocalNotificationAsync());
-      // console.log(z);
       if (todo.categories[0] !== 'default') {
         localNotification.title = categories.find (cat => cat.id === todo.categories[0]).title;
         localNotification.body = todo.title;
       } else {
         localNotification.title = todo.title;
       }
-      var notificationId = null;
+
+      if (todo.notificationID) {
+      Notifications.cancelScheduledNotificationAsync(parseInt(todo.notificationID)).then (
+          result => {
+            console.log('otmena');
+            console.log(result);
+              return Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+          },
+          error => {
+            // вторая функция - запустится при вызове reject
+            console.log("Rejected: " + error); // error - аргумент reject
+          }
+         ).then ( 
+           result => {
+            console.log('new');
+            console.log(result);
+            setTodo(prevTodo => ({...prevTodo, notificationID: String(result)}))
+            resolve();
+          },
+          error => {
+            // вторая функция - запустится при вызове reject
+            console.log("Rejected: " + error); // error - аргумент reject
+            reject();
+            // notificationId = null;
+          })
+    } else {
       Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions).then (
-      // z.then (
-        result => {
-          // первая функция-обработчик - запустится при вызове resolve
-          console.log("Fulfilled: " + result); // result - аргумент resolve
-          notificationId = result + ''; // приводим id к строке
+        id => {
+          console.log('poka net');
+          setNotificationID(String(id));
+          setFlag(true);
+          resolve(id);
         },
         error => {
           // вторая функция - запустится при вызове reject
-          alert("Rejected: " + error); // error - аргумент reject
-          notificationId = null;
+          console.log("Rejected: " + error); // error - аргумент reject
+          reject();
         }
-        );
-    }  
+      )
+    }
+  });
+  }
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
-        setShowDatePicker(false); 
+        setShowDatePicker(false);     
         if(event.type === 'set'){
             setDate(currentDate);
             setShowTimePicker(true);
@@ -100,17 +134,20 @@ const ItemScreen = props => {
         setTodo(prevTodo => ({...prevTodo, done: doneFlag, important: importantFlag}))
       }
       
-      const saveChanges = () => {
+      const saveChanges = async () => {
         if(todo.title.trim() === ''){
-            Alert.alert('Type something')
+            Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
             return;
         } else if (new Date() > new Date(todo.deadline)) {
-            Alert.alert('Selected date is in the past. Please, select new date!');
+            Alert.alert(i18n.t('selectedDateInPast'));
             return;
         }
-        setPushNotification();
+        await setPushNotification();
+      
+        console.log('-------------');
+        console.log(todo);
         dispatch(updateTodo(todo));
-        // navigation.navigate({routeName: 'ItemsList'});
+        navigation.navigate({routeName: 'ItemsList'});
       }
 
       const discardChanges = () => {
@@ -151,7 +188,7 @@ const ItemScreen = props => {
                 paddingHorizontal: 5,
               }}
             >
-              <Text style={{ fontFamily: "open-sans" }}>Task</Text>
+              <Text style={{ fontFamily: "open-sans" }}>{i18n.t('task')}</Text>
             </View>
             <TextInput
               value={todo.title}
@@ -253,12 +290,12 @@ const ItemScreen = props => {
                   paddingHorizontal: 5,
                 }}
               >
-                <Text style={{ fontFamily: "open-sans" }}>Category</Text>
+                <Text style={{ fontFamily: "open-sans" }}>{i18n.t('category')}</Text>
               </View>
               <View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.categories[0] === "default"
-                    ? "-- choose a category --"
+                    ? i18n.t('chooseCategory')
                     : categories.find((cat) => cat.id === todo.categories[0])
                         .title}
                 </Text>
@@ -303,14 +340,12 @@ const ItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Reminder</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('reminder')}</Text>
                 </View>
                 <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.deadline === ""
-                    ? "No active reminder"
-                    : new Date(todo.deadline).toLocaleDateString() +
-                      " " +
-                      new Date(todo.deadline).toLocaleTimeString()}
+                    ? i18n.t('noActiveReminder')
+                    : moment(new Date(todo.deadline)).format('DD MMM YYYY, HH:mm')}
                 </Text>
 
                 <MaterialIcons
@@ -331,7 +366,7 @@ const ItemScreen = props => {
                     paddingHorizontal: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "open-sans" }}>Note</Text>
+                  <Text style={{ fontFamily: "open-sans" }}>{i18n.t('note')}</Text>
                 </View>
                 <TextInput
                   style={{
@@ -370,7 +405,7 @@ const ItemScreen = props => {
               }}
               onPressHandler={saveChanges}
             >
-              Save
+              {i18n.t('save')}
             </MainButton>
           </View>
 

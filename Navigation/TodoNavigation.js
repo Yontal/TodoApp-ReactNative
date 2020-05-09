@@ -11,6 +11,7 @@ import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import ArchiveScreen from '../screens/ArchiveScreen';
 import Drawer from '../components/Drawer';
+import i18n from 'i18n-js';
 
 import COLORS from '../constants/colors';
 
@@ -30,19 +31,19 @@ const todosStackNavigator = createStackNavigator({
     },
     AddItem: {
         screen: AddItemScreen,
-        navigationOptions: {
-            title: 'Add task',
+        navigationOptions: () => ({
+            title: i18n.t('addTask'),
             headerTitleStyle: { 
                 textAlign: "left",
                 flex:1,
                 fontFamily: 'open-sans-bold',
             },
-        }
+        })
     },
     Item: {
         screen: ItemScreen,
         navigationOptions:{
-            title: 'Task details',
+            title: i18n.t('taskDetails'),
             headerTitleStyle: { 
                 textAlign: "left",
                 flex:1,
@@ -94,25 +95,25 @@ const categoriesStackNavigator = createStackNavigator(
   {
     CategoriesList: {
       screen: CategoriesListScreen,
-      navigationOptions: {
-        title: "Categories",
+      navigationOptions: () => ({
+        title: i18n.t('categories'),
         headerStyle: {
           backgroundColor: COLORS.accentColor,
         },
         headerTintColor: "white",
-      },
+      }),
     },
       Category: {
         screen: CategoryScreen,
-        navigationOptions: {
-          title: "Category",
+        navigationOptions: () => ( {
+          title: i18n.t('Category'),
           headerTitleStyle: {
             textAlign: "left",
             flex: 1,
             fontFamily: "open-sans-bold",
           },
           headerTintColor: "white",
-        },
+        }),
       },
   },
   {
@@ -132,11 +133,11 @@ const categoriesStackNavigator = createStackNavigator(
 const BottomTabNavRouteConfig = {
     Todos:{
         screen: todosStackNavigator,
-        navigationOptions: {
+        navigationOptions: () => ({
             tabBarIcon: (tabInfo) => { return <Feather name="check-circle" size={25} color={tabInfo.tintColor} />},
             tabBarColor: COLORS.primaryColor,
-            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Tasks</Text>)
-        }
+            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>{i18n.t('tasks')}</Text>)
+        })
     },
     // Archive: {
     //     screen: archiveStackNavigator,
@@ -148,11 +149,11 @@ const BottomTabNavRouteConfig = {
     // },
     Categories: {
         screen: categoriesStackNavigator,
-        navigationOptions: {
+        navigationOptions: () => ({
             tabBarIcon: (tabInfo) => {return <Feather name="tag" size={25} color={tabInfo.tintColor}  />},
             tabBarColor: COLORS.accentColor,
-            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>Categories</Text>)
-        }
+            tabBarLabel: (<Text style={{fontFamily: 'open-sans-bold'}}>{i18n.t('categories')}</Text>)
+        })
     },  
 }
 
@@ -187,4 +188,4 @@ const DrawerNavigator = createDrawerNavigator(
   }
 );
 
-export default createAppContainer(DrawerNavigator)
+export default DrawerNavigator

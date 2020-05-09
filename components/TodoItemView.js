@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, useWindowDimensions, Animated, Easing, Dimensions } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import moment from "moment";
+import i18n from 'i18n-js';
 
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
@@ -156,7 +158,6 @@ const TodoItemView = props => {
   const showDetailsHandler = () => {
     setShowDetails(prev => !prev);    
   }
-
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -178,7 +179,7 @@ const TodoItemView = props => {
               justifyContent: "center", 
             }}
           >
-            <TouchableOpacity onPress={() => props.markAsDone(props.item)}>
+            <TouchableOpacity onPress={() => props.markAsDone(props.item)} style={{height: 70, alignItems: 'center', justifyContent: 'center', padding: 5}} >
               <MaterialCommunityIcons
                 name={
                   props.item.done === 1
@@ -203,7 +204,7 @@ const TodoItemView = props => {
             }}
           >
             <Text style={{ fontFamily: 'open-sans', fontSize: 16, letterSpacing: 0.5, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.title}</Text>
-            {props.item.note !== '' ? <Text numberOfLines={2} style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.note}</Text> : null}
+            {props.item.note !== '' ? <Text numberOfLines={showDetails ? null : 2} style={{ fontFamily: 'open-sans-italic', fontSize: 14, letterSpacing: 0.25, textDecorationStyle: props.item.done === 1 ? 'solid' : null, textDecorationLine: props.item.done === 1 ? 'line-through' : null, color: props.item.done === 1 ? COLOR.greyColor : COLOR.blackColor }}>{props.item.note}</Text> : null}
             <View
               style={{
                 flex: (props.item.important === 1 || props.item.categories[0] !== 'default') ? 1 : 0,
@@ -215,7 +216,7 @@ const TodoItemView = props => {
               }}
             >
               
-                <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                <View style={{ flexDirection: "row", alignItems: "flex-end", width: '50%' }}>
                   {props.item.important === 1 ? 
                   <MaterialIcons name="priority-high" size={18} color={COLOR.redColor} /> : null
                   }
@@ -224,10 +225,10 @@ const TodoItemView = props => {
                   <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.categories ? props.categories.title : null}</Text></View>) : null}
               </View>
               {props.item.deadline !== "" ? (
-                <View style={{flex: 1, flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
+                <View style={{flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
                   <MaterialCommunityIcons name="timelapse" size={18} />
                   <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25 }}>
-                    {new Date(props.item.deadline).toLocaleDateString()}
+                    {moment(new Date(props.item.deadline)).format('DD MMM YYYY')}
                   </Text>
                 </View>
               ) : null}
