@@ -46,6 +46,7 @@ const ItemsListScreen = props => {
     const dispatch = useDispatch();
     const todoItems = useSelector(state => state.todoItems.filteredTodos.filter(todo => todo.archive !== 1));
     const categories = useSelector(state => state.categories.categories);
+    const selectedCategory = useSelector(state => state.todoItems.filterSettings);
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
 
@@ -63,7 +64,7 @@ const ItemsListScreen = props => {
 
     // const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
-        const newTodo = new TodoItem(Math.random().toString(), item, false, false, item.categories, false);
+        const newTodo = new TodoItem(Math.random().toString(), item, false, false, selectedCategory !== '' ? [selectedCategory] : undefined, false);
         setIsAddMode(false);
         dispatch(insertTodo(newTodo));
         dispatch(pullTodo());

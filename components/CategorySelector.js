@@ -15,7 +15,7 @@ const Category = props => {
         }
         style={{
           ...styles.inputArea,
-          height: 50,
+          minHeight: 40,
           width: useWindowDimensions().width - 20,
           //  borderWidth: 0,
           //  borderBottomWidth: 1,
@@ -23,7 +23,7 @@ const Category = props => {
           backgroundColor: COLOR.whiteColor,
         }}
       >
-        <View>
+        <View style={{width: useWindowDimensions().width * 0.75 }}>
           <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
             {props.category.title}
           </Text>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        margin: 10,
+        margin: 5,
         borderColor: COLOR.accentColor,
         borderRadius: 8,
         borderWidth: 1,

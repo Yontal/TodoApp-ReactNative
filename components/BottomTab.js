@@ -37,6 +37,8 @@ const BottomTab = props => {
           alignItems: "center",
           height: 50,
           backgroundColor: COLOR.primaryColor,
+          borderTopRightRadius: 10,
+          borderTopLeftRadius: 10,
         }}
       >
         <TouchableHighlight
@@ -80,16 +82,21 @@ const BottomTab = props => {
             position: "absolute",
             justifyContent: "center",
             alignItems: "center",
-            width: 60,
-            height: 60,
-            marginLeft: useWindowDimensions().width / 2 - 30,
+            // width: 60,
+            // height: 60,
+            padding: 0,
+            left: useWindowDimensions().width / 2 - 30,
+            top: -30,
+            borderRadius: 35,
+            borderWidth: 2,
+            backgroundColor: COLOR.whiteColor,
           }}
         >
-          <TouchableOpacity onPress={onAddButtonHandler} activeOpacity={.8}>
+          <TouchableOpacity onPress={onAddButtonHandler} activeOpacity={.8} >
             <MaterialIcons
-              name="add-circle"
+              name="add"
               size={60}
-              color={COLOR.whiteColor}
+              color={COLOR.blackColor}
             />
           </TouchableOpacity>
         </View>

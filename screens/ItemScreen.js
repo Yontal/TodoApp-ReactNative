@@ -245,8 +245,8 @@ const ItemScreen = props => {
               >
                 <Text style={{ fontFamily: "open-sans" }}>{i18n.t('category')}</Text>
               </View>
-              <View>
-                <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
+              <View style={{width: useWindowDimensions().width * 0.8}}>
+                <Text numberOfLines={2} style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
                   {todo.categories[0] === "default"
                     ? i18n.t('chooseCategory')
                     : categories.find((cat) => cat.id === todo.categories[0])

@@ -15,9 +15,10 @@ const Category = props => {
         onPress={
             () => {props.onSelectedHandler(props.category.id)}
         }
+        activeOpacity={.8}
         style={{
           ...styles.categoryItem,
-          height: 50,
+          minHeight: 40,
           width: 250,
           borderWidth: 0,
           borderBottomWidth: 1,
@@ -46,6 +47,7 @@ const Category = props => {
 
 const Drawer = props => {
     const categories = useSelector(state => state.categories.categories);
+    const selectedCategory = useSelector(state => state.todoItems.filterSettings);
     const dispatch = useDispatch();
 
     const clearFilter = () => {
@@ -68,21 +70,42 @@ const Drawer = props => {
             paddingTop: 35,
             fontFamily: "open-sans-bold",
             fontSize: 20,
-            letterSpacing: .15,
+            letterSpacing: 0.15,
           }}
         >
-          {i18n.t('categories')}
+          {i18n.t("categories")}
         </Text>
         <FlatList
           data={categories}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Category
-              onSelectedHandler={onSelectedHandler}
-              category={item}
-            />
+            <Category onSelectedHandler={onSelectedHandler} category={item} />
           )}
         />
+        {selectedCategory !== '' ? 
+        <MainButton
+          styles={{
+            width: 250,
+            borderRadius: 8,
+            margin: 10,
+            marginBottom: 0,
+            backgroundColor: COLOR.greyColor,
+          }}
+          textStyle={{
+            fontFamily: "open-sans",
+            fontSize: 16,
+            letterSpacing: 1.25,
+            textTransform: "uppercase",
+            color: COLOR.blackColor,
+          }}
+          onPressHandler={() => {
+            props.navigation.closeDrawer();
+            clearFilter()
+          }}
+        >
+          {i18n.t("dropFilters")}
+        </MainButton> : null
+        }
         <MainButton
           styles={{
             width: 250,
@@ -99,10 +122,20 @@ const Drawer = props => {
           }}
           onPressHandler={() => {
             props.navigation.closeDrawer();
-            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}});
+            props.navigation.navigate({
+              routeName: "Category",
+              params: {
+                category: new CategoryModel(
+                  (+new Date()).toString(),
+                  "",
+                  "#C7C7C7"
+                ),
+                newCategory: true,
+              },
+            });
           }}
         >
-          {i18n.t('addCategory')}
+          {i18n.t("addCategory")}
         </MainButton>
       </SafeAreaView>
     );

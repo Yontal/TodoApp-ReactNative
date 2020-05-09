@@ -15,6 +15,7 @@ export default {
    noCategories: 'Категорий пока нет',
    noActiveReminder: '-- Напоминание не установлено --',
    quickAddTask:'Быстрое создание задачи...',
+   dropFilters: 'Сбросить фильтры',
    reminder: 'Напоминание',
    note: 'Заметка',
    save: 'Сохранить',

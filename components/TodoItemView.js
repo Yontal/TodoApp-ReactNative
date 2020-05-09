@@ -169,7 +169,7 @@ const TodoItemView = props => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            width: useWindowDimensions.width,
+            //width: useWindowDimensions.width,
             borderBottomColor: COLOR.primaryColor,         
           }}
         >
@@ -216,13 +216,13 @@ const TodoItemView = props => {
               }}
             >
               
-                <View style={{ flexDirection: "row", alignItems: "flex-end", width: '50%' }}>
+                <View style={{ flexDirection: "row", alignItems: "center", width: '49%' }}>
                   {props.item.important === 1 ? 
                   <MaterialIcons name="priority-high" size={18} color={COLOR.redColor} /> : null
                   }
-                  {props.item.categories[0] !== "default" ? (<View style={{flexDirection:'row'}}>
+                  {props.item.categories[0] !== "default" ? (<View style={{flexDirection:'row', alignItems: 'center'}}>
                   <MaterialCommunityIcons name="tag" size={18} color={props.categories ? props.categories.color : COLOR.whiteColor } />
-                  <Text style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.categories ? props.categories.title : null}</Text></View>) : null}
+                  <Text numberOfLines={showDetails ? null : 3} style={{ fontFamily: 'open-sans', fontSize: 14, letterSpacing: 0.25, }}>{props.categories ? props.categories.title : null}</Text></View>) : null}
               </View>
               {props.item.deadline !== "" ? (
                 <View style={{flexDirection: "row", alignItems: "flex-end", justifyContent: 'flex-end'}}>
