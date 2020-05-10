@@ -14,7 +14,7 @@ export const insertTodo = (todo) => {
                 type: INSERT_TODO,
                 todo: todo
             })
-            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note, todo.notificationId);
+            const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note);
         } catch(err){
             throw err;
         }

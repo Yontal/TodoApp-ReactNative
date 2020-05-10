@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Task Runner",
+    "name": "Task Manager",
     "slug": "taskmanager",
     "privacy": "public",
     "sdkVersion": "36.0.0",

@@ -13,7 +13,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import todoItemsReducer from './store/reducers/todo';
 import categoriesReducer from './store/reducers/category';
-import { initTodoTable, initDeadlineColumn, initNoteColumn, initNotificationIdColumn, initCategoriesTable } from './helpers/db'
+import { initTodoTable, initDeadlineColumn, initNoteColumn, initCategoriesTable } from './helpers/db'
 import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 import ru from './constants/locale/ru';
@@ -39,14 +39,6 @@ initTodoTable()
   initNoteColumn()  
   .then(() => {
     console.log('note column was added')
-  })
-  .catch(err => {
-    console.log('note column is already exist')
-    console.log(err)
-  });
-  initNotificationIdColumn()  
-  .then(() => {
-    console.log('notificationId column was added')
   })
   .catch(err => {
     console.log('note column is already exist')

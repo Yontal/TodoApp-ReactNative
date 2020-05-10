@@ -21,14 +21,14 @@ const todoItemsReducer = (state = initialState, action) => {
             const updatedTodos = state.todoItems.filter(todo => {return todo.id !== action.id});
             return {...state, todoItems: updatedTodos, filteredTodos: updatedTodos};
         case PULL_TODOS:
-            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive, todo.deadline, todo.note, todo.notificationId));
+            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive, todo.deadline, todo.note));
             if(state.filterSettings === ''){
                 return {...state, todoItems: loadedTodos, filteredTodos: loadedTodos}
             }
             const loadedFilteredTodos = loadedTodos.filter(todo => todo.categories.findIndex(catId => catId === state.filterSettings) >= 0); 
             return {...state, todoItems: loadedTodos, filteredTodos: loadedFilteredTodos}
         case PULL_TODO:
-            const loadedTodo = new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories.split(','), action.todo.archive, action.todo.deadline, action.todo.note, action.todo.notificationId);
+            const loadedTodo = new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories.split(','), action.todo.archive, action.todo.deadline, action.todo.note);
             const modifiedTodo = state.filteredTodos.map(item => {
                 if(item.id.toString() === action.todo.id){
                     return loadedTodo
@@ -41,7 +41,7 @@ const todoItemsReducer = (state = initialState, action) => {
         case UPDATE_TODO:
             const modifiedTodos = state.todoItems.map(item => {
                 if(item.id.toString() === action.todo.id){
-                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories, action.todo.archive, action.todo.deadline, action.todo.note, action.todo.notificationId);
+                    return new TodoItem(action.todo.id.toString(), action.todo.title, action.todo.important, action.todo.done, action.todo.categories, action.todo.archive, action.todo.deadline, action.todo.note);
                 } else {
                     return item
                 }

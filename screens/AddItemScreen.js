@@ -7,8 +7,6 @@ import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
 import CategorySelector from '../components/CategorySelector';
 import TodoItem from '../models/TodoItem';
-import { Notifications } from 'expo';
-import {localNotification, schedulingOptions} from '../services/LocalPushController.js';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import i18n from 'i18n-js';
 
@@ -19,9 +17,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 const AddItemScreen = props => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
-    const [todo, setTodo] = useState(new TodoItem(Math.random().toString(), '', false, false, ['default'], false,'', '', ''));
+    const [todo, setTodo] = useState(new TodoItem(Math.random().toString(), '', false, false, ['default'], false,'', ''));
     const [date, setDate] = useState();
-    const [redirectBackFlag, setRedirectBackFlag] = useState(false);
     const [isCategorySelector, setIsCategorySelector] = useState(false);
     const categories = useSelector(state => state.categories.categories);
     const dispatch = useDispatch();
@@ -29,14 +26,6 @@ const AddItemScreen = props => {
     useEffect(() => {
         dispatch(pullCategory());
     }, [dispatch])
-
-    useEffect(() => {
-      if(redirectBackFlag){
-        dispatch(insertTodo(todo));
-        dispatch(pullTodo());
-        props.navigation.navigate({routeName: 'ItemsList'});
-      }
-    }, [redirectBackFlag]);
 
 
       const onDateChange = (event, selectedDate) => {
@@ -73,7 +62,7 @@ const AddItemScreen = props => {
         setTodo(prevTodo => ({...prevTodo, done: doneFlag, important: importantFlag}))
       }
 
-      const addItem = async () => {
+      const addItem = () => {
         if(todo.title.trim() === ''){
             Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
             return;
@@ -81,27 +70,9 @@ const AddItemScreen = props => {
           Alert.alert(i18n.t('selectedDateInPast'));
           return;
         }
-        if (todo.deadline){
-          try{
-               const push = await setPushNotification();
-               setTodo(prevTodo => ({...prevTodo, notificationId: String(push)}));
-             }
-             catch(err){
-               console.log(err);
-             }
-        }
-        setRedirectBackFlag(true);
-        
-      }
-      const setPushNotification = async () => {
-        schedulingOptions.time = new Date(todo.deadline);
-        if (todo.categories[0] !== 'default') {
-          localNotification.title = categories.find (cat => cat.id === todo.categories[0]).title;
-          localNotification.body = todo.title;
-        } else {
-          localNotification.title = todo.title;
-        }
-        return Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
+        dispatch(insertTodo(todo));
+        props.navigation.navigate({routeName: 'ItemsList'});
+        dispatch(pullTodo());
       }
 
       const setCategory = (category) => {
