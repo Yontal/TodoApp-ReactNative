@@ -25,6 +25,7 @@ const ItemScreen = props => {
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [todo, setTodo] = useState(navigation.getParam('task'));
     const [date, setDate] = useState();
+    const [redirectBackFlag, setRedirectBackFlag] = useState(false);
     const [isChanging, setIsChanging] = useState(false);
     const [isCategorySelector, setIsCategorySelector] = useState(false);
     const categories = useSelector(state => state.categories.categories);
@@ -36,7 +37,14 @@ const ItemScreen = props => {
         dispatch(pullCategory());
     }, [dispatch])
 
-    const setPushNotification = () => {
+    useEffect(() => {
+      if(redirectBackFlag){
+        dispatch(updateTodo(todo));
+        navigation.navigate({routeName: 'ItemsList'});
+      }
+    }, [redirectBackFlag]);
+
+    const setPushNotification = async () => {
       schedulingOptions.time = new Date(todo.deadline);
       if (todo.categories[0] !== 'default') {
         localNotification.title = categories.find (cat => cat.id === todo.categories[0]).title;
@@ -44,8 +52,12 @@ const ItemScreen = props => {
       } else {
         localNotification.title = todo.title;
       }
-      Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
-    }  
+      return Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions);
+    }
+    
+    const cancelPushNotification = async (localNotificationId) => {
+      return Notifications.cancelScheduledNotificationAsync(localNotificationId);
+    }
 
       const onDateChange = (event, selectedDate) => {
         const currentDate = new Date(selectedDate);
@@ -87,7 +99,7 @@ const ItemScreen = props => {
         setTodo(prevTodo => ({...prevTodo, done: doneFlag, important: importantFlag}))
       }
       
-      const saveChanges = () => {
+      const saveChanges = async () => {
         if(todo.title.trim() === ''){
             Alert.alert(i18n.t('taskTitleCannotBeEmpty'))
             return;
@@ -95,11 +107,23 @@ const ItemScreen = props => {
             Alert.alert(i18n.t('selectedDateInPast'));
             return;
         }
-        // console.log(todo.deadline);
+        if (todo.deadline){
+          try{
+            if(todo.notificationId){
+              const cancel = await cancelPushNotification(parseInt(todo.notificationId));
+            }
+               const push = await setPushNotification();
+               setTodo(prevTodo => ({...prevTodo, notificationId: String(push)}));
+             }
+             catch(err){
+               console.log(err);
+             }
+        }
         // console.log(new Date(todo.deadline));
  //       setPushNotification();
-        dispatch(updateTodo(todo));
-        navigation.navigate({routeName: 'ItemsList'});
+        setRedirectBackFlag(true);
+        // dispatch(updateTodo(todo));
+        // navigation.navigate({routeName: 'ItemsList'});
   //      dispatch(pullTodoById(todo.id.toString()));
       }
 
