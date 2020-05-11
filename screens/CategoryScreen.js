@@ -34,7 +34,7 @@ const CategoryScreen = props => {
       }
       if(redirectToItem){
         props.navigation.navigate({routeName: 'CategoriesList'});
-        props.navigation.navigate({routeName: 'Todos', params: {newCat: true}})
+     //   props.navigation.navigate({routeName: 'Todos', params: {newCat: true}})
       } else {
         props.navigation.navigate({routeName: 'CategoriesList'});
       }
