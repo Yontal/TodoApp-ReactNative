@@ -6,8 +6,9 @@ import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import {createAppContainer} from 'react-navigation';
 import MainNavigator from './Navigation/TodoNavigation';
-import ruDate from './constants/locale/datetime';
+//import ruDate from './constants/locale/datetime';
 import moment from 'moment';
+import 'moment/locale/ru';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
@@ -76,7 +77,7 @@ const fetchFonts = () => {
     'open-sans-italic': require('./assets/fonts/OpenSans-Italic.ttf'),
   });
 };
-
+moment.locale(Localization.locale);
 const AppContainer = createAppContainer(MainNavigator);
 
 
@@ -91,8 +92,9 @@ export default function App() {
   i18n.locale = Localization.locale;
   // When a value is missing from a language it'll fallback to another language with the key present.
   i18n.fallbacks = true;
-  moment.updateLocale('ru', ruDate);
-  moment.locale(Localization.locale);
+  //moment.updateLocale('ru', ruDate);
+  
+
   if(!appLoaded){
     return (<AppLoading startAsync={fetchFonts} onFinish={() => setAppLoaded(true)} />);
   }
