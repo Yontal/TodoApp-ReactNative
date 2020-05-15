@@ -34,7 +34,11 @@ const ItemsListScreen = props => {
     }, [dispatch])
 
     useEffect(() => {
-        checkUpdateApplication();
+        if (__DEV__) {
+            // console.log('I am in debug');
+        } else {
+            checkUpdateApplication();
+        }
     }, [])
 
     const runExpoUpdate = async () => {
