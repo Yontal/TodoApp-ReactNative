@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, Button,  TouchableOpacity, TouchableHighlight, KeyboardAvoidingView, Animated, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, Text, Alert,  TouchableOpacity } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
 import { InputField } from '../components/InputField';
 import NothingFound from '../components/NothingFound';
 import TodoItem from '../models/TodoItem';
 import TodoItemView from '../components/TodoItemView'
-import { insertTodo, removeTodo, pullTodo, updateTodo, filterTodos } from '../store/actions/todo';
+import { insertTodo, removeTodo, pullTodo, updateTodo } from '../store/actions/todo';
 import { pullCategory } from '../store/actions/category';
 import { connect } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -16,31 +16,7 @@ import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
-
-// const SlideView = (props) => {
-//     const slideAnim = useRef(new Animated.Value(props.initialValue)).current  // Initial value for opacity: 0
-  
-//     React.useEffect(() => {
-//       Animated.timing(
-//         slideAnim,
-//         {
-//           toValue: props.open ? 150 : 0,
-//           duration: 3000,
-//         }
-//       ).start();
-//     })
-  
-//     return (
-//       <Animated.View                 // Special animatable View
-//         style={{
-//           ...props.style,
-//           height: slideAnim,         // Bind opacity to animated value
-//         }}
-//       >
-//         {props.children}
-//       </Animated.View>
-//     );
-//   }
+import Expo from 'expo';
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
@@ -62,6 +38,36 @@ const ItemsListScreen = props => {
         dispatch(pullCategory());
     }, [dispatch])
 
+    useEffect(() => {
+        checkUpdateApplication();
+    }, [])
+
+    const runExpoUpdate = async () => {
+        await Expo.Updates.fetchUpdateAsync();
+        Expo.Updates.reloadFromCache();
+    }
+    
+    const checkUpdateApplication = async () => {
+        try {
+            const update = await Expo.Updates.checkForUpdateAsync();
+            if (update.isAvailable) {
+                Alert.alert(
+                    i18n.t('updateAvailableHeader'),
+                    i18n.t('updateAvailableBody'),
+                    [
+                    {
+                        text: i18n.t('cancel'),  
+                        style: "cancel"
+                    },
+                    { text: i18n.t('ok'), onPress: () => runExpoUpdate() }
+                    ]
+                );
+            }
+        } catch (e) {
+            Alert.alert(i18n.t('updateAvailableError'))
+        }
+    }
+
     // const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
         const newTodo = new TodoItem(Math.random().toString(), item, false, false, selectedCategory !== '' ? [selectedCategory] : undefined, false);
@@ -69,9 +75,23 @@ const ItemsListScreen = props => {
         dispatch(insertTodo(newTodo));
         dispatch(pullTodo());
     }
-    
+
     const onRemove = (id) =>{
         dispatch(removeTodo(id));
+    }
+
+    const onRemoveWithApprove = (id) =>{
+        Alert.alert(
+            i18n.t('confirmDeleteTaskHeader'),
+            i18n.t('confirmDeleteTaskBody'),
+            [
+              {
+                text: i18n.t('cancel'),  
+                style: "cancel"
+              },
+              { text: i18n.t('ok'), onPress: () => dispatch(removeTodo(id)) }
+            ]
+          );
     }
   
     // const onCancelHandler = () => {
@@ -181,7 +201,7 @@ const ItemsListScreen = props => {
         markAsImportant={markAsImportant}
         markAsArchived={markAsArchived}
         itemPressHandler={itemPressHandler}
-        onRemove={onRemove}
+        onRemove={onRemoveWithApprove}
         categories={categories.find(
           (cat) => cat.id === data.item.categories[0]
         )}

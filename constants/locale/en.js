@@ -22,4 +22,11 @@ export default {
     selectedDateInPast: 'Selected date is in the past. Please selecrt new date.',
     taskTitleCannotBeEmpty: 'Task title cannot be empty, please type something',
     categoryTitleCannotBeEmpty: 'Category title cannot be empty, please type something',
+    confirmDeleteTaskHeader: 'Delete task',
+    confirmDeleteTaskBody: 'Do you really want to delete the task?',
+    cancel: 'Cancel',
+    ok: 'OK',
+    updateAvailableHeader: 'Update available',
+    updateAvailableBody: 'A new version of the application is available. Update application?',
+    updateAvailableError: 'Failed to update the application. Try updating later.'
  }
