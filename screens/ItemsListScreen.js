@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Alert,  TouchableOpacity } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,7 +16,7 @@ import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
-import Expo from 'expo';
+import * as Updates from 'expo-updates'
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
@@ -26,11 +26,6 @@ const ItemsListScreen = props => {
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
 
- //   const todoItems = allTodoItems.filter(todo => todo.archive !== 1)
-
-    // const Clear = props => { 
-    //     return (<TouchableOpacity style={styles.clear} onPress={() => {}}><Text>X</Text></TouchableOpacity>)  
-    // }
     const [isAddMode, setIsAddMode] = useState(false);
 
     useEffect(() => {
@@ -43,13 +38,13 @@ const ItemsListScreen = props => {
     }, [])
 
     const runExpoUpdate = async () => {
-        await Expo.Updates.fetchUpdateAsync();
-        Expo.Updates.reloadFromCache();
+        await Updates.fetchUpdateAsync();
+        Updates.reloadFromCache();
     }
     
     const checkUpdateApplication = async () => {
         try {
-            const update = await Expo.Updates.checkForUpdateAsync();
+            const update = await Updates.checkForUpdateAsync();
             if (update.isAvailable) {
                 Alert.alert(
                     i18n.t('updateAvailableHeader'),
