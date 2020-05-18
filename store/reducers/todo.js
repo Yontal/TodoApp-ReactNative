@@ -8,6 +8,14 @@ const initialState = {
     filterSettings: '',
 };
 
+const sortTodo = (a, b) => {
+  if (a.done - b.done != 0) {
+    return a.done - b.done;
+  } else {
+    return parseInt(a.id) - parseInt(b.id);
+  }
+};
+
 const todoItemsReducer = (state = initialState, action) => {
     switch (action.type){
         case INSERT_TODO:
@@ -22,6 +30,7 @@ const todoItemsReducer = (state = initialState, action) => {
             return {...state, todoItems: updatedTodos, filteredTodos: updatedTodos};
         case PULL_TODOS:
             const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive, todo.deadline, todo.note, todo.notificationId));
+            loadedTodos.sort((a,b) => sortTodo(a,b));
             if(state.filterSettings === ''){
                 return {...state, todoItems: loadedTodos, filteredTodos: loadedTodos}
             }
@@ -36,6 +45,7 @@ const todoItemsReducer = (state = initialState, action) => {
                     return item
                 }
             });
+            modifiedTodo.sort((a,b) => sortTodo(a,b));
             const modifiedFilteredTodo = modifiedTodo.filter(todo => todo.categories.findIndex(catId => catId === state.filterSettings) >= 0); 
             return {...state, todoItems: modifiedTodo, filteredTodos: modifiedFilteredTodo}
         case UPDATE_TODO:
@@ -46,6 +56,7 @@ const todoItemsReducer = (state = initialState, action) => {
                     return item
                 }
             });
+            modifiedTodos.sort((a,b) => sortTodo(a,b));
             if(state.filterSettings === ''){
                 return {...state, todoItems: modifiedTodos, filteredTodos: modifiedTodos}
             }
