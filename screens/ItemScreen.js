@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, Switch, Dimensions, TextInput, Alert, TouchableWithoutFeedback, Keyboard, TouchableOpacity, useWindowDimensions, Modal, KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTodo, pullTodoById, pullTodo } from '../store/actions/todo';
-import { pullCategory } from '../store/actions/category';
+import { pullCategory, deleteLastInsertedCategoryId } from '../store/actions/category';
 import DateTimePicker from '../components/DateTimePicker';
 import MainButton from '../components/MainButton';
 import Picker from '../components/Picker';
@@ -29,10 +29,10 @@ const ItemScreen = props => {
     const [isChanging, setIsChanging] = useState(false);
     const [isCategorySelector, setIsCategorySelector] = useState(false);
     const categories = useSelector(state => state.categories.categories);
+    const recentlyAddedCategory = useSelector(state => state.categories.lastAddedCategory);
     const dispatch = useDispatch();
 
     const [isAddMode, setIsAddMode] = useState(false);
-
     useEffect(() => {
         dispatch(pullCategory());
     }, [dispatch])
@@ -43,6 +43,14 @@ const ItemScreen = props => {
         navigation.navigate({routeName: 'ItemsList'});
       }
     }, [redirectBackFlag]);
+
+    useEffect(() => {
+      if(recentlyAddedCategory !== ''){
+        dispatch(pullCategory());
+        setTodo(prevTodo => ({...prevTodo, categories: [String(recentlyAddedCategory)]}))
+      }
+      dispatch(deleteLastInsertedCategoryId());
+    }, [recentlyAddedCategory]);
 
     const setPushNotification = async () => {
       schedulingOptions.time = new Date(todo.deadline);
@@ -136,7 +144,12 @@ const ItemScreen = props => {
       }
 
       const setCategory = (category) => {
+        if(recentlyAddedCategory !== ''){
+          return;
+        } else {
         setTodo(prevTodo => ({...prevTodo, categories: [category]}))
+        }
+        dispatch(deleteLastInsertedCategoryId());
       }
 
     return (

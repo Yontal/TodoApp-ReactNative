@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
+import CategoryQuickCreator from '../components/CategoryQuickCreator';
 
 
 const Category = props => {
@@ -43,6 +44,7 @@ const Category = props => {
 }
 
 const CategorySelector = props => {
+  const [isCategoryQuickCreator, setIsCategoryQuickCreator] = useState(false);
     return (
       <View style={styles.container}>
         <FlatList
@@ -56,6 +58,21 @@ const CategorySelector = props => {
             />
           )}
         />
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={isCategoryQuickCreator}
+          onRequestClose={() => {
+            setIsCategoryQuickCreator(false);
+          }}
+        >
+          <CategoryQuickCreator
+            onSelected={() => setIsCategoryQuickCreator(false)}
+            onSelectedHandler={props.onSelectedHandler}
+            closeModal={props.onSelected}
+            navigation={props.navigation}
+          />
+        </Modal>
         <MainButton
           styles={{
             width: useWindowDimensions().width - 20,
@@ -71,11 +88,11 @@ const CategorySelector = props => {
             color: COLOR.blackColor,
           }}
           onPressHandler={() => {
-            props.navigation.navigate({routeName: 'Category', params: {category: new CategoryModel((+new Date()).toString(), '', '#C7C7C7'), newCategory: true, redirectToItem: true}})
-            props.onSelected();
+            setIsCategoryQuickCreator(true);
+            //props.onSelected();
           }}
         >
-          {i18n.t('addCategory')}
+          {i18n.t("addCategory")}
         </MainButton>
       </View>
     );
