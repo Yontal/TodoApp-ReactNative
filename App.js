@@ -22,7 +22,7 @@ import en from './constants/locale/en';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import COLOR from './constants/colors';
 
-useScreens();
+enableScreens();
 initTodoTable()
   .then(() => {
     console.log('todos.db was initialized')

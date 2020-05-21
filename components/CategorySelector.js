@@ -5,6 +5,7 @@ import CategoryModel from '../models/Category';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
 import CategoryQuickCreator from '../components/CategoryQuickCreator';
+import NothingToDisplay from '../components/EmptyCategoriesPlug';
 
 
 const Category = props => {
@@ -47,6 +48,7 @@ const CategorySelector = props => {
   const [isCategoryQuickCreator, setIsCategoryQuickCreator] = useState(false);
     return (
       <View style={styles.container}>
+        <NothingToDisplay categories={props.categories} />
         <FlatList
           data={props.categories}
           keyExtractor={(item) => item.id}

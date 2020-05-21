@@ -230,7 +230,7 @@ CategoriesListScreen.navigationOptions = (navData) => {
       headerLeft: (
         <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
           <Item
-            onPress={() => navData.navigation.toggleDrawer()}
+            onPress={() => navData.navigation.openDrawer()}
             iconName="menu"
             title="Menu"
           />

@@ -12,7 +12,7 @@ export default {
    delete: 'Удалить',
    taskDetails: 'Описание задачи',
    noTasks: 'Задач пока нет',
-   noCategories: 'Категорий пока нет',
+   noCategories: 'У вас пока нет категорий',
    noActiveReminder: '-- Напоминание не установлено --',
    quickAddTask:'Быстрое создание задачи...',
    dropFilters: 'Сбросить фильтры',

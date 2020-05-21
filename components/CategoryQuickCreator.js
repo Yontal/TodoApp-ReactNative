@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  updateCategory,
   insertCategory,
   pullCategory,
 } from "../store/actions/category";
@@ -40,6 +39,7 @@ const CategoryQuickCreator = (props) => {
     // console.log(category);
 
     dispatch(insertCategory(category));
+    dispatch(pullCategory())
     
     props.onSelectedHandler('default');
     props.closeModal()
