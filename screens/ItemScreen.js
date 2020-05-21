@@ -127,6 +127,13 @@ const ItemScreen = props => {
                console.log(err);
              }
         }
+        if (!todo.deadline && todo.notificationId) {
+          try {
+            const cancel = await cancelPushNotification(parseInt(todo.notificationId));
+          } catch (err) {
+            console.log(err);
+          }
+        }
         // console.log(new Date(todo.deadline));
  //       setPushNotification();
         setRedirectBackFlag(true);
@@ -337,12 +344,19 @@ const ItemScreen = props => {
                     ? i18n.t('noActiveReminder')
                     : moment(new Date(todo.deadline)).format('DD MMM YYYY, HH:mm')}
                 </Text>
-
+                {!todo.deadline ? 
                 <MaterialIcons
                   name="alarm-add"
                   size={30}
                   color={COLOR.accentColor}
-                />
+                /> : 
+                <TouchableOpacity onPress={() => setTodo((prevTodo) => ({ ...prevTodo, deadline: '' }))} style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'flex-end'}}>
+                  <MaterialIcons
+                    name="alarm-off"
+                    size={30}
+                    color={COLOR.accentColor}
+                  />
+                </TouchableOpacity> }
               </View>
             </TouchableOpacity>
               <View>

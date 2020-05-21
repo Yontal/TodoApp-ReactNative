@@ -288,11 +288,19 @@ const AddItemScreen = props => {
                       new Date(todo.deadline).toLocaleTimeString()}
                 </Text>
 
+                {!todo.deadline ? 
                 <MaterialIcons
                   name="alarm-add"
                   size={30}
                   color={COLOR.accentColor}
-                />
+                /> : 
+                <TouchableOpacity onPress={() => setTodo((prevTodo) => ({ ...prevTodo, deadline: '' }))} style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'flex-end'}}>
+                  <MaterialIcons
+                    name="alarm-off"
+                    size={30}
+                    color={COLOR.accentColor}
+                  />
+                </TouchableOpacity> }
               </View>
             </TouchableOpacity>
               <View>
