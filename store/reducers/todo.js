@@ -12,14 +12,16 @@ const sortTodo = (a, b) => {
   if (a.done - b.done != 0) {
     return a.done - b.done;
   } else {
-    return parseInt(a.id) - parseInt(b.id);
+    return parseInt(b.id) - parseInt(a.id);
   }
 };
 
 const todoItemsReducer = (state = initialState, action) => {
     switch (action.type){
         case INSERT_TODO:
-            const addedTodos = state.todoItems.concat(action.todo);
+            const currentTodo = [...state.todoItems];
+            currentTodo.unshift({...action.todo, id: action.insertId.toString()});
+            const addedTodos = currentTodo;
             if(state.filterSettings === ''){
                 return {...state, todoItems: addedTodos, filteredTodos: addedTodos}
             }
