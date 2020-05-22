@@ -1,16 +1,17 @@
-import { INSERT_CATEGORY, REMOVE_CATEGORY, PULL_CATEGORY, UPDATE_CATEGORY } from '../actions/category';
+import { INSERT_CATEGORY, REMOVE_CATEGORY, PULL_CATEGORY, UPDATE_CATEGORY, DELETE_LAST_INSERTED_CATEGORY_ID } from '../actions/category';
 import Category from '../../models/Category';
 
 
 const initialState = {
     categories: [],
+    lastAddedCategory: '',
 };
 
 const categoriesReducer = (state = initialState, action) => {
     switch (action.type){
         case INSERT_CATEGORY:
-            const addedCategories = state.categories.concat(action.category); 
-            return { ...state, categories: addedCategories};
+            const addedCategories = state.categories.concat({...action.category, id: action.insertId.toString()});
+            return { ...state, categories: addedCategories, lastAddedCategory: action.insertId};
         case REMOVE_CATEGORY:
             const updatedCategories = state.categories.filter(category => {return category.id !== action.id});
             return {...state, categories: updatedCategories};
@@ -26,6 +27,8 @@ const categoriesReducer = (state = initialState, action) => {
                 }
             });
             return {...state, categories: modifiedCategories}
+        case DELETE_LAST_INSERTED_CATEGORY_ID:
+            return{...state, lastAddedCategory: action.str}
         default:
             return state;
     }

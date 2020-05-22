@@ -2,9 +2,11 @@ import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, View, useWindowDimensions, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
+import { AntDesign } from '@expo/vector-icons';
 import { filterTodos } from '../store/actions/todo';
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
+import NothingToDisplay from '../components/EmptyCategoriesPlug';
 import i18n from 'i18n-js';
 
 import COLOR from '../constants/colors';
@@ -75,6 +77,7 @@ const Drawer = props => {
         >
           {i18n.t("categories")}
         </Text>
+        <NothingToDisplay categories={categories} />
         <FlatList
           data={categories}
           keyExtractor={(item) => item.id}

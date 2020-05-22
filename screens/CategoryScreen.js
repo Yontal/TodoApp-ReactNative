@@ -64,7 +64,7 @@ const CategoryScreen = props => {
               defaultValue={category.title}
               style={{
                 
-                width: useWindowDimensions().width - 120,
+                width: useWindowDimensions().width - 20,
                 fontFamily: "open-sans",
                 fontSize: 16,
                 letterSpacing: 0.5

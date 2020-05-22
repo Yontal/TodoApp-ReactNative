@@ -4,14 +4,17 @@ export const INSERT_CATEGORY = 'INSERT_CATEGORY';
 export const REMOVE_CATEGORY = 'REMOVE_CATEGORY';
 export const PULL_CATEGORY = 'PULL_CATEGORY';
 export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
+export const DELETE_LAST_INSERTED_CATEGORY_ID = "DELETE_LAST_INSERTED_CATEGORY_ID";
 
 export const insertCategory = (category) => {
     return async dispatch => {
         try{
             const response = await addCategory(category.title, category.color);
+            const categoryId = response.insertId
             dispatch({
                 type: INSERT_CATEGORY,
-                category: category
+                category: category,
+                insertId: categoryId,
             })
         } catch(err){
             throw err;
@@ -61,5 +64,12 @@ export const updateCategory = (category) => {
         } catch(err){
            throw err;
         }
+    }
+}
+
+export const deleteLastInsertedCategoryId = () => {
+    return {
+        type: DELETE_LAST_INSERTED_CATEGORY_ID,
+        str: '',
     }
 }
