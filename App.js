@@ -19,8 +19,10 @@ import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 import ru from './constants/locale/ru';
 import en from './constants/locale/en';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import COLOR from './constants/colors';
 
-useScreens();
+enableScreens();
 initTodoTable()
   .then(() => {
     console.log('todos.db was initialized')
@@ -101,7 +103,9 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AppContainer />
+      <PaperProvider theme={{...DefaultTheme, colors: {...DefaultTheme.colors, background: COLOR.primaryColor}, dark: true}}>
+        <AppContainer />
+      </PaperProvider>
     </Provider>
   );
 }

@@ -63,7 +63,7 @@ const todosStackNavigator = createStackNavigator({
             fontSize: 20,
             letterSpacing: .15,
         },
-        headerTintColor: 'white',
+        headerTintColor: COLORS.whiteColor,
     }
 })
 
@@ -75,7 +75,7 @@ const archiveStackNavigator = createStackNavigator({
             headerStyle: {
                 backgroundColor: COLORS.accentColor,
             },
-            headerTintColor: 'white',
+            headerTintColor: COLORS.whiteColor,
         }
     },
 },{
