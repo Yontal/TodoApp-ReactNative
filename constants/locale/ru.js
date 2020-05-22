@@ -22,11 +22,11 @@ export default {
    selectedDateInPast: 'Необходимо установить дату напоминания в будущем',
    taskTitleCannotBeEmpty: 'Название задачи не может быть пустым',
    categoryTitleCannotBeEmpty: 'Название категории не может быть пустым',
-   confirmDeleteTaskHeader: 'Удалить задачу',
-   confirmDeleteTaskBody: 'Вы действительно хотите удалить задачу?',
+   confirmDeleteTaskHeader: 'Удалить задачу?',
+   // confirmDeleteTaskBody: 'Вы действительно хотите удалить задачу?',
    cancel: 'Отмена',
    ok: 'OK',
-   updateAvailableHeader: 'Обновление',
-   updateAvailableBody: 'Доступна новая версия приложения. Обновить?',
+   updateAvailableHeader: 'Доступна новая версия приложения. Обновить?',
+   // updateAvailableBody: 'Доступна новая версия приложения. Обновить?',
    updateAvailableError: 'Не удалось обновить приложение. Попробуйте обновить позже.'
 }

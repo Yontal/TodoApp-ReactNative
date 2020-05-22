@@ -14,6 +14,7 @@ import { CustomHeaderButton, CustomHeaderButtonEmpty, ClearFilterHeaderButton } 
 import { MaterialIcons } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
+import CustomModal from '../components/CustomModal';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
 import * as Updates from 'expo-updates'
@@ -25,6 +26,9 @@ const ItemsListScreen = props => {
     const selectedCategory = useSelector(state => state.todoItems.filterSettings);
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
+    const [updateModal, setUpdateModal] = useState(false);
+    const [deleteTaskModal, setDeleteTaskModal] = useState(false);
+    const [deleteTaskId, setDeleteTaskId] = useState(null);
 
     const [isAddMode, setIsAddMode] = useState(false);
 
@@ -35,36 +39,43 @@ const ItemsListScreen = props => {
 
     useEffect(() => {
         if (__DEV__) {
-            // console.log('I am in debug');
+
         } else {
             checkUpdateApplication();
         }
     }, [])
 
-    const runExpoUpdate = async () => {
-        await Updates.fetchUpdateAsync();
-        Updates.reloadFromCache();
+    const closeUpdateModal = () => {
+        setUpdateModal(false);
     }
     
     const checkUpdateApplication = async () => {
         try {
             const update = await Updates.checkForUpdateAsync();
             if (update.isAvailable) {
-                Alert.alert(
-                    i18n.t('updateAvailableHeader'),
-                    i18n.t('updateAvailableBody'),
-                    [
-                    {
-                        text: i18n.t('cancel'),  
-                        style: "cancel"
-                    },
-                    { text: i18n.t('ok'), onPress: () => runExpoUpdate() }
-                    ]
-                );
+                setUpdateModal(true);
             }
+            // if (update.isAvailable) {
+            //     Alert.alert(
+            //         i18n.t('updateAvailableHeader'),
+            //         i18n.t('updateAvailableBody'),
+            //         [
+            //         {
+            //             text: i18n.t('cancel'),  
+            //             style: "cancel"
+            //         },
+            //         { text: i18n.t('ok'), onPress: () => runExpoUpdate() }
+            //         ]
+            //     );
+            // }
         } catch (e) {
             Alert.alert(i18n.t('updateAvailableError'))
         }
+    }
+
+    const runExpoUpdate = async () => {
+        await Updates.fetchUpdateAsync();
+        Updates.reloadFromCache();
     }
 
     // const [indexToAnimate, setIndexToAnimate] = useState(null);
@@ -79,23 +90,19 @@ const ItemsListScreen = props => {
         dispatch(removeTodo(id));
     }
 
-    const onRemoveWithApprove = (id) =>{
-        Alert.alert(
-            i18n.t('confirmDeleteTaskHeader'),
-            i18n.t('confirmDeleteTaskBody'),
-            [
-              {
-                text: i18n.t('cancel'),  
-                style: "cancel"
-              },
-              { text: i18n.t('ok'), onPress: () => dispatch(removeTodo(id)) }
-            ]
-          );
+    const closeDeleteTaskModal = () => {
+        setDeleteTaskModal(false);
     }
-  
-    // const onCancelHandler = () => {
-    //   setIsAddMode(false);
-    // }
+
+    const onRemoveWithApprove = () =>{  
+        dispatch(removeTodo(deleteTaskId));
+        setDeleteTaskModal(false);
+    }
+
+    const showRemoveTaskModalAndSaveTaskId = (id) =>{
+        setDeleteTaskModal(true);
+        setDeleteTaskId(id);
+    }
 
     const markAsImportant = (todo) =>{
         const importantFlag = todo.important === 1 ? 0 : 1;
@@ -200,7 +207,7 @@ const ItemsListScreen = props => {
         markAsImportant={markAsImportant}
         markAsArchived={markAsArchived}
         itemPressHandler={itemPressHandler}
-        onRemove={onRemoveWithApprove}
+        onRemove={showRemoveTaskModalAndSaveTaskId}
         categories={categories.find(
           (cat) => cat.id === data.item.categories[0]
         )}
@@ -238,7 +245,7 @@ const ItemsListScreen = props => {
     );
 
     return(
-        <View style={styles.mainContainer}>
+        <View style={styles.mainContainer}>           
             <View style={styles.headerContainer}/>        
                 <InputField onAddItem={addItem} placeholder={i18n.t('quickAddTask')} />
                 <View style={styles.contentContainer}>
@@ -267,6 +274,36 @@ const ItemsListScreen = props => {
                 <ProgressBar tasks={todoItems} />
             </View>
             <AddButton onPress={() => {props.navigation.navigate('AddItem')}} />
+            <CustomModal 
+                visible={deleteTaskModal}
+                header={i18n.t('confirmDeleteTaskHeader')}
+                buttons={[
+                    {
+                        text: i18n.t('ok'),
+                        action: onRemoveWithApprove
+                    }, 
+                    {
+                        text: i18n.t('cancel'),
+                        action: closeDeleteTaskModal
+                    }
+                ]}
+                onRequestClose={closeDeleteTaskModal}
+            />
+             <CustomModal 
+                visible={updateModal}
+                header={i18n.t('updateAvailableHeader')}
+                buttons={[
+                    {
+                        text: i18n.t('ok'),
+                        action: runExpoUpdate
+                    }, 
+                    {
+                        text: i18n.t('cancel'),
+                        action: closeUpdateModal
+                    }
+                ]}
+                onRequestClose={closeUpdateModal}
+            />
         </View>
         );
 }
