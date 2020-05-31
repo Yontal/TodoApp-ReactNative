@@ -16,7 +16,6 @@ import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
-import * as Updates from 'expo-updates'
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
@@ -33,39 +32,9 @@ const ItemsListScreen = props => {
         dispatch(pullCategory());
     }, [dispatch])
 
-    useEffect(() => {
-        if (__DEV__) {
-            // console.log('I am in debug');
-        } else {
-            checkUpdateApplication();
-        }
-    }, [])
 
-    const runExpoUpdate = async () => {
-        await Updates.fetchUpdateAsync();
-        Updates.reloadFromCache();
-    }
     
-    const checkUpdateApplication = async () => {
-        try {
-            const update = await Updates.checkForUpdateAsync();
-            if (update.isAvailable) {
-                Alert.alert(
-                    i18n.t('updateAvailableHeader'),
-                    i18n.t('updateAvailableBody'),
-                    [
-                    {
-                        text: i18n.t('cancel'),  
-                        style: "cancel"
-                    },
-                    { text: i18n.t('ok'), onPress: () => runExpoUpdate() }
-                    ]
-                );
-            }
-        } catch (e) {
-            Alert.alert(i18n.t('updateAvailableError'))
-        }
-    }
+
 
     // const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
@@ -200,7 +169,7 @@ const ItemsListScreen = props => {
         markAsImportant={markAsImportant}
         markAsArchived={markAsArchived}
         itemPressHandler={itemPressHandler}
-        onRemove={onRemoveWithApprove}
+        onRemove={onRemove}
         categories={categories.find(
           (cat) => cat.id === data.item.categories[0]
         )}
@@ -402,7 +371,7 @@ ItemsListScreen.navigationOptions = (navData) => {
       headerLeft: (
         <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
           <Item
-            onPress={() => navData.navigation.toggleDrawer()}
+            onPress={() => navData.navigation.openDrawer()}
             iconName="menu"
             title="Menu"
           />

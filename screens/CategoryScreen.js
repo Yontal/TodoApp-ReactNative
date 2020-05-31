@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Picker, Dimensions, useWindowDimensions, TextInput, Alert} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateCategory, insertCategory, pullCategory } from '../store/actions/category';
+import { updateCategory, insertCategory, pullCategory, deleteLastInsertedCategoryId } from '../store/actions/category';
 import { toHsv, fromHsv } from 'react-native-color-picker'
 import i18n from 'i18n-js';
-
+import CustomModal from '../components/CustomModal';
 import MainButton from '../components/MainButton';
 import COLOR from '../constants/colors';
 
@@ -15,6 +15,7 @@ const CategoryScreen = props => {
     const [category, setCategory] = useState(props.navigation.getParam('category'));
     const [newCategory, setNewCategory] = useState(props.navigation.getParam('newCategory'));
     const [redirectToItem, setRedirectToItem] = useState(props.navigation.getParam('redirectToItem'));
+    const [categoryTitleCannotBeEmptyModal, setCategoryTitleCannotBeEmptyModal] = useState(false);
     
     // const [color, setSelectedValue] = useState(category.color);
     
@@ -22,7 +23,7 @@ const CategoryScreen = props => {
     // console.log(newCategory);
     const saveChanges = () => {
       if (category.title === '') {
-        Alert.alert(i18n.t('categoryTitleCannotBeEmpty'));
+        setCategoryTitleCannotBeEmptyModal(true);
         return;
       }
       // console.log(category);
@@ -64,7 +65,7 @@ const CategoryScreen = props => {
               defaultValue={category.title}
               style={{
                 
-                width: useWindowDimensions().width - 120,
+                width: useWindowDimensions().width - 20,
                 fontFamily: "open-sans",
                 fontSize: 16,
                 letterSpacing: 0.5
@@ -94,6 +95,19 @@ const CategoryScreen = props => {
                 textTransform: 'uppercase'
               }} 
               onPressHandler={saveChanges}>{newCategory ? i18n.t('addItem') : i18n.t('save')}</MainButton>
+              <View style={{ position: "absolute" }}>
+                <CustomModal
+                  visible={categoryTitleCannotBeEmptyModal}
+                  header={i18n.t("categoryTitleCannotBeEmpty")}
+                  buttons={[
+                    {
+                      text: i18n.t("ok"),
+                      action: () => setCategoryTitleCannotBeEmptyModal(false),
+                    },
+                  ]}
+                  onRequestClose={() => setCategoryTitleCannotBeEmptyModal(false)}
+                />
+              </View>
       </View>
     );
 }

@@ -6,6 +6,7 @@ import { filterTodos } from '../store/actions/todo';
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
 import i18n from 'i18n-js';
+// import NothingToDisplay from '../components/EmptyCategoriesPlug';
 
 import COLOR from '../constants/colors';
 
@@ -75,6 +76,7 @@ const Drawer = props => {
         >
           {i18n.t("categories")}
         </Text>
+        {/* <NothingToDisplay /> */}
         <FlatList
           data={categories}
           keyExtractor={(item) => item.id}

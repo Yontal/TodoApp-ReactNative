@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, useWindow
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import moment from "moment";
 import i18n from 'i18n-js';
-
+import CustomModal from '../components/CustomModal';
 import COLOR from '../constants/colors';
 import MainButton from './MainButton';
 
@@ -11,6 +11,7 @@ const MoreDetails = props => {
   const slideAnim = useRef(new Animated.Value(props.initialValue)).current 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const [editNote, setEditNote] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false);
 
     useEffect(() => {
       Animated.timing(
@@ -78,10 +79,28 @@ const MoreDetails = props => {
               width: useWindowDimensions().width * 0.25,
               borderRadius: 8,
             }}
-            onPressHandler={() => props.onRemove(props.item.id)}
+            onPressHandler={() => setDeleteModal(true)}
           >
             <MaterialIcons name="delete" size={30} color={COLOR.whiteColor} />
           </MainButton>
+          <View style={{position: 'absolute'}}>
+            <CustomModal 
+                  visible={deleteModal}
+                  header={i18n.t('confirmDeleteTaskHeader')}
+                  buttons={[
+                      {
+                          text: i18n.t('ok'),
+                          action: () => props.onRemove(props.item.id)
+                      }, 
+                      {
+                          text: i18n.t('cancel'),
+                          action: () => {setDeleteModal(false)}
+                      }
+                  ]}
+                  onRequestClose={() => {setDeleteModal(false)}
+                }
+              />
+            </View>
           {/* <MainButton
             styles={{
               width: useWindowDimensions().width * 0.25,
