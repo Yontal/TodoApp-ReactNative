@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity, View, useWindowDimensions, FlatList } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, View, useWindowDimensions, FlatList, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterTodos } from '../store/actions/todo';
 import MainButton from '../components/MainButton';
 import CategoryModel from '../models/Category';
 import i18n from 'i18n-js';
+import { AntDesign } from '@expo/vector-icons';
 // import NothingToDisplay from '../components/EmptyCategoriesPlug';
 
 import COLOR from '../constants/colors';
@@ -77,6 +78,10 @@ const Drawer = props => {
           {i18n.t("categories")}
         </Text>
         {/* <NothingToDisplay /> */}
+        {categories[0] === undefined ? <View style={{height: Dimensions.get('window').height *0.7, justifyContent: 'center', alignItems: 'center'}}>
+          <AntDesign name="frowno" size={50} color="white" />
+          <Text style={{color: COLOR.whiteColor, fontFamily: "open-sans", fontSize: 16, letterSpacing: .5}}>{i18n.t("noCategories")}</Text>
+        </View> : null}
         <FlatList
           data={categories}
           keyExtractor={(item) => item.id}

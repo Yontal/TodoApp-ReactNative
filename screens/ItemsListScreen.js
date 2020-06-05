@@ -16,6 +16,7 @@ import ProgressBar from '../components/ProgressBar';
 import AddButton from '../components/AddButton';
 import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
+import { Notifications } from 'expo';
 
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
@@ -44,9 +45,17 @@ const ItemsListScreen = props => {
         dispatch(pullTodo());
     }
 
-    const onRemove = (id) =>{
+    const onRemove = async (id) =>{
         dispatch(removeTodo(id));
+        let todo = todoItems.find(todo => todo.id == id)
+        if(todo){
+            const cancel = await cancelPushNotification(parseInt(todo.notificationId));
+        }
     }
+
+    const cancelPushNotification = async (localNotificationId) => {
+        return Notifications.cancelScheduledNotificationAsync(localNotificationId);
+      }
 
     const onRemoveWithApprove = (id) =>{
         Alert.alert(
@@ -84,9 +93,9 @@ const ItemsListScreen = props => {
     }
 
     const markAsArchived = (todo) =>{
-        const archiveFlag = 1;
-        todo.archive = archiveFlag;
-        dispatch(updateTodo(todo));
+        // const archiveFlag = 1;
+        // todo.archive = archiveFlag;
+        onRemove(todo.id);
     }
     
     const itemPressHandler = task => {
