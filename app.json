@@ -32,8 +32,9 @@
     },
     "android": {
       "package": "ru.goodfellas.dev_task_manager",
-      "versionCode": 7,
-      "permissions": []
+      "versionCode": 8,
+      "permissions": [],
+      "enableDangerousExperimentalLeanBuilds": true
     },
     "description": ""
   }
