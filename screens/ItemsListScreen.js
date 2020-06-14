@@ -18,6 +18,7 @@ import COLOR from '../constants/colors';
 import i18n from 'i18n-js';
 import { Notifications } from 'expo';
 
+
 const ItemsListScreen = props => {
     const dispatch = useDispatch();
     const todoItems = useSelector(state => state.todoItems.filteredTodos.filter(todo => todo.archive !== 1));
@@ -25,8 +26,8 @@ const ItemsListScreen = props => {
     const selectedCategory = useSelector(state => state.todoItems.filterSettings);
     const [countOfDone, setCountOfDone] = useState(todoItems.filter(item => item.done == 1).length);
     const [countOfAllTasks, setCountOfAllTasks] = useState(todoItems.length);
-
     const [isAddMode, setIsAddMode] = useState(false);
+
 
     useEffect(() => {
         dispatch(pullTodo());
@@ -34,8 +35,8 @@ const ItemsListScreen = props => {
     }, [dispatch])
 
 
+ 
     
-
 
     // const [indexToAnimate, setIndexToAnimate] = useState(null);
     const addItem = (item) => {
@@ -48,7 +49,7 @@ const ItemsListScreen = props => {
     const onRemove = async (id) =>{
         dispatch(removeTodo(id));
         let todo = todoItems.find(todo => todo.id == id)
-        if(todo){
+        if(todo.notificationId){
             const cancel = await cancelPushNotification(parseInt(todo.notificationId));
         }
     }

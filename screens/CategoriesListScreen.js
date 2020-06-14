@@ -11,14 +11,20 @@ import { insertCategory, pullCategory, removeCategory } from '../store/actions/c
 import { updateTodo } from '../store/actions/todo';
 import Category from '../models/Category';
 import AddButton from '../components/AddButton';
+import { MaterialIcons } from '@expo/vector-icons';
 import i18n from 'i18n-js';
+import { TouchableRipple } from 'react-native-paper';
+import CustomModal from '../components/CustomModal';
 // import Category from '../models/Category';
+
 const CategoriesListScreen = props => {
     const categories = useSelector(state => state.categories.categories);
     const todos = useSelector(state => state.todoItems.todoItems);
     const dispatch = useDispatch();
 
     const [isAddMode, setIsAddMode] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteCategoryId, setDeleteCategoryId] = useState();
 
     useEffect(() => {
         dispatch(pullCategory());
@@ -72,10 +78,15 @@ const CategoriesListScreen = props => {
     };
       
       const renderItem = data => (
-        <TouchableHighlight
+        <TouchableRipple
             onPress={() => {selectCategoryHandler(data.item)}}
+            onLongPress={() => {
+              setDeleteModal(true);
+              setDeleteCategoryId(data.item.id);
+            }
+          }
             style={styles.rowFront}
-            underlayColor={'#AAA'}
+            rippleColor='black'
         >
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}> 
             <Text style={{ fontFamily: "open-sans", fontSize: 16, letterSpacing: 0.5 }}>
@@ -94,7 +105,7 @@ const CategoriesListScreen = props => {
             }}
             ></View>
           </View>
-        </TouchableHighlight>
+        </TouchableRipple>
     );
 
       const renderHiddenItem = (data, rowMap) => (
@@ -107,17 +118,26 @@ const CategoriesListScreen = props => {
               onRemove(data.item.id);
             }}
           >
-            <Text style={styles.backTextWhite}>{i18n.t('delete')}</Text>
+            <MaterialIcons name="delete" size={30} color={COLOR.whiteColor} />
           </TouchableOpacity>
+          {/* <TouchableOpacity
+            style={[styles.backRightBtn, styles.backRightBtnRight]}
+            onPress={() => {
+              deleteRow(rowMap, data.item.id);
+              onRemove(data.item.id);
+            }}
+          >
+            <Text style={styles.backTextWhite}>{i18n.t('delete')}</Text>
+          </TouchableOpacity> */}
         </View>
       );
 
-    return(
-        <View style={styles.mainContainer}>
-            {/* <View style={styles.headerContainer}>
+    return (
+      <View style={styles.mainContainer}>
+        {/* <View style={styles.headerContainer}>
                 <InputField onAddItem={addItem} isAddMode={isAddMode} onCancel={onCancelHandler} placeholder="Type category name" />
             </View> */}
-            {/* <FlatList 
+        {/* <FlatList 
             data={categories}
             renderItem={data => (
                 <TouchableNativeFeedback onPress={() => {selectCategoryHandler(data.item)}}>
@@ -128,28 +148,66 @@ const CategoriesListScreen = props => {
                 )
             } 
             keyExtractor={item => item.id} /> */}
-            <View style={styles.contentContainer}>
-                    {(categories.length < 1) ? (<NothingFound message={i18n.t('noCategories')} />) : null}
-                    <SwipeListView
-                            data={categories}
-                            renderItem={renderItem}
-                            renderHiddenItem={renderHiddenItem}
-                            leftOpenValue={75}
-                            rightOpenValue={-80}
-                            previewRowKey={'0'}
-                            previewOpenValue={-40}
-                            previewOpenDelay={3000}
-                            onRowDidOpen={onRowDidOpen}
-                            disableRightSwipe={true}
-                            keyExtractor={item => item.id}
-                            onRemove={onRemove}
-                            contentContainerStyle={styles.list}
-                            initialNumToRender={15}
-                        />
-                </View>
-                <AddButton onPress={() => {props.navigation.navigate({routeName: 'Category', params: {category: new Category((+new Date()).toString(), '', '#C7C7C7'), newCategory: true}})}} />
-                
+        <View style={styles.contentContainer}>
+          {categories.length < 1 ? (
+            <NothingFound message={i18n.t("noCategories")} />
+          ) : null}
+          <SwipeListView
+            data={categories}
+            renderItem={renderItem}
+            renderHiddenItem={renderHiddenItem}
+            leftOpenValue={75}
+            rightOpenValue={-80}
+            previewRowKey={"0"}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowDidOpen={onRowDidOpen}
+            disableRightSwipe={true}
+            keyExtractor={(item) => item.id}
+            onRemove={onRemove}
+            contentContainerStyle={styles.list}
+            initialNumToRender={15}
+          />
         </View>
+        <AddButton
+          onPress={() => {
+            props.navigation.navigate({
+              routeName: "Category",
+              params: {
+                category: new Category((+new Date()).toString(), "", "#C7C7C7"),
+                newCategory: true,
+              },
+            });
+          }}
+        />
+        <View style={{ position: "absolute" }}>
+          <CustomModal
+            visible={deleteModal}
+            header={i18n.t("confirmDeleteCategoryHeader")}
+            buttons={[
+              {
+                text: i18n.t("ok"),
+                action: () => {
+                  onRemove(deleteCategoryId);
+                  setDeleteCategoryId();
+                  setDeleteModal(false);
+                },
+              },
+              {
+                text: i18n.t("cancel"),
+                action: () => {
+                  setDeleteModal(false);
+                  setDeleteCategoryId();
+                },
+              },
+            ]}
+            onRequestClose={() => {
+              setDeleteModal(false);
+              setDeleteCategoryId();
+            }}
+          />
+        </View>
+      </View>
     );
 }
 
@@ -187,7 +245,7 @@ const styles = StyleSheet.create({
         borderBottomColor: COLOR.greyColor,
         borderBottomWidth: 1,
         justifyContent: 'center',
-        minHeight: 50,
+        minHeight: 80,
     },
     backTextWhite: {
         color: '#FFF',
@@ -204,14 +262,14 @@ const styles = StyleSheet.create({
         maxHeight: 50,
     },
     backRightBtn: {
-        alignItems: 'center',
-        bottom: 0,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        height: 45,
-        width: 75,
-    },
+      alignItems: 'center',
+      bottom: 10,
+      justifyContent: 'center',
+      position: 'absolute',
+      top: 10,
+      height: 60,
+      width: 75,
+  },
     backRightBtnLeft: {
         backgroundColor: COLOR.accentColor,
         right: 75,
@@ -219,10 +277,11 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     backRightBtnRight: {
-        backgroundColor: COLOR.redColor,
-        right: 0,
-        borderRadius: 15,
-    }
+      backgroundColor: COLOR.primaryColor,
+      right: 0,
+      borderRadius: 8,
+      marginHorizontal: 2,
+  }
 })
 
 CategoriesListScreen.navigationOptions = (navData) => {

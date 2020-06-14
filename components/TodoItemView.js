@@ -178,10 +178,7 @@ const TodoItemView = props => {
     setShowDetails(prev => !prev);    
   }
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => props.itemPressHandler(props.item)}
-      >
+      <View>
         <View
           style={{
             ...styles.rowFront,
@@ -198,7 +195,7 @@ const TodoItemView = props => {
               justifyContent: "center", 
             }}
           >
-            <TouchableOpacity onPress={() => props.markAsDone(props.item)} style={{height: 70, alignItems: 'center', justifyContent: 'center', padding: 5}} >
+            <TouchableOpacity onPress={() => props.markAsDone(props.item)} style={{height: 70, width: 40, alignItems: 'center', justifyContent: 'center', padding: 5}} >
               <MaterialCommunityIcons
                 name={
                   props.item.done === 1
@@ -213,9 +210,14 @@ const TodoItemView = props => {
               />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => props.itemPressHandler(props.item)}
+          > 
           <View
             style={{
-              maxWidth: "80%",
+              //maxWidth: "80%",
+              width: useWindowDimensions().width-120,
               flex: 1,
               alignItems: "flex-start",
               justifyContent: 'center',
@@ -253,6 +255,7 @@ const TodoItemView = props => {
               ) : null}
             </View>
           </View>
+          </TouchableOpacity>
           <View
             style={{
               maxWidth: 50,
@@ -260,7 +263,7 @@ const TodoItemView = props => {
               height: 70
             }}
           >
-            <TouchableOpacity onPress={() => showDetailsHandler()} style={{height: 70, alignItems: 'center', justifyContent: 'center'}} >
+            <TouchableOpacity onPress={() => showDetailsHandler()} style={{height: 70, width: 40, alignItems: 'center', justifyContent: 'center'}} >
               <MoreDetailsIcon
                 initialValue={showDetails ? 0 : 1}
                 open={showDetails ? true : false}
@@ -275,7 +278,7 @@ const TodoItemView = props => {
           item={props.item}
           onRemove={props.onRemove}
         />
-      </TouchableOpacity>
+      </View>
     );
 }
 

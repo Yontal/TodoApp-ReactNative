@@ -11,7 +11,7 @@ export const insertTodo = (todo) => {
     return async dispatch => {
         try{
             const response = await addTodo(todo.title, todo.important, todo.done, todo.categories, todo.archive, todo.deadline, todo.note, todo.notificationId);
-            const todoId = response.insertId
+            const todoId = response
             dispatch({
                 type: INSERT_TODO,
                 todo: todo,
@@ -43,7 +43,7 @@ export const pullTodo = () => {
             const response = await loadTodo();
             dispatch({
                 type: PULL_TODOS,
-                todoItems: response.rows._array
+                todoItems: response
             })
         } catch (err){
             console.log(err);

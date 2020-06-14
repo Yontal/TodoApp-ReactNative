@@ -31,7 +31,21 @@ const todoItemsReducer = (state = initialState, action) => {
             const updatedTodos = state.todoItems.filter(todo => {return todo.id !== action.id});
             return {...state, todoItems: updatedTodos, filteredTodos: updatedTodos};
         case PULL_TODOS:
-            const loadedTodos = action.todoItems.map(todo => new TodoItem(todo.id.toString(), todo.title, todo.important, todo.done, todo.categories.split(','), todo.archive, todo.deadline, todo.note, todo.notificationId));
+            const loadedTodos = []
+            var todosObj = action.todoItems.toJSON();
+            for(key in todosObj){
+                loadedTodos.push(new TodoItem(
+                    todosObj[key].id.toString(),
+                    todosObj[key].title,
+                    todosObj[key].important,
+                    todosObj[key].done,
+                    todosObj[key].categories.split(','),
+                    todosObj[key].archive,
+                    todosObj[key].deadline,
+                    todosObj[key].note,
+                    todosObj[key].notificationId
+                ))
+            }
             loadedTodos.sort((a,b) => sortTodo(a,b));
             if(state.filterSettings === ''){
                 return {...state, todoItems: loadedTodos, filteredTodos: loadedTodos}

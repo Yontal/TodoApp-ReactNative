@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import {createAppContainer, createStackNavigator, createDrawerNavigator} from 'react-navigation';
+import {createAppContainer, createStackNavigator, createDrawerNavigator, createSwitchNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import ItemListsScreen from '../screens/ItemsListScreen';
 import AddItemScreen from '../screens/AddItemScreen';
@@ -10,6 +10,7 @@ import ItemScreen from '../screens/ItemScreen';
 import CategoriesListScreen from '../screens/CategoriesListScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import ArchiveScreen from '../screens/ArchiveScreen';
+import AuthScreen from '../screens/AuthScreen';
 import Drawer from '../components/Drawer';
 import i18n from 'i18n-js';
 
@@ -187,5 +188,12 @@ const DrawerNavigator = createDrawerNavigator(
     hideStatusBar: false,
   }
 );
+const AuthNavigator = createStackNavigator({
+  Auth: AuthScreen
+});
+const SwitchNavigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  App: DrawerNavigator
+})
 
-export default DrawerNavigator
+export default SwitchNavigator;

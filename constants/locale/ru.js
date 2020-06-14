@@ -24,6 +24,7 @@ export default {
    categoryTitleCannotBeEmpty: 'Название категории не может быть пустым',
    confirmDeleteTaskHeader: 'Удалить задачу?',
    confirmDeleteTaskBody: 'Вы действительно хотите удалить задачу?',
+   confirmDeleteCategoryHeader: 'Удалить категорию?',
    cancel: 'Отмена',
    ok: 'OK',
    updateAvailableHeader: 'Доступна новая версия приложения. Обновить?',

@@ -16,7 +16,16 @@ const categoriesReducer = (state = initialState, action) => {
             const updatedCategories = state.categories.filter(category => {return category.id !== action.id});
             return {...state, categories: updatedCategories};
         case PULL_CATEGORY:
-            const loadedCategories = action.categories.map(category => new Category(category.id.toString(), category.title, category.color));
+            const loadedCategories = []
+            var categoriesObj = action.categories.toJSON();
+            for(key in categoriesObj){
+                loadedCategories.push(new Category(
+                    categoriesObj[key].id.toString(),
+                    categoriesObj[key].title,
+                    categoriesObj[key].color,
+                ))
+            }
+            //loadedCategories = action.categories.map(category => new Category(category.id.toString(), category.title, category.color));
             return {...state, categories: loadedCategories}
         case UPDATE_CATEGORY:
             const modifiedCategories = state.categories.map(item => {

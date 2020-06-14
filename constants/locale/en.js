@@ -24,6 +24,7 @@ export default {
     categoryTitleCannotBeEmpty: 'Category title cannot be empty, please type something',
     confirmDeleteTaskHeader: 'Delete task?',
     confirmDeleteTaskBody: 'Do you really want to delete the task?',
+    confirmDeleteCategoryHeader: 'Delete category?',
     cancel: 'Cancel',
     ok: 'OK',
     updateAvailableHeader: 'A new version of the application is available. Update application?',

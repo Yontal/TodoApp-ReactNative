@@ -10,7 +10,7 @@ export const insertCategory = (category) => {
     return async dispatch => {
         try{
             const response = await addCategory(category.title, category.color);
-            const categoryId = response.insertId
+            const categoryId = response
             dispatch({
                 type: INSERT_CATEGORY,
                 category: category,
@@ -42,7 +42,7 @@ export const pullCategory = () => {
             const response = await loadCategories();
             dispatch({
                 type: PULL_CATEGORY,
-                categories: response.rows._array
+                categories: response
             })
         } catch (err){
             console.log(err);

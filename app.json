@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.1.9",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -32,7 +32,7 @@
     },
     "android": {
       "package": "ru.goodfellas.dev_task_manager",
-      "versionCode": 9,
+      "versionCode": 10,
       "permissions": [],
       "enableDangerousExperimentalLeanBuilds": true
     },
